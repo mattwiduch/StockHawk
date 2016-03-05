@@ -18,13 +18,5 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:src="@drawable/ic_add_white_24dp"
-        app:fabSize="normal"
-
-        fab:fab_colorNormal="@color/material_blue_500"
-        fab:fab_colorPressed="@color/material_blue_600"
-        fab:fab_colorRipple="@color/ripple"
-        fab:fab_shadow="true"
-        fab:fab_type="normal"
-        fab:layout_anchor="recycler_view"
-        fab:layout_anchorGravity="bottom | end"/>
+        app:fabSize="normal"/>
 </android.support.design.widget.CoordinatorLayout>
