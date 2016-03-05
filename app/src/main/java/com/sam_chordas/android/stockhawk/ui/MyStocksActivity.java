@@ -40,13 +40,13 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
 
+    private static final int CURSOR_LOADER_ID = 0;
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
     private Intent mServiceIntent;
     private ItemTouchHelper mItemTouchHelper;
-    private static final int CURSOR_LOADER_ID = 0;
     private QuoteCursorAdapter mCursorAdapter;
     private Context mContext;
     private Cursor mCursor;
@@ -113,6 +113,44 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.my_stocks, menu);
+        restoreActionBar();
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        if (id == R.id.action_change_units) {
+            // this is for changing stock changes from percent value to dollar value
+            Utils.showPercent = !Utils.showPercent;
+            this.getContentResolver().notifyChange(QuoteProvider.Quotes.CONTENT_URI, null);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void networkToast() {
+        Toast.makeText(mContext, getString(R.string.network_toast), Toast.LENGTH_SHORT).show();
+    }
+
     private void prepareFab(RecyclerView recyclerView) {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.attachToRecyclerView(recyclerView);
@@ -155,50 +193,11 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         });
     }
 
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
-    }
-
-    public void networkToast() {
-        Toast.makeText(mContext, getString(R.string.network_toast), Toast.LENGTH_SHORT).show();
-    }
-
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.my_stocks, menu);
-        restoreActionBar();
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        if (id == R.id.action_change_units) {
-            // this is for changing stock changes from percent value to dollar value
-            Utils.showPercent = !Utils.showPercent;
-            this.getContentResolver().notifyChange(QuoteProvider.Quotes.CONTENT_URI, null);
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
