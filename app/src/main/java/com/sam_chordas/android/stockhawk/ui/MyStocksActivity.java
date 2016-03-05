@@ -50,12 +50,10 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     private QuoteCursorAdapter mCursorAdapter;
     private Context mContext;
     private Cursor mCursor;
-    boolean isConnected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        isConnected = Utils.isNetworkAvailable(this);
         setContentView(R.layout.activity_my_stocks);
         mContext = this;
 
@@ -66,7 +64,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         if (savedInstanceState == null) {
             // Run the initialize task service so that some stocks appear upon an empty database
             mServiceIntent.putExtra("tag", "init");
-            if (isConnected) {
+            if (Utils.isNetworkAvailable(this)) {
                 //startService(mServiceIntent);
             } else {
                 networkToast();
@@ -94,7 +92,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         prepareFab(recyclerView);
 
         mTitle = getTitle();
-        if (isConnected) {
+        if (Utils.isNetworkAvailable(this)) {
             long period = 3600L;
             long flex = 10L;
             String periodicTag = "periodic";
@@ -121,7 +119,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isConnected) {
+                if (Utils.isNetworkAvailable(mContext)) {
                     new MaterialDialog.Builder(mContext).title(R.string.symbol_search)
                             .content(R.string.content_test)
                             .inputType(InputType.TYPE_CLASS_TEXT)
