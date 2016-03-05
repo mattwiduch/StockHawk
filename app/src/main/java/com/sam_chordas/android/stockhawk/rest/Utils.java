@@ -4,6 +4,7 @@ import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.IntDef;
 import android.util.Log;
 
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
@@ -13,6 +14,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 
 /**
@@ -114,4 +117,15 @@ public class Utils {
     return activeNetwork != null &&
             activeNetwork.isConnectedOrConnecting();
   }
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({HAWK_STATUS_OK, HAWK_STATUS_SERVER_DOWN, HAWK_STATUS_SERVER_INVALID, HAWK_STATUS_UNKNOWN,
+            HAWK_STATUS_INVALID_STOCK})
+    public @interface HawkStatus {}
+
+    public static final int HAWK_STATUS_OK = 100;
+    public static final int HAWK_STATUS_SERVER_DOWN = 101;
+    public static final int HAWK_STATUS_SERVER_INVALID = 102;
+    public static final int HAWK_STATUS_UNKNOWN = 103;
+    public static final int HAWK_STATUS_INVALID_STOCK = 104;
 }
