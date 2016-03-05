@@ -8,6 +8,8 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,7 +26,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
-import com.melnykov.fab.FloatingActionButton;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
@@ -68,7 +69,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
             if (Utils.isNetworkAvailable(this)) {
                 startService(mServiceIntent);
             } else {
-                networkToast();
+                networkSnackbar();
             }
         }
 
@@ -148,13 +149,16 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         return super.onOptionsItemSelected(item);
     }
 
-    public void networkToast() {
-        Toast.makeText(mContext, getString(R.string.network_toast), Toast.LENGTH_SHORT).show();
+    private void networkSnackbar() {
+        Snackbar snackbar = Snackbar
+                .make(findViewById(R.id.layout_my_stocks), getString(R.string.network_toast),
+                        Snackbar.LENGTH_INDEFINITE);
+        snackbar.show();
     }
 
     private void prepareFab(RecyclerView recyclerView) {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.attachToRecyclerView(recyclerView);
+        //fab.attachToRecyclerView(recyclerView);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -188,7 +192,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                             })
                             .show();
                 } else {
-                    networkToast();
+                    networkSnackbar();
                 }
 
             }
