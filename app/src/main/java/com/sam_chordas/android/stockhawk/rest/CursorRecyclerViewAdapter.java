@@ -30,6 +30,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
         }
 
         mEmptyView = emptyView;
+        mEmptyView.setVisibility(View.GONE);
     }
 
     public Cursor getCursor() {
