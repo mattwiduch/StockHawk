@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -153,7 +154,19 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     private void networkSnackbar() {
         Snackbar snackbar = Snackbar
                 .make(findViewById(R.id.layout_my_stocks), getString(R.string.network_toast),
-                        Snackbar.LENGTH_INDEFINITE);
+                        Snackbar.LENGTH_INDEFINITE)
+                .setAction("RETRY", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mServiceIntent.putExtra("tag", "init");
+                        if (Utils.isNetworkAvailable(mContext)) {
+                            startService(mServiceIntent);
+                        } else {
+                            networkSnackbar();
+                        }
+                    }
+                })
+                .setActionTextColor(ContextCompat.getColor(mContext, R.color.material_green_A400));
         snackbar.show();
     }
 
