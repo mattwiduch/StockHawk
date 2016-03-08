@@ -17,7 +17,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -70,7 +69,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
             // Run the initialize task service so that some stocks appear upon an empty database
             mServiceIntent.putExtra("tag", "init");
             if (Utils.isNetworkAvailable(this)) {
-                //startService(mServiceIntent);
+                startService(mServiceIntent);
             } else {
                 networkSnackbar();
             }
@@ -194,7 +193,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                                         Toast toast =
                                                 Toast.makeText(MyStocksActivity.this, "This stock is already saved!",
                                                         Toast.LENGTH_LONG);
-                                        toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
+                                        //toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
                                         toast.show();
                                         return;
                                     } else {

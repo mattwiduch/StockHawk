@@ -1,16 +1,21 @@
 package com.sam_chordas.android.stockhawk.service;
 
+import android.content.ContentProviderOperation;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.OperationApplicationException;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.os.RemoteException;
+import android.preference.PreferenceManager;
+import android.support.annotation.IntDef;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
 import com.google.android.gms.gcm.TaskParams;
+import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 import com.sam_chordas.android.stockhawk.rest.Utils;
@@ -18,9 +23,16 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 /**
  * Created by sam_chordas on 9/30/15.
@@ -28,10 +40,24 @@ import java.net.URLEncoder;
  * and is used for the initialization and adding task as well.
  */
 public class StockTaskService extends GcmTaskService {
-    private String LOG_TAG = StockTaskService.class.getSimpleName();
+    private static String LOG_TAG = StockTaskService.class.getSimpleName();
+
+    // Define Error States
+    public static final int HAWK_STATUS_OK = 100;
+    public static final int HAWK_STATUS_SERVER_DOWN = 101;
+    public static final int HAWK_STATUS_SERVER_INVALID = 102;
+    public static final int HAWK_STATUS_DATA_CORRUPTED = 103;
+    public static final int HAWK_STATUS_SYMBOL_INVALID = 104;
+    public static final int HAWK_STATUS_UTF8_NOT_SUPPORTED = 105;
+    public static final int HAWK_STATUS_UNKNOWN = 106;
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({HAWK_STATUS_OK, HAWK_STATUS_SERVER_DOWN, HAWK_STATUS_SERVER_INVALID, HAWK_STATUS_DATA_CORRUPTED,
+            HAWK_STATUS_SYMBOL_INVALID, HAWK_STATUS_UTF8_NOT_SUPPORTED, HAWK_STATUS_UNKNOWN})
+    public @interface HawkStatus {
+    }
 
     private OkHttpClient client = new OkHttpClient();
-    private Context mContext;
+    private static Context mContext;
     private StringBuilder mStoredSymbols = new StringBuilder();
     private boolean isUpdate;
 
@@ -64,6 +90,7 @@ public class StockTaskService extends GcmTaskService {
             urlStringBuilder.append(URLEncoder.encode("select * from yahoo.finance.quotes where symbol "
                     + "in (", "UTF-8"));
         } catch (UnsupportedEncodingException e) {
+            setHawkStatus(HAWK_STATUS_UTF8_NOT_SUPPORTED);
             e.printStackTrace();
         }
         if (params.getTag().equals("init") || params.getTag().equals("periodic")) {
@@ -77,6 +104,7 @@ public class StockTaskService extends GcmTaskService {
                     urlStringBuilder.append(
                             URLEncoder.encode("\"YHOO\",\"AAPL\",\"GOOG\",\"MSFT\")", "UTF-8"));
                 } catch (UnsupportedEncodingException e) {
+                    setHawkStatus(HAWK_STATUS_UTF8_NOT_SUPPORTED);
                     e.printStackTrace();
                 }
             } else if (initQueryCursor != null) {
@@ -91,6 +119,7 @@ public class StockTaskService extends GcmTaskService {
                 try {
                     urlStringBuilder.append(URLEncoder.encode(mStoredSymbols.toString(), "UTF-8"));
                 } catch (UnsupportedEncodingException e) {
+                    setHawkStatus(HAWK_STATUS_UTF8_NOT_SUPPORTED);
                     e.printStackTrace();
                 }
             }
@@ -101,6 +130,7 @@ public class StockTaskService extends GcmTaskService {
             try {
                 urlStringBuilder.append(URLEncoder.encode("\"" + stockInput + "\")", "UTF-8"));
             } catch (UnsupportedEncodingException e) {
+                setHawkStatus(HAWK_STATUS_UTF8_NOT_SUPPORTED);
                 e.printStackTrace();
             }
         }
@@ -126,11 +156,13 @@ public class StockTaskService extends GcmTaskService {
                                 null, null);
                     }
                     mContext.getContentResolver().applyBatch(QuoteProvider.AUTHORITY,
-                            Utils.quoteJsonToContentVals(getResponse));
+                            quoteJsonToContentVals(getResponse));
                 } catch (RemoteException | OperationApplicationException e) {
                     Log.e(LOG_TAG, "Error applying batch insert", e);
+                    setHawkStatus(HAWK_STATUS_DATA_CORRUPTED);
                 }
             } catch (IOException e) {
+                setHawkStatus(HAWK_STATUS_SERVER_DOWN);
                 e.printStackTrace();
             }
         }
@@ -138,4 +170,82 @@ public class StockTaskService extends GcmTaskService {
         return result;
     }
 
+    private static ArrayList quoteJsonToContentVals(String JSON) {
+        ArrayList<ContentProviderOperation> batchOperations = new ArrayList<>();
+        JSONObject jsonObject = null;
+        JSONArray resultsArray = null;
+        Log.i(LOG_TAG, "GET FB: " + JSON);
+        try {
+            jsonObject = new JSONObject(JSON);
+            if (jsonObject != null && jsonObject.length() != 0) {
+                jsonObject = jsonObject.getJSONObject("query");
+                int count = Integer.parseInt(jsonObject.getString("count"));
+                if (count == 1) {
+                    jsonObject = jsonObject.getJSONObject("results")
+                            .getJSONObject("quote");
+                    if (!jsonObject.getString("Name").equals("null")) {
+                        batchOperations.add(buildBatchOperation(jsonObject));
+                    } else {
+                        setHawkStatus(HAWK_STATUS_SYMBOL_INVALID);
+                    }
+                } else {
+                    resultsArray = jsonObject.getJSONObject("results").getJSONArray("quote");
+
+                    if (resultsArray != null && resultsArray.length() != 0) {
+                        for (int i = 0; i < resultsArray.length(); i++) {
+                            jsonObject = resultsArray.getJSONObject(i);
+                            if (!jsonObject.getString("Name").equals("null")) {
+                                batchOperations.add(buildBatchOperation(jsonObject));
+                            } else {
+                                setHawkStatus(HAWK_STATUS_SYMBOL_INVALID);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, "String to JSON failed: " + e);
+            setHawkStatus(HAWK_STATUS_SERVER_INVALID);
+        }
+
+        setHawkStatus(HAWK_STATUS_OK);
+        return batchOperations;
+    }
+
+    private static ContentProviderOperation buildBatchOperation(JSONObject jsonObject) {
+        ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(
+                QuoteProvider.Quotes.CONTENT_URI);
+        try {
+            String change = jsonObject.getString("Change");
+            builder.withValue(QuoteColumns.SYMBOL, jsonObject.getString("symbol"));
+            builder.withValue(QuoteColumns.BIDPRICE, Utils.truncateBidPrice(jsonObject.getString("Bid")));
+            builder.withValue(QuoteColumns.PERCENT_CHANGE, Utils.truncateChange(
+                    jsonObject.getString("ChangeinPercent"), true));
+            builder.withValue(QuoteColumns.CHANGE, Utils.truncateChange(change, false));
+            builder.withValue(QuoteColumns.ISCURRENT, 1);
+            if (change.charAt(0) == '-') {
+                builder.withValue(QuoteColumns.ISUP, 0);
+            } else {
+                builder.withValue(QuoteColumns.ISUP, 1);
+            }
+
+
+        } catch (JSONException e) {
+            setHawkStatus(HAWK_STATUS_SERVER_INVALID);
+            e.printStackTrace();
+        }
+        return builder.build();
+    }
+
+    /**
+     * Sets application status into shared preference.
+     *
+     * @param hawkStatus The IntDef value to set
+     */
+    private static void setHawkStatus(@HawkStatus int hawkStatus){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences.Editor spe = sp.edit();
+        spe.putInt(mContext.getString(R.string.pref_hawk_status_key), hawkStatus);
+        spe.apply();
+    }
 }
