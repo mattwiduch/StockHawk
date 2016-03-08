@@ -208,7 +208,7 @@ public class StockTaskService extends GcmTaskService {
             setHawkStatus(HAWK_STATUS_SERVER_INVALID);
         }
 
-        setHawkStatus(HAWK_STATUS_OK);
+        if (!batchOperations.isEmpty()) setHawkStatus(HAWK_STATUS_OK);
         return batchOperations;
     }
 
@@ -246,6 +246,6 @@ public class StockTaskService extends GcmTaskService {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor spe = sp.edit();
         spe.putInt(mContext.getString(R.string.pref_hawk_status_key), hawkStatus);
-        spe.apply();
+        spe.commit();
     }
 }

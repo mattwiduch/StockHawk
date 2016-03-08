@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -37,7 +39,8 @@ import com.sam_chordas.android.stockhawk.service.StockIntentService;
 import com.sam_chordas.android.stockhawk.service.StockTaskService;
 import com.sam_chordas.android.stockhawk.touch_helper.SimpleItemTouchHelperCallback;
 
-public class MyStocksActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MyStocksActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -119,7 +122,16 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     }
 
     @Override
+    protected void onPause() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        sp.unregisterOnSharedPreferenceChangeListener(this);
+        super.onPause();
+    }
+
+    @Override
     public void onResume() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        sp.registerOnSharedPreferenceChangeListener(this);
         super.onResume();
         getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
     }
@@ -245,4 +257,43 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         mCursorAdapter.swapCursor(null);
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(getString(R.string.pref_hawk_status_key))) {
+            @StockTaskService.HawkStatus int status = Utils.getHawkStatus(this);
+            switch (status) {
+                case StockTaskService.HAWK_STATUS_SERVER_DOWN:
+                    showSnackbar(getString(R.string.error_server_down));
+                    Utils.resetHawkStatus(this);
+                    break;
+                case StockTaskService.HAWK_STATUS_SERVER_INVALID:
+                    showSnackbar(getString(R.string.error_server_invalid));
+                    Utils.resetHawkStatus(this);
+                    break;
+                case StockTaskService.HAWK_STATUS_SYMBOL_INVALID:
+                    showSnackbar(getString(R.string.error_symbol_invalid));
+                    Utils.resetHawkStatus(this);
+                    break;
+                case StockTaskService.HAWK_STATUS_DATA_CORRUPTED:
+                    showSnackbar(getString(R.string.error_data_corrupted));
+                    Utils.resetHawkStatus(this);
+                    break;
+                case StockTaskService.HAWK_STATUS_UTF8_NOT_SUPPORTED:
+                    showSnackbar(getString(R.string.error_utf8_not_supported));
+                    Utils.resetHawkStatus(this);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    /*
+        Shows snackbar with provided message.
+     */
+    private void showSnackbar(String message) {
+        Snackbar snackbar = Snackbar
+                .make(findViewById(R.id.layout_my_stocks), message, Snackbar.LENGTH_LONG);
+        snackbar.show();
+    }
 }

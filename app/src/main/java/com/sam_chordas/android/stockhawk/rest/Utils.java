@@ -64,4 +64,16 @@ public class Utils {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         return sp.getInt(context.getString(R.string.pref_hawk_status_key), StockTaskService.HAWK_STATUS_UNKNOWN);
     }
+
+    /**
+     * Resets stock hawk status to HAWK_STATUS_UNKNOWN
+     *
+     * @param context Context used to get the SharedPreferences
+     */
+    static public void resetHawkStatus(Context context){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor spe = sp.edit();
+        spe.putInt(context.getString(R.string.pref_hawk_status_key), StockTaskService.HAWK_STATUS_UNKNOWN);
+        spe.apply();
+    }
 }
