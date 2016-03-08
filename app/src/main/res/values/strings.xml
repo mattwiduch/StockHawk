@@ -20,4 +20,5 @@
     <string name="error_symbol_invalid">Please enter valid stock symbol.</string>
     <string name="error_server_down">The server is not responding. Please try again later.</string>
     <string name="error_server_invalid">The server has returned invalid data. Please update your Stock Hawk.</string>
+    <string name="error_symbol_saved">This stock is already saved.</string>
 </resources>

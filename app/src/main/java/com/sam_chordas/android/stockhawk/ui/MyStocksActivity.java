@@ -22,7 +22,6 @@ import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.stetho.Stetho;
@@ -190,6 +189,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
             @Override
             public void onClick(View v) {
                 if (Utils.isNetworkAvailable(mContext)) {
+                    /** */
                     new MaterialDialog.Builder(mContext).title(R.string.symbol_search)
                             .content(R.string.content_test)
                             .inputType(InputType.TYPE_CLASS_TEXT)
@@ -202,11 +202,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                                             new String[]{QuoteColumns.SYMBOL}, QuoteColumns.SYMBOL + "= ?",
                                             new String[]{input.toString()}, null);
                                     if (c.getCount() != 0) {
-                                        Toast toast =
-                                                Toast.makeText(MyStocksActivity.this, "This stock is already saved!",
-                                                        Toast.LENGTH_LONG);
-                                        //toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
-                                        toast.show();
+                                        showSnackbar(getString(R.string.error_symbol_saved));
                                         return;
                                     } else {
                                         // Add the stock to DB
@@ -218,6 +214,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                                 }
                             })
                             .show();
+                    /** */
                 } else {
                     networkSnackbar();
                 }
