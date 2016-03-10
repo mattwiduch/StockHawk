@@ -196,7 +196,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
             @Override
             public void onClick(View v) {
                 if (Utils.isNetworkAvailable(mContext)) {
-                    /** */
                     new MaterialDialog.Builder(mContext).title(R.string.symbol_search)
                             .content(R.string.content_test)
                             .inputType(InputType.TYPE_CLASS_TEXT)
@@ -209,7 +208,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                                     Cursor c = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
                                             new String[]{QuoteColumns.SYMBOL}, QuoteColumns.SYMBOL + "= ?",
                                             new String[]{input.toString().toUpperCase()}, null);
-                                    showSnackbar(c.getCount() + "");
                                     if (c.getCount() != 0) {
                                         showSnackbar(getString(R.string.error_symbol_saved));
                                         return;
@@ -223,7 +221,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                                 }
                             })
                             .show();
-                    /** */
                 } else {
                     networkSnackbar();
                 }

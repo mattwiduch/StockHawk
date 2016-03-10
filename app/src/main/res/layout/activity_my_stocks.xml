@@ -25,7 +25,8 @@
         android:text="@string/empty_stocks_list"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"
         app:layout_anchor="@+id/recycler_view"
-        app:layout_anchorGravity="fill"/>
+        app:layout_anchorGravity="fill"
+        android:visibility="gone"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

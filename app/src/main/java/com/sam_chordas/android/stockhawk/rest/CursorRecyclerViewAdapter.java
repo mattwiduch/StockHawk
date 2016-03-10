@@ -14,7 +14,7 @@ import android.view.View;
  */
 public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
     private static final String LOG_TAG = CursorRecyclerViewAdapter.class.getSimpleName();
-    private Cursor mCursor;
+    protected Cursor mCursor;
     private boolean dataIsValid;
     private int rowIdColumn;
     private DataSetObserver mDataSetObserver;
@@ -30,7 +30,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
         }
 
         mEmptyView = emptyView;
-        mEmptyView.setVisibility(View.GONE);
+        //mEmptyView.setVisibility(View.GONE);
     }
 
     public Cursor getCursor() {
@@ -68,7 +68,6 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
         if (!mCursor.moveToPosition(position)) {
             throw new IllegalStateException("Could not move Cursor to position: " + position);
         }
-
         onBindViewHolder(viewHolder, mCursor);
     }
 

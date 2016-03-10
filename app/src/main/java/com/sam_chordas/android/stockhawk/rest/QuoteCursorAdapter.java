@@ -26,7 +26,7 @@ import com.sam_chordas.android.stockhawk.touch_helper.ItemTouchHelperViewHolder;
  */
 public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAdapter.ViewHolder>
         implements ItemTouchHelperAdapter {
-
+    private static final int FOOTER_VIEW = 1;
     private static Context mContext;
     private static Typeface robotoLight;
     //private final OnStartDragListener mDragListener;
@@ -41,10 +41,24 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         robotoLight = Typeface.createFromAsset(mContext.getAssets(), "fonts/Roboto-Light.ttf");
+
+        if (viewType == FOOTER_VIEW) {
+            View footerView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.list_item_footer, parent, false);
+            FooterViewHolder vh = new FooterViewHolder(footerView);
+            return vh;
+        }
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_quote, parent, false);
-        ViewHolder vh = new ViewHolder(itemView);
+        ListItemViewHolder vh = new ListItemViewHolder(itemView);
         return vh;
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder viewHolder, int position) {
+        if (viewHolder instanceof ListItemViewHolder) {
+            super.onBindViewHolder(viewHolder, position);
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -88,7 +102,23 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
 
     @Override
     public int getItemCount() {
-        return super.getItemCount();
+        if (mCursor == null) {
+            return 0;
+        }
+        if (mCursor.getCount() == 0) {
+            // Nothing to show
+            return 1;
+        }
+        // Add extra view to show the footer view
+        return mCursor.getCount() + 1;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == mCursor.getCount()) {
+            return FOOTER_VIEW;
+        }
+        return super.getItemViewType(position);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder
@@ -100,7 +130,6 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
         public ViewHolder(View itemView) {
             super(itemView);
             symbol = (TextView) itemView.findViewById(R.id.stock_symbol);
-            symbol.setTypeface(robotoLight);
             bidPrice = (TextView) itemView.findViewById(R.id.bid_price);
             change = (TextView) itemView.findViewById(R.id.change);
         }
@@ -118,6 +147,21 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
         @Override
         public void onClick(View v) {
 
+        }
+    }
+
+    // Footer
+    public class FooterViewHolder extends ViewHolder {
+        public FooterViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
+    // List Item
+    public class ListItemViewHolder extends ViewHolder {
+        public ListItemViewHolder(View itemView) {
+            super(itemView);
+            symbol.setTypeface(robotoLight);
         }
     }
 }
