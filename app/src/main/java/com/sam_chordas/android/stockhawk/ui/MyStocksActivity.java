@@ -198,6 +198,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                 if (Utils.isNetworkAvailable(mContext)) {
                     new MaterialDialog.Builder(mContext).title(R.string.symbol_search)
                             .content(R.string.content_test)
+                            .positiveText(R.string.button_search)
                             .inputType(InputType.TYPE_CLASS_TEXT)
                             .inputRange(1, 5, Color.RED)
                             .input(R.string.input_hint, R.string.input_prefill, new MaterialDialog.InputCallback() {
