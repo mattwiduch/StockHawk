@@ -10,15 +10,15 @@
     <string name="input_hint">FB</string>
     <string name="input_prefill"></string>
     <string name="widget_title">Today\'s Market</string>
-    <string name="network_toast">Couldn\'t connect with the server.\nYour data might be out of date.</string>
-    <string name="empty_stocks_list">Uh-oh! You are not tracking any stocks.</string>
     <string name="pref_hawk_status_key">hawk_status</string>
 
     <!-- Strings used to display various errors -->
-    <string name="error_utf8_not_supported">Sorry! Stock Hawk uses UTF8 encoding which is not supported by your device.</string>
-    <string name="error_data_corrupted">There was an error while adding data to the database.</string>
-    <string name="error_symbol_invalid">Please enter valid stock symbol.</string>
-    <string name="error_server_down">The server is not responding. Please try again later.</string>
-    <string name="error_server_invalid">The server has returned invalid data. Please update your Stock Hawk.</string>
-    <string name="error_symbol_saved">This stock is already saved.</string>
+    <string name="empty_stocks_list">Uh-oh! You are not tracking any stocks.</string>
+    <string name="error_no_network">Stock Hawk requires internet connection to fetch stocks.\nYour data might be out of date.</string>
+    <string name="error_utf8_not_supported">Stock Hawk requires UTF-8 encoding to work. Unfortunately, your device does not support it.</string>
+    <string name="error_corrupted_data">Something went wrong while adding data. Please try again.</string>
+    <string name="error_server_down">Stock server is not responding. Please try again later.</string>
+    <string name="error_server_invalid">Stock server provided invalid data. Please try again.</string>
+    <string name="error_symbol_saved">Your Hawk is already tracking</string>
+    <string name="error_symbol_invalid">Your Hawk does not recognise this symbol.</string>
 </resources>

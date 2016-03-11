@@ -172,7 +172,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 
     private void networkSnackbar() {
         Snackbar snackbar = Snackbar
-                .make(findViewById(R.id.layout_my_stocks), getString(R.string.network_toast),
+                .make(findViewById(R.id.layout_my_stocks), getString(R.string.error_no_network),
                         Snackbar.LENGTH_INDEFINITE)
                 .setAction("RETRY", new View.OnClickListener() {
                     @Override
@@ -209,7 +209,8 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                                             new String[]{QuoteColumns.SYMBOL}, QuoteColumns.SYMBOL + "= ?",
                                             new String[]{input.toString().toUpperCase()}, null);
                                     if (c.getCount() != 0) {
-                                        showSnackbar(getString(R.string.error_symbol_saved));
+                                        showSnackbar(getString(R.string.error_symbol_saved)
+                                                + " "  + input.toString().toUpperCase() + ".");
                                         return;
                                     } else {
                                         // Add the stock to DB
@@ -278,7 +279,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                     Utils.resetHawkStatus(this);
                     break;
                 case StockTaskService.HAWK_STATUS_DATA_CORRUPTED:
-                    showSnackbar(getString(R.string.error_data_corrupted));
+                    showSnackbar(getString(R.string.error_corrupted_data));
                     Utils.resetHawkStatus(this);
                     break;
                 case StockTaskService.HAWK_STATUS_UTF8_NOT_SUPPORTED:
