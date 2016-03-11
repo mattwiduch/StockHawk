@@ -196,12 +196,12 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
             @Override
             public void onClick(View v) {
                 if (Utils.isNetworkAvailable(mContext)) {
-                    new MaterialDialog.Builder(mContext).title(R.string.symbol_search)
-                            .content(R.string.content_test)
-                            .positiveText(R.string.button_search)
+                    new MaterialDialog.Builder(mContext).title(R.string.dialog_track_title)
+                            .content(R.string.dialog_track_message)
+                            .positiveText(R.string.dialog_track_button_positive)
                             .inputType(InputType.TYPE_CLASS_TEXT)
                             .inputRange(1, 5, Color.RED)
-                            .input(R.string.input_hint, R.string.input_prefill, new MaterialDialog.InputCallback() {
+                            .input(R.string.dialog_track_input_hint, R.string.dialog_track_input_prefill, new MaterialDialog.InputCallback() {
                                 @Override
                                 public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
                                     // On FAB click, receive user input. Make sure the stock doesn't already exist

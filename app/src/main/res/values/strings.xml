@@ -1,18 +1,12 @@
 <resources>
+    <!-- Application Name -->
     <string name="app_name">Stock Hawk</string>
 
-    <string name="action_example">Example action</string>
-
+    <!-- Labels for toolbar buttons -->
     <string name="action_settings">Settings</string>
     <string name="action_change_units">Change Units</string>
-    <string name="symbol_search">Add Stock</string>
-    <string name="content_test">Please enter stock symbol</string>
-    <string name="input_hint">FB</string>
-    <string name="input_prefill"></string>
-    <string name="widget_title">Today\'s Market</string>
-    <string name="pref_hawk_status_key">hawk_status</string>
 
-    <!-- Strings used to display various errors -->
+    <!-- Error Messages -->
     <string name="empty_stocks_list">Uh-oh! You are not tracking any stocks.</string>
     <string name="error_no_network">Stock Hawk requires internet connection to fetch stocks.\nYour data might be out of date.</string>
     <string name="error_utf8_not_supported">Stock Hawk requires UTF-8 encoding to work. Unfortunately, your device does not support it.</string>
@@ -21,5 +15,17 @@
     <string name="error_server_invalid">Stock server provided invalid data. Please try again.</string>
     <string name="error_symbol_saved">Your Hawk is already tracking</string>
     <string name="error_symbol_invalid">Your Hawk does not recognise this symbol.</string>
-    <string name="button_search">Search</string>
+
+    <!-- Strings related to Track Stock Dialog -->
+    <string name="dialog_track_title">Track Stock</string>
+    <string name="dialog_track_message">Please enter stock symbol</string>
+    <string name="dialog_track_input_hint">FB</string>
+    <string name="dialog_track_input_prefill"></string>
+    <string name="dialog_track_button_positive">Track</string>
+
+    <!-- Strings related to widget -->
+    <string name="widget_title">Today\'s Market</string>
+
+    <!-- Key name for storing application status in SharedPreferences -->
+    <string name="pref_hawk_status_key">hawk_status</string>
 </resources>
