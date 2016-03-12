@@ -46,6 +46,8 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
             View footerView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.list_item_footer, parent, false);
             FooterViewHolder vh = new FooterViewHolder(footerView);
+            // Prevent footer from being selected
+            vh.itemView.setEnabled(false);
             return vh;
         }
         View itemView = LayoutInflater.from(parent.getContext())
