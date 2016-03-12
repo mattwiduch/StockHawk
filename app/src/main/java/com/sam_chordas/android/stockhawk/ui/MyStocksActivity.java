@@ -195,41 +195,48 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Utils.isNetworkAvailable(mContext)) {
-                    new MaterialDialog.Builder(mContext).title(R.string.dialog_track_title)
-                            .content(R.string.dialog_track_message)
-                            .positiveText(R.string.dialog_track_button_positive)
-                            .inputType(InputType.TYPE_CLASS_TEXT)
-                            .inputRange(1, 5, Color.RED)
-                            .input(R.string.dialog_track_input_hint, R.string.dialog_track_input_prefill, new MaterialDialog.InputCallback() {
-                                @Override
-                                public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                                    // On FAB click, receive user input. Make sure the stock doesn't already exist
-                                    // in the DB and proceed accordingly
-                                    Cursor c = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
-                                            new String[]{QuoteColumns.SYMBOL}, QuoteColumns.SYMBOL + "= ?",
-                                            new String[]{input.toString().toUpperCase()}, null);
-                                    if (c.getCount() != 0) {
-                                        showSnackbar(getString(R.string.error_symbol_saved)
-                                                + " "  + input.toString().toUpperCase() + ".");
-                                        return;
-                                    } else {
-                                        // Add the stock to DB
-                                        mServiceIntent.putExtra("tag", "add");
-                                        mServiceIntent.putExtra("symbol", input.toString().toUpperCase());
-                                        startService(mServiceIntent);
-                                    }
-                                    c.close();
-                                }
-                            })
-                            .show();
-                } else {
-                    networkSnackbar();
-                }
-
+                createTrackDialog(R.string.dialog_track_title, R.string.dialog_track_message);
             }
         });
     }
+
+    private void createTrackDialog(int title, int message) {
+        if (Utils.isNetworkAvailable(mContext)) {
+            new MaterialDialog.Builder(mContext).title(title)
+                    .content(message)
+                    .positiveText(R.string.dialog_track_button_positive)
+                    .inputType(InputType.TYPE_CLASS_TEXT)
+                    .inputRange(1, 5, Color.RED)
+                    .input(R.string.dialog_track_input_hint, R.string.dialog_track_input_prefill, new MaterialDialog.InputCallback() {
+                        @Override
+                        public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                            // On FAB click, receive user input. Make sure the stock doesn't already exist
+                            // in the DB and proceed accordingly
+                            Cursor c = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
+                                    new String[]{QuoteColumns.SYMBOL}, QuoteColumns.SYMBOL + "= ?",
+                                    new String[]{input.toString().toUpperCase()}, null);
+                            if (c.getCount() != 0) {
+                                showSnackbar(getString(R.string.error_symbol_saved)
+                                        + " " + input.toString().toUpperCase() + ".");
+                                return;
+                            } else {
+                                // Add the stock to DB
+                                mServiceIntent.putExtra("tag", "add");
+                                mServiceIntent.putExtra("symbol", input.toString().toUpperCase());
+                                // Check if stock was found
+                                // If it wasn't
+                                // - Reopen the dialog with hint
+                                startService(mServiceIntent);
+                            }
+                            c.close();
+                        }
+                    })
+                    .show();
+        } else {
+            networkSnackbar();
+        }
+    }
+
 
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
@@ -276,7 +283,8 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                     Utils.resetHawkStatus(this);
                     break;
                 case StockTaskService.HAWK_STATUS_SYMBOL_INVALID:
-                    showSnackbar(getString(R.string.error_symbol_invalid));
+                    //showSnackbar(getString(R.string.error_symbol_invalid));
+                    createTrackDialog(R.string.dialog_track_error, R.string.dialog_track_error_message);
                     Utils.resetHawkStatus(this);
                     break;
                 case StockTaskService.HAWK_STATUS_DATA_CORRUPTED:

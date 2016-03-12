@@ -28,4 +28,6 @@
 
     <!-- Key name for storing application status in SharedPreferences -->
     <string name="pref_hawk_status_key">hawk_status</string>
+    <string name="dialog_track_error">Symbol not recognised</string>
+    <string name="dialog_track_error_message">Please enter valid stock symbol</string>
 </resources>
