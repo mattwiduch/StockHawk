@@ -8,8 +8,8 @@
 
     <!-- Error Messages -->
     <string name="empty_stocks_list">Uh-oh! You are not tracking any stocks.</string>
-    <string name="error_no_network">Stock Hawk requires internet connection to fetch stocks.\nYour data might be out of date.</string>
-    <string name="error_utf8_not_supported">Stock Hawk requires UTF-8 encoding to work. Unfortunately, your device does not support it.</string>
+    <string name="error_no_network">Stock Hawk requires internet connection.\n Your data might be out of date.</string>
+    <string name="error_utf8_not_supported">Stock Hawk requires UTF-8 encoding which is not supported by your device.</string>
     <string name="error_corrupted_data">Something went wrong while adding data. Please try again.</string>
     <string name="error_server_down">Stock server is not responding. Please try again later.</string>
     <string name="error_server_invalid">Stock server provided invalid data. Please try again.</string>
