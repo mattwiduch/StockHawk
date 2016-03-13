@@ -1,10 +1,14 @@
 package com.sam_chordas.android.stockhawk.ui;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,27 +27,26 @@ import com.sam_chordas.android.stockhawk.service.StockIntentService;
 /**
  * Created by frano on 12/03/2016.
  */
-public class TrackStockDialog {
-    private Context mContext;
-    private AlertDialog.Builder mBuilder;
+public class TrackStockDialog extends DialogFragment {
     private AlertDialog mDialog;
     private EditText mEditText;
     private TextInputLayout mTextInputLayout;
     private ProgressBar mProgressBar;
+    private Button mPositiveButton;
 
-    public TrackStockDialog(Context context) {
-        super();
-        mContext = context;
-        mBuilder = new AlertDialog.Builder(context, R.style.DialogTrackStock);
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.DialogTrackStock);
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
         View dialogView = inflater.inflate(R.layout.dialog_track_stock, null);
         mEditText = (EditText) dialogView.findViewById(R.id.dialog_track_stock_input);
         mTextInputLayout = (TextInputLayout) dialogView.findViewById(R.id.dialog_track_stock_input_layout);
         mProgressBar = (ProgressBar) dialogView.findViewById(R.id.dialog_track_stock_progress);
-        mBuilder.setView(dialogView)
+        builder.setView(dialogView)
                 .setTitle(R.string.dialog_track_title)
                 .setPositiveButton(R.string.dialog_track_button_positive, null);
-        mDialog = mBuilder.create();
+        mDialog = builder.create();
         mDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog) {
@@ -54,64 +57,64 @@ public class TrackStockDialog {
                         mProgressBar.setVisibility(View.VISIBLE);
                         String input = getText().toUpperCase();
                         // User clicked OK button
-                        Cursor c = mContext.getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
+                        Cursor c = getActivity().getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
                                 new String[]{QuoteColumns.SYMBOL}, QuoteColumns.SYMBOL + "= ?",
                                 new String[]{input}, null);
                         if (c.getCount() != 0) {
-                            setErrorMessage(mContext.getString(R.string.error_symbol_saved));
+                            setErrorMessage(getActivity().getString(R.string.error_symbol_saved));
                             return;
                         } else {
                             // Create intent
-                            Intent serviceIntent = new Intent(mContext, StockIntentService.class);
+                            Intent serviceIntent = new Intent(getActivity(), StockIntentService.class);
                             // Add the stock to DB
                             serviceIntent.putExtra("tag", "add");
                             serviceIntent.putExtra("symbol", input);
-                            mContext.startService(serviceIntent);
+                            getActivity().startService(serviceIntent);
                         }
                         c.close();
                     }
                 });
             }
         });
+        return mDialog;
     }
 
-    public void show() {
-        mDialog.show();
-        mDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-        mEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mTextInputLayout.setError(null);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                int count = s.length();
-                if (count > 0 && count < 8) {
-                    mDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
-                } else {
-                    mDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+    @Override
+    public void onStart() {
+        super.onStart();
+        AlertDialog dialog = (AlertDialog) getDialog();
+        if (dialog != null) {
+            mPositiveButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
+            if (!(mEditText.getText().length() > 0)) mPositiveButton.setEnabled(false);
+            mEditText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 }
-            }
-        });
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    mTextInputLayout.setError(null);
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (s.length() > 0 && s.length() < 8) {
+                        mPositiveButton.setEnabled(true);
+                    } else {
+                        mPositiveButton.setEnabled(false);
+                    }
+                }
+            });
+        }
     }
 
-    public String getText() {
+    private String getText() {
         return mEditText.getText().toString();
     }
 
     public void setErrorMessage(String errorMessage) {
         mProgressBar.setVisibility(View.GONE);
-        mTextInputLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.shake));
+        mTextInputLayout.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shake));
         mTextInputLayout.setError(errorMessage);
-    }
-
-    public void dismiss() {
-        mDialog.dismiss();
     }
 }

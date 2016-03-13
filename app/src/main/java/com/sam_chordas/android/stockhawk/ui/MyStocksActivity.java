@@ -100,8 +100,8 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
             @Override
             public void onClick(View v) {
                 if (Utils.isNetworkAvailable(mContext)) {
-                    mDialog = new TrackStockDialog(mContext);
-                    mDialog.show();
+                    mDialog = new TrackStockDialog();
+                    mDialog.show(getSupportFragmentManager(), "TRACK_STOCK_DIALOG");
                 } else {
                     networkSnackbar();
                 }
@@ -236,7 +236,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
             if (status != StockTaskService.HAWK_STATUS_UNKNOWN &&
                     status != StockTaskService.HAWK_STATUS_SYMBOL_INVALID && mDialog != null) {
                 mDialog.dismiss();
-                mDialog = null;
             }
             switch (status) {
                 case StockTaskService.HAWK_STATUS_UNKNOWN:
@@ -268,7 +267,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                     break;
                 default:
                     break;
-
             }
         }
     }
@@ -280,5 +278,11 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         Snackbar snackbar = Snackbar
                 .make(findViewById(R.id.layout_my_stocks), message, Snackbar.LENGTH_LONG);
         snackbar.show();
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mDialog = (TrackStockDialog) getSupportFragmentManager().findFragmentByTag("TRACK_STOCK_DIALOG");
     }
 }
