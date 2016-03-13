@@ -10,6 +10,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -106,6 +107,7 @@ public class TrackStockDialog {
 
     public void setErrorMessage(String errorMessage) {
         mProgressBar.setVisibility(View.GONE);
+        mTextInputLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.shake));
         mTextInputLayout.setError(errorMessage);
     }
 
