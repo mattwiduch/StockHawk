@@ -1,28 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.TextInputLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/dialog_track_stock_input_layout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingBottom="24dp"
     android:paddingLeft="24dp"
     android:paddingRight="24dp"
-    android:paddingTop="20dp"
-    app:errorEnabled="true"
-    app:counterEnabled="true"
-    app:counterMaxLength="7"
-    app:hintEnabled="false"
-    >
+    android:paddingTop="20dp">
 
-    <android.support.v7.widget.AppCompatEditText
-        android:id="@+id/dialog_track_stock_input"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/dialog_track_stock_input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/dialog_track_input_hint"
-        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.-"
-        android:maxLength="7"
-        android:singleLine="true"/>
+        app:counterEnabled="true"
+        app:counterMaxLength="7"
+        app:errorEnabled="true"
+        app:hintEnabled="false">
 
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/dialog_track_stock_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.-"
+            android:hint="@string/dialog_track_input_hint"
+            android:maxLength="7"
+            android:singleLine="true"/>
 
-</android.support.design.widget.TextInputLayout>
+    </android.support.design.widget.TextInputLayout>
+
+    <ProgressBar
+        android:id="@+id/dialog_track_stock_progress"
+        style="?android:attr/progressBarStyleSmallInverse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/dialog_track_stock_input_layout"
+        android:layout_alignRight="@id/dialog_track_stock_input_layout"
+        android:layout_alignTop="@id/dialog_track_stock_input_layout"
+        android:paddingEnd="4dp"
+        android:paddingRight="4dp"
+        android:paddingTop="16dp"
+        android:visibility="gone"/>
+
+</RelativeLayout>
+

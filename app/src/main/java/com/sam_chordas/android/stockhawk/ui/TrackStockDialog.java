@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
@@ -27,6 +28,7 @@ public class TrackStockDialog {
     private AlertDialog mDialog;
     private EditText mEditText;
     private TextInputLayout mTextInputLayout;
+    private ProgressBar mProgressBar;
 
     public TrackStockDialog(Context context) {
         super();
@@ -36,6 +38,7 @@ public class TrackStockDialog {
         View dialogView = inflater.inflate(R.layout.dialog_track_stock, null);
         mEditText = (EditText) dialogView.findViewById(R.id.dialog_track_stock_input);
         mTextInputLayout = (TextInputLayout) dialogView.findViewById(R.id.dialog_track_stock_input_layout);
+        mProgressBar = (ProgressBar) dialogView.findViewById(R.id.dialog_track_stock_progress);
         mBuilder.setView(dialogView)
                 .setTitle(R.string.dialog_track_title)
                 .setPositiveButton(R.string.dialog_track_button_positive, null);
@@ -47,13 +50,14 @@ public class TrackStockDialog {
                 positiveButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        mProgressBar.setVisibility(View.VISIBLE);
                         String input = getText().toUpperCase();
                         // User clicked OK button
                         Cursor c = mContext.getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
                                 new String[]{QuoteColumns.SYMBOL}, QuoteColumns.SYMBOL + "= ?",
                                 new String[]{input}, null);
                         if (c.getCount() != 0) {
-                            mTextInputLayout.setError(mContext.getString(R.string.error_symbol_saved));
+                            setErrorMessage(mContext.getString(R.string.error_symbol_saved));
                             return;
                         } else {
                             // Create intent
@@ -101,6 +105,7 @@ public class TrackStockDialog {
     }
 
     public void setErrorMessage(String errorMessage) {
+        mProgressBar.setVisibility(View.GONE);
         mTextInputLayout.setError(errorMessage);
     }
 
