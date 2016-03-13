@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/widget_title"
-            android:textSize="@dimen/md_title_textsize"/>
+            android:textSize="12sp"/>
     </FrameLayout>
 
     <FrameLayout

@@ -13,21 +13,23 @@
     <string name="error_corrupted_data">Something went wrong while adding data. Please try again.</string>
     <string name="error_server_down">Stock server is not responding. Please try again later.</string>
     <string name="error_server_invalid">Stock server provided invalid data. Please try again.</string>
-    <string name="error_symbol_saved">Your Hawk is already tracking</string>
-    <string name="error_symbol_invalid">Your Hawk does not recognise this symbol.</string>
+    <string name="error_symbol_saved">You are already tracking it. </string>
+    <string name="error_symbol_invalid">Symbol not found.</string>
 
     <!-- Strings related to Track Stock Dialog -->
-    <string name="dialog_track_title">Track Stock</string>
+    <string name="dialog_track_title">Enter stock symbol</string>
     <string name="dialog_track_message">Please enter stock symbol</string>
     <string name="dialog_track_input_hint">FB</string>
     <string name="dialog_track_input_prefill"></string>
     <string name="dialog_track_button_positive">Track</string>
+    <string name="dialog_track_error">Symbol not recognised</string>
+    <string name="dialog_track_error_message">Please enter valid stock symbol</string>
+    <string name="dialog_track_error_input_length">Stock symbol should be between 1 and 7 characters.</string>
 
     <!-- Strings related to widget -->
     <string name="widget_title">Today\'s Market</string>
 
     <!-- Key name for storing application status in SharedPreferences -->
     <string name="pref_hawk_status_key">hawk_status</string>
-    <string name="dialog_track_error">Symbol not recognised</string>
-    <string name="dialog_track_error_message">Please enter valid stock symbol</string>
+
 </resources>

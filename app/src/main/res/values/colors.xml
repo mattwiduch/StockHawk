@@ -6,4 +6,9 @@
     <color name="material_green_700">#00C853</color>
     <color name="material_green_A400">#00E676</color>
     <color name="material_orange_A700">#FF6D00</color>
+
+    <!-- Text Colors -->
+    <color name="text_light_primary">#FFFFFF</color>
+    <color name="text_light_secondary">#B3FFFFFF</color>
+    <color name="text_light_hint">#80FFFFFF</color>
 </resources>

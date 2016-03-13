@@ -7,10 +7,8 @@ import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -19,12 +17,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.stetho.Stetho;
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.PeriodicTask;
@@ -56,6 +52,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     private QuoteCursorAdapter mCursorAdapter;
     private Context mContext;
     private Cursor mCursor;
+    private TrackStockDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +94,19 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mCursorAdapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
-        prepareFab(recyclerView);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Utils.isNetworkAvailable(mContext)) {
+                    mDialog = new TrackStockDialog(mContext);
+                    mDialog.show();
+                } else {
+                    networkSnackbar();
+                }
+            }
+        });
 
         mTitle = getTitle();
         if (Utils.isNetworkAvailable(this)) {
@@ -189,55 +198,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         snackbar.show();
     }
 
-    private void prepareFab(RecyclerView recyclerView) {
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        //fab.attachToRecyclerView(recyclerView);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createTrackDialog(R.string.dialog_track_title, R.string.dialog_track_message);
-            }
-        });
-    }
-
-    private void createTrackDialog(int title, int message) {
-        if (Utils.isNetworkAvailable(mContext)) {
-            new MaterialDialog.Builder(mContext).title(title)
-                    .content(message)
-                    .positiveText(R.string.dialog_track_button_positive)
-                    .inputType(InputType.TYPE_CLASS_TEXT)
-                    .inputRange(1, 5, Color.RED)
-                    .input(R.string.dialog_track_input_hint, R.string.dialog_track_input_prefill, new MaterialDialog.InputCallback() {
-                        @Override
-                        public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                            // On FAB click, receive user input. Make sure the stock doesn't already exist
-                            // in the DB and proceed accordingly
-                            Cursor c = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
-                                    new String[]{QuoteColumns.SYMBOL}, QuoteColumns.SYMBOL + "= ?",
-                                    new String[]{input.toString().toUpperCase()}, null);
-                            if (c.getCount() != 0) {
-                                showSnackbar(getString(R.string.error_symbol_saved)
-                                        + " " + input.toString().toUpperCase() + ".");
-                                return;
-                            } else {
-                                // Add the stock to DB
-                                mServiceIntent.putExtra("tag", "add");
-                                mServiceIntent.putExtra("symbol", input.toString().toUpperCase());
-                                // Check if stock was found
-                                // If it wasn't
-                                // - Reopen the dialog with hint
-                                startService(mServiceIntent);
-                            }
-                            c.close();
-                        }
-                    })
-                    .show();
-        } else {
-            networkSnackbar();
-        }
-    }
-
-
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -273,7 +233,14 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.pref_hawk_status_key))) {
             @StockTaskService.HawkStatus int status = Utils.getHawkStatus(this);
+            if (status != StockTaskService.HAWK_STATUS_UNKNOWN &&
+                    status != StockTaskService.HAWK_STATUS_SYMBOL_INVALID && mDialog != null) {
+                mDialog.dismiss();
+                mDialog = null;
+            }
             switch (status) {
+                case StockTaskService.HAWK_STATUS_UNKNOWN:
+                    break;
                 case StockTaskService.HAWK_STATUS_SERVER_DOWN:
                     showSnackbar(getString(R.string.error_server_down));
                     Utils.resetHawkStatus(this);
@@ -283,8 +250,9 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                     Utils.resetHawkStatus(this);
                     break;
                 case StockTaskService.HAWK_STATUS_SYMBOL_INVALID:
-                    //showSnackbar(getString(R.string.error_symbol_invalid));
-                    createTrackDialog(R.string.dialog_track_error, R.string.dialog_track_error_message);
+                    if (mDialog != null) {
+                        mDialog.setErrorMessage(getString(R.string.error_symbol_invalid));
+                    }
                     Utils.resetHawkStatus(this);
                     break;
                 case StockTaskService.HAWK_STATUS_DATA_CORRUPTED:
@@ -295,8 +263,12 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                     showSnackbar(getString(R.string.error_utf8_not_supported));
                     Utils.resetHawkStatus(this);
                     break;
+                case StockTaskService.HAWK_STATUS_OK:
+                    Utils.resetHawkStatus(this);
+                    break;
                 default:
                     break;
+
             }
         }
     }

@@ -1,12 +1,18 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme"
-           parent="Theme.AppCompat">
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/material_blue_500</item>
         <item name="colorPrimaryDark">@color/material_blue_700</item>
         <item name="colorAccent">@color/material_orange_A700</item>
         <!-- Customize your theme here. -->
+    </style>
+
+    <!-- Track Stock dialog theme -->
+    <style name="DialogTrackStock" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="colorAccent">@color/material_orange_A700</item>
+        <item name="android:textColor">@color/text_light_primary</item>
+        <item name="android:textColorPrimary">@color/text_light_secondary</item>
     </style>
 
     <style name="PercentChangeTextStyle">
