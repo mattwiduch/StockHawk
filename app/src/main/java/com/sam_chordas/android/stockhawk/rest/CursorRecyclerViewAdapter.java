@@ -92,7 +92,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
             dataIsValid = false;
             notifyDataSetChanged();
         }
-        mEmptyView.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
+        mEmptyView.setVisibility(getItemCount() == 1 ? View.VISIBLE : View.GONE);
 
         return oldCursor;
     }
