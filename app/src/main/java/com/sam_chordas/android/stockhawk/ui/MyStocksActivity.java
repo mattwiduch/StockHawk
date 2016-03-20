@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -49,13 +50,14 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     private Context mContext;
     private Cursor mCursor;
     private TrackStockDialog mDialog;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        Stetho.initializeWithDefaults(this);
         setContentView(R.layout.activity_my_stocks);
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mContext = this;
 
@@ -92,6 +94,20 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mCursorAdapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mServiceIntent.putExtra("tag", "init");
+                if (Utils.isNetworkAvailable(mContext)) {
+                    startService(mServiceIntent);
+
+                } else {
+                    networkSnackbar();
+                }
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -161,12 +177,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         }
 
         if (id == R.id.action_change_units) {
-            mServiceIntent.putExtra("tag", "init");
-            if (Utils.isNetworkAvailable(this)) {
-                startService(mServiceIntent);
-            } else {
-                networkSnackbar();
-            }
             // this is for changing stock changes from percent value to dollar value
             Utils.showPercent = !Utils.showPercent;
             this.getContentResolver().notifyChange(QuoteProvider.Quotes.CONTENT_URI, null);
@@ -176,6 +186,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     }
 
     private void networkSnackbar() {
+        mSwipeRefreshLayout.setRefreshing(false);
         Snackbar snackbar = Snackbar
                 .make(findViewById(R.id.layout_my_stocks), getString(R.string.error_no_network),
                         Snackbar.LENGTH_INDEFINITE)
@@ -209,6 +220,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mCursorAdapter.swapCursor(data);
         mCursor = data;
+        mSwipeRefreshLayout.setEnabled(mCursorAdapter.getItemCount() > 1);
     }
 
     @Override
@@ -255,6 +267,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                 default:
                     break;
             }
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
