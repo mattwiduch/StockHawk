@@ -1,99 +1,79 @@
 package com.sam_chordas.android.stockhawk.rest;
 
-import android.content.ContentProviderOperation;
-import android.util.Log;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 
-import com.sam_chordas.android.stockhawk.data.QuoteColumns;
-import com.sam_chordas.android.stockhawk.data.QuoteProvider;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
+import com.sam_chordas.android.stockhawk.R;
+import com.sam_chordas.android.stockhawk.service.StockTaskService;
 
 /**
  * Created by sam_chordas on 10/8/15.
  */
 public class Utils {
+    public static boolean showPercent = true;
 
-  private static String LOG_TAG = Utils.class.getSimpleName();
+    public static String truncateBidPrice(String bidPrice) {
+        bidPrice = String.format("%.2f", Float.parseFloat(bidPrice));
+        return bidPrice;
+    }
 
-  public static boolean showPercent = true;
-
-  public static ArrayList quoteJsonToContentVals(String JSON){
-    ArrayList<ContentProviderOperation> batchOperations = new ArrayList<>();
-    JSONObject jsonObject = null;
-    JSONArray resultsArray = null;
-    Log.i(LOG_TAG, "GET FB: " +JSON);
-    try{
-      jsonObject = new JSONObject(JSON);
-      if (jsonObject != null && jsonObject.length() != 0){
-        jsonObject = jsonObject.getJSONObject("query");
-        int count = Integer.parseInt(jsonObject.getString("count"));
-        if (count == 1){
-          jsonObject = jsonObject.getJSONObject("results")
-              .getJSONObject("quote");
-          batchOperations.add(buildBatchOperation(jsonObject));
-        } else{
-          resultsArray = jsonObject.getJSONObject("results").getJSONArray("quote");
-
-          if (resultsArray != null && resultsArray.length() != 0){
-            for (int i = 0; i < resultsArray.length(); i++){
-              jsonObject = resultsArray.getJSONObject(i);
-              batchOperations.add(buildBatchOperation(jsonObject));
-            }
-          }
+    public static String truncateChange(String change, boolean isPercentChange) {
+        String weight = change.substring(0, 1);
+        String ampersand = "";
+        if (isPercentChange) {
+            ampersand = change.substring(change.length() - 1, change.length());
+            change = change.substring(0, change.length() - 1);
         }
-      }
-    } catch (JSONException e){
-      Log.e(LOG_TAG, "String to JSON failed: " + e);
+        change = change.substring(1, change.length());
+        double round = (double) Math.round(Double.parseDouble(change) * 100) / 100;
+        change = String.format("%.2f", round);
+        StringBuffer changeBuffer = new StringBuffer(change);
+        changeBuffer.insert(0, weight);
+        changeBuffer.append(ampersand);
+        change = changeBuffer.toString();
+        return change;
     }
-    return batchOperations;
-  }
 
-  public static String truncateBidPrice(String bidPrice){
-    bidPrice = String.format("%.2f", Float.parseFloat(bidPrice));
-    return bidPrice;
-  }
+    /**
+     * Returns true if the network is available or about to become available.
+     *
+     * @param c Context used to get the ConnectivityManager
+     * @return true if the network is available
+     */
+     public static boolean isNetworkAvailable(Context c) {
+        ConnectivityManager cm =
+                (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-  public static String truncateChange(String change, boolean isPercentChange){
-    String weight = change.substring(0,1);
-    String ampersand = "";
-    if (isPercentChange){
-      ampersand = change.substring(change.length() - 1, change.length());
-      change = change.substring(0, change.length() - 1);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
     }
-    change = change.substring(1, change.length());
-    double round = (double) Math.round(Double.parseDouble(change) * 100) / 100;
-    change = String.format("%.2f", round);
-    StringBuffer changeBuffer = new StringBuffer(change);
-    changeBuffer.insert(0, weight);
-    changeBuffer.append(ampersand);
-    change = changeBuffer.toString();
-    return change;
-  }
 
-  public static ContentProviderOperation buildBatchOperation(JSONObject jsonObject){
-    ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(
-        QuoteProvider.Quotes.CONTENT_URI);
-    try {
-      String change = jsonObject.getString("Change");
-      builder.withValue(QuoteColumns.SYMBOL, jsonObject.getString("symbol"));
-      builder.withValue(QuoteColumns.BIDPRICE, truncateBidPrice(jsonObject.getString("Bid")));
-      builder.withValue(QuoteColumns.PERCENT_CHANGE, truncateChange(
-          jsonObject.getString("ChangeinPercent"), true));
-      builder.withValue(QuoteColumns.CHANGE, truncateChange(change, false));
-      builder.withValue(QuoteColumns.ISCURRENT, 1);
-      if (change.charAt(0) == '-'){
-        builder.withValue(QuoteColumns.ISUP, 0);
-      }else{
-        builder.withValue(QuoteColumns.ISUP, 1);
-      }
-
-    } catch (JSONException e){
-      e.printStackTrace();
+    /**
+     * Retrieves application status from shared preference.
+     *
+     * @param context Context used to get the SharedPreferences
+     * @return hawk status integer type
+     */
+    @SuppressWarnings("ResourceType")
+    static public @StockTaskService.HawkStatus
+    int getHawkStatus(Context context){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getInt(context.getString(R.string.pref_hawk_status_key), StockTaskService.HAWK_STATUS_UNKNOWN);
     }
-    return builder.build();
-  }
+
+    /**
+     * Resets stock hawk status to HAWK_STATUS_UNKNOWN
+     *
+     * @param context Context used to get the SharedPreferences
+     */
+    static public void resetHawkStatus(Context context){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor spe = sp.edit();
+        spe.putInt(context.getString(R.string.pref_hawk_status_key), StockTaskService.HAWK_STATUS_UNKNOWN);
+        spe.apply();
+    }
 }
