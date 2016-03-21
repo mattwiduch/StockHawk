@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -14,8 +13,16 @@ import com.sam_chordas.android.stockhawk.R;
 
 public class LineGraphFragment extends Fragment {
 
+    private String mStockSymbol;
+
     public LineGraphFragment() {
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mStockSymbol = getActivity().getIntent().getStringExtra(getString(R.string.line_graph_extra));
     }
 
     @Nullable
@@ -27,19 +34,20 @@ public class LineGraphFragment extends Fragment {
         if (toolbar != null) {
             activity.setSupportActionBar(toolbar);
             activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            activity.getSupportActionBar().setTitle(mStockSymbol);
         }
         return rootView;
     }
 
-    /** Override up button behaviour so it navigates back to parent activity without recreating it. */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                getActivity().onBackPressed();
-                return (true);
-        }
-
-        return (super.onOptionsItemSelected(item));
-    }
+//    /** Override up button behaviour so it navigates back to parent activity without recreating it. */
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case android.R.id.home:
+//                getActivity().onBackPressed();
+//                return (true);
+//        }
+//
+//        return (super.onOptionsItemSelected(item));
+//    }
 }
