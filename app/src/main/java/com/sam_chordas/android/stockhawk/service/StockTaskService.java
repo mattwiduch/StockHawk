@@ -42,6 +42,23 @@ import java.util.ArrayList;
 public class StockTaskService extends GcmTaskService {
     private static String LOG_TAG = StockTaskService.class.getSimpleName();
 
+    private OkHttpClient client = new OkHttpClient();
+    private static Context mContext;
+    private StringBuilder mStoredSymbols = new StringBuilder();
+    private boolean isUpdate;
+
+    // Names of the JSON objects that need to be extracted
+    private static final String YFQ_COUNT = "count";
+    private static final String YFQ_QUERY = "query";
+    private static final String YFQ_QUOTE = "quote";
+    private static final String YFQ_RESULTS = "results";
+    private static final String YFQ_STOCK_SYMBOL = "symbol";
+    private static final String YFQ_STOCK_NAME = "Name";
+    private static final String YFQ_STOCK_BID = "Bid";
+    private static final String YFQ_STOCK_CHANGE = "Change";
+    private static final String YFQ_STOCK_CHANGE_IN_PERCENT = "ChangeinPercent";
+    private static final String YFQ_DATA_NOT_AVAILABLE = "null";
+    
     // Define Error States
     public static final int HAWK_STATUS_OK = 100;
     public static final int HAWK_STATUS_SERVER_DOWN = 101;
@@ -56,13 +73,7 @@ public class StockTaskService extends GcmTaskService {
     public @interface HawkStatus {
     }
 
-    private OkHttpClient client = new OkHttpClient();
-    private static Context mContext;
-    private StringBuilder mStoredSymbols = new StringBuilder();
-    private boolean isUpdate;
-
-    public StockTaskService() {
-    }
+    public StockTaskService() {}
 
     public StockTaskService(Context context) {
         mContext = context;
@@ -87,16 +98,17 @@ public class StockTaskService extends GcmTaskService {
         try {
             // Base URL for the Yahoo query
             urlStringBuilder.append("https://query.yahooapis.com/v1/public/yql?q=");
-            urlStringBuilder.append(URLEncoder.encode("select * from yahoo.finance.quotes where symbol "
-                    + "in (", "UTF-8"));
+            urlStringBuilder.append(URLEncoder.encode("SELECT * FROM yahoo.finance.quotes WHERE symbol "
+                    + "IN (", "UTF-8"));
         } catch (UnsupportedEncodingException e) {
             setHawkStatus(HAWK_STATUS_UTF8_NOT_SUPPORTED);
             e.printStackTrace();
         }
-        if (params.getTag().equals("init") || params.getTag().equals("periodic")) {
+        if (params.getTag().equals(StockIntentService.TASK_TYPE_INIT)
+                || params.getTag().equals(StockIntentService.TASK_TYPE_PERIODIC)) {
             isUpdate = true;
             initQueryCursor = mContext.getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
-                    new String[]{"Distinct " + QuoteColumns.SYMBOL}, null,
+                    new String[]{"DISTINCT " + QuoteColumns.SYMBOL}, null,
                     null, null);
             if (initQueryCursor.getCount() == 0 || initQueryCursor == null) {
                 // Init task. Populates DB with quotes for the symbols seen below
@@ -112,7 +124,7 @@ public class StockTaskService extends GcmTaskService {
                 initQueryCursor.moveToFirst();
                 for (int i = 0; i < initQueryCursor.getCount(); i++) {
                     mStoredSymbols.append("\"" +
-                            initQueryCursor.getString(initQueryCursor.getColumnIndex("symbol")) + "\",");
+                            initQueryCursor.getString(initQueryCursor.getColumnIndex(YFQ_STOCK_SYMBOL)) + "\",");
                     initQueryCursor.moveToNext();
                 }
                 mStoredSymbols.replace(mStoredSymbols.length() - 1, mStoredSymbols.length(), ")");
@@ -123,10 +135,10 @@ public class StockTaskService extends GcmTaskService {
                     e.printStackTrace();
                 }
             }
-        } else if (params.getTag().equals("add")) {
+        } else if (params.getTag().equals(StockIntentService.TASK_TYPE_ADD)) {
             isUpdate = false;
             // get symbol from params.getExtra and build query
-            String stockInput = params.getExtras().getString("symbol");
+            String stockInput = params.getExtras().getString(YFQ_STOCK_SYMBOL);
             try {
                 urlStringBuilder.append(URLEncoder.encode("\"" + stockInput + "\")", "UTF-8"));
             } catch (UnsupportedEncodingException e) {
@@ -178,23 +190,23 @@ public class StockTaskService extends GcmTaskService {
         try {
             jsonObject = new JSONObject(JSON);
             if (jsonObject != null && jsonObject.length() != 0) {
-                jsonObject = jsonObject.getJSONObject("query");
-                int count = Integer.parseInt(jsonObject.getString("count"));
+                jsonObject = jsonObject.getJSONObject(YFQ_QUERY);
+                int count = Integer.parseInt(jsonObject.getString(YFQ_COUNT));
                 if (count == 1) {
-                    jsonObject = jsonObject.getJSONObject("results")
-                            .getJSONObject("quote");
-                    if (!jsonObject.getString("Name").equals("null")) {
+                    jsonObject = jsonObject.getJSONObject(YFQ_RESULTS)
+                            .getJSONObject(YFQ_QUOTE);
+                    if (!jsonObject.getString(YFQ_STOCK_NAME).equals(YFQ_DATA_NOT_AVAILABLE)) {
                         batchOperations.add(buildBatchOperation(jsonObject));
                     } else {
                         setHawkStatus(HAWK_STATUS_SYMBOL_INVALID);
                     }
                 } else {
-                    resultsArray = jsonObject.getJSONObject("results").getJSONArray("quote");
+                    resultsArray = jsonObject.getJSONObject(YFQ_RESULTS).getJSONArray(YFQ_QUOTE);
 
                     if (resultsArray != null && resultsArray.length() != 0) {
                         for (int i = 0; i < resultsArray.length(); i++) {
                             jsonObject = resultsArray.getJSONObject(i);
-                            if (!jsonObject.getString("Name").equals("null")) {
+                            if (!jsonObject.getString(YFQ_STOCK_NAME).equals(YFQ_DATA_NOT_AVAILABLE)) {
                                 batchOperations.add(buildBatchOperation(jsonObject));
                             } else {
                                 setHawkStatus(HAWK_STATUS_SYMBOL_INVALID);
@@ -216,15 +228,18 @@ public class StockTaskService extends GcmTaskService {
         ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(
                 QuoteProvider.Quotes.CONTENT_URI);
         try {
-            builder.withValue(QuoteColumns.SYMBOL, jsonObject.getString("symbol"));
-            String bidPrice = jsonObject.getString("Bid").equals("null")
-                    ?  "N/A" : Utils.truncateBidPrice(jsonObject.getString("Bid"));
+            builder.withValue(QuoteColumns.SYMBOL, jsonObject.getString(YFQ_STOCK_SYMBOL));
+            String bidPrice = jsonObject.getString(YFQ_STOCK_BID).equals(YFQ_DATA_NOT_AVAILABLE)
+                    ? mContext.getString(R.string.data_not_available)
+                    : Utils.truncateBidPrice(jsonObject.getString(YFQ_STOCK_BID));
             builder.withValue(QuoteColumns.BIDPRICE, bidPrice);
-            String change = jsonObject.getString("Change").equals("null")
-                    ? "N/A" : Utils.truncateChange(jsonObject.getString("Change"), false);
+            String change = jsonObject.getString(YFQ_STOCK_CHANGE).equals(YFQ_DATA_NOT_AVAILABLE)
+                    ? mContext.getString(R.string.data_not_available)
+                    : Utils.truncateChange(jsonObject.getString(YFQ_STOCK_CHANGE), false);
             builder.withValue(QuoteColumns.CHANGE, change);
-            String percentChange = jsonObject.getString("ChangeinPercent").equals("null")
-                    ? "N/A" : Utils.truncateChange(jsonObject.getString("ChangeinPercent"), true);
+            String percentChange = jsonObject.getString(YFQ_STOCK_CHANGE_IN_PERCENT).equals(YFQ_DATA_NOT_AVAILABLE)
+                    ? mContext.getString(R.string.data_not_available)
+                    : Utils.truncateChange(jsonObject.getString(YFQ_STOCK_CHANGE_IN_PERCENT), true);
             builder.withValue(QuoteColumns.PERCENT_CHANGE, percentChange);
             builder.withValue(QuoteColumns.ISCURRENT, 1);
             if (change.charAt(0) == '-') {

@@ -25,7 +25,7 @@ import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 import com.sam_chordas.android.stockhawk.service.StockIntentService;
 
 /**
- * Created by frano on 12/03/2016.
+ * Creates Dialog that allows user to track new stock symbol.
  */
 public class TrackStockDialog extends DialogFragment {
     private AlertDialog mDialog;
@@ -67,8 +67,8 @@ public class TrackStockDialog extends DialogFragment {
                             // Create intent
                             Intent serviceIntent = new Intent(getActivity(), StockIntentService.class);
                             // Add the stock to DB
-                            serviceIntent.putExtra("tag", "add");
-                            serviceIntent.putExtra("symbol", input);
+                            serviceIntent.putExtra(StockIntentService.TASK_TAG, StockIntentService.TASK_TYPE_ADD);
+                            serviceIntent.putExtra(StockIntentService.TASK_SYMBOL, input);
                             getActivity().startService(serviceIntent);
                         }
                         c.close();

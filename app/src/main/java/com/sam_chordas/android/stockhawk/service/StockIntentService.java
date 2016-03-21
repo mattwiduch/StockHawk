@@ -3,7 +3,6 @@ package com.sam_chordas.android.stockhawk.service;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.gms.gcm.TaskParams;
 
@@ -11,6 +10,11 @@ import com.google.android.gms.gcm.TaskParams;
  * Created by sam_chordas on 10/1/15.
  */
 public class StockIntentService extends IntentService {
+    public static final String TASK_TAG = "task_type";
+    public static final String TASK_SYMBOL = "symbol";
+    public static final String TASK_TYPE_ADD = "add";
+    public static final String TASK_TYPE_INIT = "init";
+    public static final String TASK_TYPE_PERIODIC = "periodic";
 
     public StockIntentService() {
         super(StockIntentService.class.getName());
@@ -22,14 +26,14 @@ public class StockIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.d(StockIntentService.class.getSimpleName(), "Stock Intent Service");
+        //Log.d(StockIntentService.class.getSimpleName(), "Stock Intent Service");
         StockTaskService stockTaskService = new StockTaskService(this);
         Bundle args = new Bundle();
-        if (intent.getStringExtra("tag").equals("add")) {
-            args.putString("symbol", intent.getStringExtra("symbol"));
+        if (intent.getStringExtra(TASK_TAG).equals(TASK_TYPE_ADD)) {
+            args.putString(TASK_SYMBOL, intent.getStringExtra(TASK_SYMBOL));
         }
         // We can call OnRunTask from the intent service to force it to run immediately instead of
         // scheduling a task.
-        stockTaskService.onRunTask(new TaskParams(intent.getStringExtra("tag"), args));
+        stockTaskService.onRunTask(new TaskParams(intent.getStringExtra(TASK_TAG), args));
     }
 }

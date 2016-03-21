@@ -45,6 +45,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
      */
 
     private static final int CURSOR_LOADER_ID = 0;
+    private static final String DIALOG_TAG = "track_stock_dialog";
 
     private Intent mServiceIntent;
     private ItemTouchHelper mItemTouchHelper;
@@ -69,7 +70,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 
         if (savedInstanceState == null) {
             // Run the initialize task service so that some stocks appear upon an empty database
-            mServiceIntent.putExtra("tag", "init");
+            mServiceIntent.putExtra(StockIntentService.TASK_TAG, StockIntentService.TASK_TYPE_INIT);
             if (Utils.isNetworkAvailable(this)) {
                 startService(mServiceIntent);
             } else {
@@ -106,10 +107,9 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mServiceIntent.putExtra("tag", "init");
+                mServiceIntent.putExtra(StockIntentService.TASK_TAG, StockIntentService.TASK_TYPE_INIT);
                 if (Utils.isNetworkAvailable(mContext)) {
                     startService(mServiceIntent);
-
                 } else {
                     networkSnackbar();
                 }
@@ -122,7 +122,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
             public void onClick(View v) {
                 if (Utils.isNetworkAvailable(mContext)) {
                     mDialog = new TrackStockDialog();
-                    mDialog.show(getSupportFragmentManager(), "TRACK_STOCK_DIALOG");
+                    mDialog.show(getSupportFragmentManager(), DIALOG_TAG);
                 } else {
                     networkSnackbar();
                 }
@@ -132,7 +132,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         if (Utils.isNetworkAvailable(this)) {
             long period = 3600L;
             long flex = 10L;
-            String periodicTag = "periodic";
 
             // create a periodic task to pull stocks once every hour after the app has been opened. This
             // is so Widget data stays up to date.
@@ -140,7 +139,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                     .setService(StockTaskService.class)
                     .setPeriod(period)
                     .setFlex(flex)
-                    .setTag(periodicTag)
+                    .setTag(StockIntentService.TASK_TYPE_PERIODIC)
                     .setRequiredNetwork(Task.NETWORK_STATE_CONNECTED)
                     .setRequiresCharging(false)
                     .build();
@@ -200,7 +199,8 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                 .setAction("RETRY", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        mServiceIntent.putExtra("tag", "init");
+                        mServiceIntent.putExtra(StockIntentService.TASK_TAG,
+                                StockIntentService.TASK_TYPE_INIT);
                         if (Utils.isNetworkAvailable(mContext)) {
                             startService(mServiceIntent);
                         } else {
@@ -290,6 +290,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mDialog = (TrackStockDialog) getSupportFragmentManager().findFragmentByTag("TRACK_STOCK_DIALOG");
+        mDialog = (TrackStockDialog) getSupportFragmentManager().findFragmentByTag(DIALOG_TAG);
     }
 }

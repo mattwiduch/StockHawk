@@ -32,7 +32,10 @@
     <string name="pref_hawk_status_key">hawk_status</string>
 
     <!-- Strings related to Stock Value Graph -->
-    <string name="title_activity_line_graph">Stock Value Graph</string>
+    <string name="line_graph_activity_title">Stock Value Graph</string>
     <string name="line_graph_extra">stock_symbol</string>
+
+    <!-- Strings related to database -->
+    <string name="data_not_available">N/A</string>
 
 </resources>
