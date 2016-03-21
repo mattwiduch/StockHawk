@@ -32,4 +32,8 @@
     <!-- Key name for storing application status in SharedPreferences -->
     <string name="pref_hawk_status_key">hawk_status</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_line_graph">Stock Value Graph</string>
+
 </resources>
