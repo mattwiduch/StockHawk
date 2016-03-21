@@ -216,19 +216,22 @@ public class StockTaskService extends GcmTaskService {
         ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(
                 QuoteProvider.Quotes.CONTENT_URI);
         try {
-            String change = jsonObject.getString("Change");
             builder.withValue(QuoteColumns.SYMBOL, jsonObject.getString("symbol"));
-            builder.withValue(QuoteColumns.BIDPRICE, Utils.truncateBidPrice(jsonObject.getString("Bid")));
-            builder.withValue(QuoteColumns.PERCENT_CHANGE, Utils.truncateChange(
-                    jsonObject.getString("ChangeinPercent"), true));
-            builder.withValue(QuoteColumns.CHANGE, Utils.truncateChange(change, false));
+            String bidPrice = jsonObject.getString("Bid").equals("null")
+                    ?  "N/A" : Utils.truncateBidPrice(jsonObject.getString("Bid"));
+            builder.withValue(QuoteColumns.BIDPRICE, bidPrice);
+            String change = jsonObject.getString("Change").equals("null")
+                    ? "N/A" : Utils.truncateChange(jsonObject.getString("Change"), false);
+            builder.withValue(QuoteColumns.CHANGE, change);
+            String percentChange = jsonObject.getString("ChangeinPercent").equals("null")
+                    ? "N/A" : Utils.truncateChange(jsonObject.getString("ChangeinPercent"), true);
+            builder.withValue(QuoteColumns.PERCENT_CHANGE, percentChange);
             builder.withValue(QuoteColumns.ISCURRENT, 1);
             if (change.charAt(0) == '-') {
                 builder.withValue(QuoteColumns.ISUP, 0);
             } else {
                 builder.withValue(QuoteColumns.ISUP, 1);
             }
-
 
         } catch (JSONException e) {
             setHawkStatus(HAWK_STATUS_SERVER_INVALID);
