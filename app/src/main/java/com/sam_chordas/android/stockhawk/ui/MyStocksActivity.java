@@ -239,40 +239,33 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.pref_hawk_status_key))) {
             @StockTaskService.HawkStatus int status = Utils.getHawkStatus(this);
-            if (status != StockTaskService.HAWK_STATUS_UNKNOWN &&
-                    status != StockTaskService.HAWK_STATUS_SYMBOL_INVALID && mDialog != null) {
-                mDialog.dismiss();
-            }
             switch (status) {
                 case StockTaskService.HAWK_STATUS_UNKNOWN:
                     break;
                 case StockTaskService.HAWK_STATUS_SERVER_DOWN:
                     showSnackbar(getString(R.string.error_server_down));
-                    Utils.resetHawkStatus(this);
                     break;
                 case StockTaskService.HAWK_STATUS_SERVER_INVALID:
                     showSnackbar(getString(R.string.error_server_invalid));
-                    Utils.resetHawkStatus(this);
                     break;
                 case StockTaskService.HAWK_STATUS_SYMBOL_INVALID:
-                    if (mDialog != null) {
-                        mDialog.setErrorMessage(getString(R.string.error_symbol_invalid));
-                    }
-                    Utils.resetHawkStatus(this);
+                    if (mDialog != null) mDialog.setErrorMessage(getString(R.string.error_symbol_invalid));
                     break;
                 case StockTaskService.HAWK_STATUS_DATA_CORRUPTED:
                     showSnackbar(getString(R.string.error_corrupted_data));
-                    Utils.resetHawkStatus(this);
                     break;
                 case StockTaskService.HAWK_STATUS_UTF8_NOT_SUPPORTED:
                     showSnackbar(getString(R.string.error_utf8_not_supported));
-                    Utils.resetHawkStatus(this);
                     break;
                 case StockTaskService.HAWK_STATUS_OK:
-                    Utils.resetHawkStatus(this);
                     break;
                 default:
                     break;
+            }
+
+            if (status != StockTaskService.HAWK_STATUS_UNKNOWN
+                    && status != StockTaskService.HAWK_STATUS_SYMBOL_INVALID) {
+                if (mDialog != null) mDialog.dismiss();
             }
             mSwipeRefreshLayout.setRefreshing(false);
         }

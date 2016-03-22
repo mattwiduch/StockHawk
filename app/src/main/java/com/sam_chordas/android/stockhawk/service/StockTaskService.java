@@ -134,6 +134,7 @@ public class StockTaskService extends GcmTaskService {
                     setHawkStatus(HAWK_STATUS_UTF8_NOT_SUPPORTED);
                     e.printStackTrace();
                 }
+                initQueryCursor.close();
             }
         } else if (params.getTag().equals(StockIntentService.TASK_TYPE_ADD)) {
             isUpdate = false;
@@ -264,6 +265,6 @@ public class StockTaskService extends GcmTaskService {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor spe = sp.edit();
         spe.putInt(mContext.getString(R.string.pref_hawk_status_key), hawkStatus);
-        spe.commit();
+        spe.apply();
     }
 }

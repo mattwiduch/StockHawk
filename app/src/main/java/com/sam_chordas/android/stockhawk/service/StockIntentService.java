@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.gms.gcm.TaskParams;
+import com.sam_chordas.android.stockhawk.rest.Utils;
 
 /**
  * Created by sam_chordas on 10/1/15.
@@ -27,6 +28,7 @@ public class StockIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         //Log.d(StockIntentService.class.getSimpleName(), "Stock Intent Service");
+        Utils.resetHawkStatus(getApplication());
         StockTaskService stockTaskService = new StockTaskService(this);
         Bundle args = new Bundle();
         if (intent.getStringExtra(TASK_TAG).equals(TASK_TYPE_ADD)) {
