@@ -117,4 +117,10 @@ public class TrackStockDialog extends DialogFragment {
         mTextInputLayout.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shake));
         mTextInputLayout.setError(errorMessage);
     }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        mTextInputLayout.setError(null);
+    }
 }
