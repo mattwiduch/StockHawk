@@ -38,4 +38,19 @@
     <!-- Strings related to database -->
     <string name="data_not_available">N/A</string>
 
+    <!-- Strings related to Line Graph Fragment -->
+    <string name="graph_label">PRICE HISTORY</string>
+    <string name="stock_price_label">Current Price</string>
+    <string name="stock_change_label">Change</string>
+    <string name="stock_prev_close_label">Prev Close</string>
+    <string name="stock_open_label">Open</string>
+    <string name="stock_low_label">Low</string>
+    <string name="stock_52wk_low_label">52wk Low</string>
+    <string name="stock_mkt_capital_label">Mkt Cap</string>
+    <string name="stock_1y_target_label">1y Target</string>
+    <string name="stock_high_label">High</string>
+    <string name="stock_52wk_high_label">52wk High</string>
+    <string name="stock_volume_label">Volume</string>
+    <string name="stock_avg_volume_label">Avg Vol (3m)</string>
+
 </resources>
