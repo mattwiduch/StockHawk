@@ -102,7 +102,7 @@ public class LineGraphFragment extends Fragment {
     }
 
     private void buildLineGraph() {
-        int color = getResources().getColor(R.color.material_green_high);
+        int color = getResources().getColor(R.color.green_high);
         // Line chart customization
         LineSet dataset = new LineSet(new String[] {"", "", "", "", "", "", "", "", ""}, mValues[1]);
         dataset.setThickness(Tools.fromDpToPx(2.5f));
