@@ -143,17 +143,18 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
 
     @Override
     public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), QuoteProvider.Quotes.CONTENT_URI,
+        return new CursorLoader(getActivity(),
+                QuoteProvider.Quotes.CONTENT_URI,
                 new String[]{QuoteColumns._ID, QuoteColumns.SYMBOL, QuoteColumns.NAME, QuoteColumns.BID_PRICE,
                         QuoteColumns.PERCENT_CHANGE, QuoteColumns.CHANGE, QuoteColumns.IS_UP},
-                QuoteColumns.SYMBOL + " = ? AND " + QuoteColumns.IS_CURRENT + " = ?",
-                new String[]{mStockSymbol, "1"},
-                null);
+                QuoteColumns.SYMBOL + " = ?",
+                new String[]{mStockSymbol},
+                QuoteColumns.CREATED + " ASC");
     }
 
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
-        if (data.moveToFirst()) {
+        if (data.moveToLast()) {
             AppCompatActivity activity = (AppCompatActivity)getActivity();
             if (mToolbar != null) {
                 activity.setSupportActionBar(mToolbar);
