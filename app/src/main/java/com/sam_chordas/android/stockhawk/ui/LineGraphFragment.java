@@ -1,17 +1,21 @@
 package com.sam_chordas.android.stockhawk.ui;
 
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.db.chart.Tools;
 import com.db.chart.model.LineSet;
@@ -21,13 +25,16 @@ import com.db.chart.view.LineChartView;
 import com.db.chart.view.animation.Animation;
 import com.db.chart.view.animation.easing.CircEase;
 import com.sam_chordas.android.stockhawk.R;
+import com.sam_chordas.android.stockhawk.data.QuoteColumns;
+import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 
 import java.text.DecimalFormat;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class LineGraphFragment extends Fragment {
+public class LineGraphFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+    private static final int CURSOR_LOADER_ID = 0;
     private LineChartView mChart;
     private String mStockSymbol;
 
@@ -69,6 +76,13 @@ public class LineGraphFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mStockSymbol = getActivity().getIntent().getStringExtra(getString(R.string.line_graph_extra));
+        getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
     }
 
     @Nullable
@@ -85,19 +99,6 @@ public class LineGraphFragment extends Fragment {
         }
         mChart = (LineChartView) rootView.findViewById(R.id.line_chart);
         buildLineGraph();
-        stockSymbolTextview.setText(mStockSymbol);
-        stockPriceTextview.setText(getResources().getString(R.string.data_not_available));
-        stockChangeTextview.setText(getResources().getString(R.string.data_not_available));
-        stockPrevCloseTextview.setText(getResources().getString(R.string.data_not_available));
-        stockOpenTextview.setText(getResources().getString(R.string.data_not_available));
-        stockLowTextview.setText(getResources().getString(R.string.data_not_available));
-        stockHighTextview.setText(getResources().getString(R.string.data_not_available));
-        stock52wkLowTextview.setText(getResources().getString(R.string.data_not_available));
-        stock52wkHighTextview.setText(getResources().getString(R.string.data_not_available));
-        stockMktCapitalTextview.setText(getResources().getString(R.string.data_not_available));
-        stockVolumeTextview.setText(getResources().getString(R.string.data_not_available));
-        stock1yTargetTextview.setText(getResources().getString(R.string.data_not_available));
-        stockAvgVolumeTextview.setText(getResources().getString(R.string.data_not_available));
         return rootView;
     }
 
@@ -146,6 +147,38 @@ public class LineGraphFragment extends Fragment {
         anim.setStartPoint(0.0f, 1.0f);
         mChart.show(anim);
     }
+
+    @Override
+    public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Toast.makeText(getActivity(), "OnCreate", Toast.LENGTH_SHORT).show();
+        return new CursorLoader(getActivity(), QuoteProvider.Quotes.CONTENT_URI,
+                new String[]{QuoteColumns._ID, QuoteColumns.SYMBOL, QuoteColumns.BIDPRICE,
+                        QuoteColumns.PERCENT_CHANGE, QuoteColumns.CHANGE, QuoteColumns.ISUP},
+                QuoteColumns.SYMBOL + " = ? AND " + QuoteColumns.ISCURRENT + " = ?",
+                new String[]{mStockSymbol, "1"},
+                null);
+    }
+
+    @Override
+    public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
+        data.moveToFirst();
+        stockSymbolTextview.setText(mStockSymbol);
+        stockPriceTextview.setText(data.getString(data.getColumnIndex(QuoteColumns.BIDPRICE)));
+        stockChangeTextview.setText(data.getString(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
+        stockPrevCloseTextview.setText(getResources().getString(R.string.data_not_available));
+        stockOpenTextview.setText(getResources().getString(R.string.data_not_available));
+        stockLowTextview.setText(getResources().getString(R.string.data_not_available));
+        stockHighTextview.setText(getResources().getString(R.string.data_not_available));
+        stock52wkLowTextview.setText(getResources().getString(R.string.data_not_available));
+        stock52wkHighTextview.setText(getResources().getString(R.string.data_not_available));
+        stockMktCapitalTextview.setText(getResources().getString(R.string.data_not_available));
+        stockVolumeTextview.setText(getResources().getString(R.string.data_not_available));
+        stock1yTargetTextview.setText(getResources().getString(R.string.data_not_available));
+        stockAvgVolumeTextview.setText(getResources().getString(R.string.data_not_available));
+    }
+
+    @Override
+    public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {}
 
 //    /** Override up button behaviour so it navigates back to parent activity without recreating it. */
 //    @Override
