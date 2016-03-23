@@ -208,7 +208,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                         }
                     }
                 })
-                .setActionTextColor(ContextCompat.getColor(mContext, R.color.material_green_A400));
+                .setActionTextColor(ContextCompat.getColor(mContext, R.color.green_action));
         snackbar.show();
     }
 

@@ -36,7 +36,7 @@
         android:layout_marginStart="@dimen/content_spacing"
         android:layout_marginTop="@dimen/content_spacing"
         android:layout_weight="1"
-        card_view:cardBackgroundColor="@color/material_grey_card"
+        card_view:cardBackgroundColor="@color/grey_card"
         card_view:cardCornerRadius="@dimen/cardview_corner_radius"
         card_view:cardElevation="@dimen/cardview_default_elevation"
         card_view:cardUseCompatPadding="true">
@@ -163,7 +163,7 @@
         android:layout_marginRight="@dimen/content_spacing"
         android:layout_marginStart="@dimen/content_spacing"
         android:layout_marginTop="0dp"
-        card_view:cardBackgroundColor="@color/material_grey_card"
+        card_view:cardBackgroundColor="@color/grey_card"
         card_view:cardCornerRadius="@dimen/cardview_corner_radius"
         card_view:cardElevation="@dimen/cardview_default_elevation"
         card_view:cardUseCompatPadding="true">

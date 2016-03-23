@@ -1,28 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App Theme Colors -->
-    <!--<color name="material_grey_background">#212121</color>-->
-    <!--<color name="material_grey_dark">#282828</color>-->
-    <!--<color name="material_grey_primary">#303030</color>-->
-    <color name="material_grey_background">#242424</color>
-    <color name="material_grey_dark">#181818</color>
-    <color name="material_grey_primary">#242424</color>
-    <color name="material_grey_card">#303030</color>
-
-    <color name="material_green_high">#4BC98A</color>
-    <color name="material_red_low">#F06976</color>
-
-    <color name="material_blue_grey_900_">#263238</color>
-    <color name="material_blue_grey_800_">#37474F</color>
-    <color name="material_blue_grey_700_">#607D8B</color>
-
-    <color name="material_blue_700">#1976D2</color>
-    <color name="material_blue_500">#2196F3</color>
-    <color name="material_red_700">#D50000</color>
-    <color name="material_green_700">#00C853</color>
-    <color name="material_green_A400">#00E676</color>
-    <color name="material_orange_A700">#FF6D00</color>
+    <color name="grey_background">#242424</color>
+    <color name="grey_dark">#181818</color>
+    <color name="grey_primary">#242424</color>
+    <color name="grey_card">#303030</color>
+    <color name="orange_accent">#FF9100</color>
+    <color name="green_action">#00E676</color>
     <color name="divider_light">#1FFFFFFF</color>
+
+    <!-- Stock Tendency Colors -->
+    <color name="green_high">#4BC98A</color>
+    <color name="red_low">#F06976</color>
 
     <!-- Text Colors -->
     <color name="text_light_primary">#FFFFFF</color>
