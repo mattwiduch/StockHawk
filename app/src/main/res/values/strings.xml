@@ -52,5 +52,6 @@
     <string name="stock_52wk_high_label">52wk High</string>
     <string name="stock_volume_label">Volume</string>
     <string name="stock_avg_volume_label">Avg Vol (3m)</string>
+    <string name="stock_symbol_label">Symbol</string>
 
 </resources>
