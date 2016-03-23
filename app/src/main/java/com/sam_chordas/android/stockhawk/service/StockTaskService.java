@@ -162,9 +162,9 @@ public class StockTaskService extends GcmTaskService {
                 result = GcmNetworkManager.RESULT_SUCCESS;
                 try {
                     ContentValues contentValues = new ContentValues();
-                    // update ISCURRENT to 0 (false) so new data is current
+                    // update IS_CURRENT to 0 (false) so new data is current
                     if (isUpdate) {
-                        contentValues.put(QuoteColumns.ISCURRENT, 0);
+                        contentValues.put(QuoteColumns.IS_CURRENT, 0);
                         mContext.getContentResolver().update(QuoteProvider.Quotes.CONTENT_URI, contentValues,
                                 null, null);
                     }
@@ -234,7 +234,7 @@ public class StockTaskService extends GcmTaskService {
             String bidPrice = jsonObject.getString(YFQ_STOCK_BID).equals(YFQ_DATA_NOT_AVAILABLE)
                     ? mContext.getString(R.string.data_not_available)
                     : Utils.truncateBidPrice(jsonObject.getString(YFQ_STOCK_BID));
-            builder.withValue(QuoteColumns.BIDPRICE, bidPrice);
+            builder.withValue(QuoteColumns.BID_PRICE, bidPrice);
             String change = jsonObject.getString(YFQ_STOCK_CHANGE).equals(YFQ_DATA_NOT_AVAILABLE)
                     ? mContext.getString(R.string.data_not_available)
                     : Utils.truncateChange(jsonObject.getString(YFQ_STOCK_CHANGE), false);
@@ -243,11 +243,11 @@ public class StockTaskService extends GcmTaskService {
                     ? mContext.getString(R.string.data_not_available)
                     : Utils.truncateChange(jsonObject.getString(YFQ_STOCK_CHANGE_IN_PERCENT), true);
             builder.withValue(QuoteColumns.PERCENT_CHANGE, percentChange);
-            builder.withValue(QuoteColumns.ISCURRENT, 1);
+            builder.withValue(QuoteColumns.IS_CURRENT, 1);
             if (change.charAt(0) == '-') {
-                builder.withValue(QuoteColumns.ISUP, 0);
+                builder.withValue(QuoteColumns.IS_UP, 0);
             } else {
-                builder.withValue(QuoteColumns.ISUP, 1);
+                builder.withValue(QuoteColumns.IS_UP, 1);
             }
 
         } catch (JSONException e) {

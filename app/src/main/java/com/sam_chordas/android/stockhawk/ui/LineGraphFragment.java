@@ -144,9 +144,9 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(getActivity(), QuoteProvider.Quotes.CONTENT_URI,
-                new String[]{QuoteColumns._ID, QuoteColumns.SYMBOL, QuoteColumns.NAME, QuoteColumns.BIDPRICE,
-                        QuoteColumns.PERCENT_CHANGE, QuoteColumns.CHANGE, QuoteColumns.ISUP},
-                QuoteColumns.SYMBOL + " = ? AND " + QuoteColumns.ISCURRENT + " = ?",
+                new String[]{QuoteColumns._ID, QuoteColumns.SYMBOL, QuoteColumns.NAME, QuoteColumns.BID_PRICE,
+                        QuoteColumns.PERCENT_CHANGE, QuoteColumns.CHANGE, QuoteColumns.IS_UP},
+                QuoteColumns.SYMBOL + " = ? AND " + QuoteColumns.IS_CURRENT + " = ?",
                 new String[]{mStockSymbol, "1"},
                 null);
     }
@@ -162,7 +162,7 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
             }
 
             stockSymbolTextview.setText(mStockSymbol);
-            stockPriceTextview.setText(data.getString(data.getColumnIndex(QuoteColumns.BIDPRICE)));
+            stockPriceTextview.setText(data.getString(data.getColumnIndex(QuoteColumns.BID_PRICE)));
             stockChangeTextview.setText(data.getString(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
             stockPrevCloseTextview.setText(getResources().getString(R.string.data_not_available));
             stockOpenTextview.setText(getResources().getString(R.string.data_not_available));
@@ -175,7 +175,7 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
             stock1yTargetTextview.setText(getResources().getString(R.string.data_not_available));
             stockAvgVolumeTextview.setText(getResources().getString(R.string.data_not_available));
 
-            buildLineGraph(data.getInt(data.getColumnIndex(QuoteColumns.ISUP)));
+            buildLineGraph(data.getInt(data.getColumnIndex(QuoteColumns.IS_UP)));
         }
     }
 

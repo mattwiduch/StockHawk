@@ -32,16 +32,17 @@ public class QuoteColumns {
 
     @DataType(DataType.Type.TEXT)
     @NotNull
-    public static final String BIDPRICE = "bid_price";
+    public static final String BID_PRICE = "bid_price";
 
     @DataType(DataType.Type.TEXT)
+    @NotNull
     public static final String CREATED = "created";
 
     @DataType(DataType.Type.INTEGER)
     @NotNull
-    public static final String ISUP = "is_up";
+    public static final String IS_UP = "is_up";
 
     @DataType(DataType.Type.INTEGER)
     @NotNull
-    public static final String ISCURRENT = "is_current";
+    public static final String IS_CURRENT = "is_current";
 }
