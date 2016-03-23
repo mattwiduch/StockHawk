@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.db.chart.Tools;
 import com.db.chart.model.LineSet;
@@ -35,6 +34,7 @@ import butterknife.ButterKnife;
 
 public class LineGraphFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
     private static final int CURSOR_LOADER_ID = 0;
+    private Toolbar mToolbar;
     private LineChartView mChart;
     private String mStockSymbol;
 
@@ -90,20 +90,13 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_line_graph, container, false);
         ButterKnife.bind(this, rootView);
-        AppCompatActivity activity = (AppCompatActivity)getActivity();
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            activity.setSupportActionBar(toolbar);
-            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            activity.getSupportActionBar().setTitle("Apple Inc.");
-        }
+        mToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         mChart = (LineChartView) rootView.findViewById(R.id.line_chart);
-        buildLineGraph();
         return rootView;
     }
 
-    private void buildLineGraph() {
-        int color = getResources().getColor(R.color.green_high);
+    private void buildLineGraph(int isUp) {
+        int color = isUp == 1 ? getResources().getColor(R.color.green_high) : getResources().getColor(R.color.red_low);
         // Line chart customization
         LineSet dataset = new LineSet(new String[] {"", "", "", "", "", "", "", "", ""}, mValues[1]);
         dataset.setThickness(Tools.fromDpToPx(2.5f));
@@ -150,9 +143,8 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
 
     @Override
     public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Toast.makeText(getActivity(), "OnCreate", Toast.LENGTH_SHORT).show();
         return new CursorLoader(getActivity(), QuoteProvider.Quotes.CONTENT_URI,
-                new String[]{QuoteColumns._ID, QuoteColumns.SYMBOL, QuoteColumns.BIDPRICE,
+                new String[]{QuoteColumns._ID, QuoteColumns.SYMBOL, QuoteColumns.NAME, QuoteColumns.BIDPRICE,
                         QuoteColumns.PERCENT_CHANGE, QuoteColumns.CHANGE, QuoteColumns.ISUP},
                 QuoteColumns.SYMBOL + " = ? AND " + QuoteColumns.ISCURRENT + " = ?",
                 new String[]{mStockSymbol, "1"},
@@ -161,20 +153,30 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
 
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
-        data.moveToFirst();
-        stockSymbolTextview.setText(mStockSymbol);
-        stockPriceTextview.setText(data.getString(data.getColumnIndex(QuoteColumns.BIDPRICE)));
-        stockChangeTextview.setText(data.getString(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
-        stockPrevCloseTextview.setText(getResources().getString(R.string.data_not_available));
-        stockOpenTextview.setText(getResources().getString(R.string.data_not_available));
-        stockLowTextview.setText(getResources().getString(R.string.data_not_available));
-        stockHighTextview.setText(getResources().getString(R.string.data_not_available));
-        stock52wkLowTextview.setText(getResources().getString(R.string.data_not_available));
-        stock52wkHighTextview.setText(getResources().getString(R.string.data_not_available));
-        stockMktCapitalTextview.setText(getResources().getString(R.string.data_not_available));
-        stockVolumeTextview.setText(getResources().getString(R.string.data_not_available));
-        stock1yTargetTextview.setText(getResources().getString(R.string.data_not_available));
-        stockAvgVolumeTextview.setText(getResources().getString(R.string.data_not_available));
+        if (data.moveToFirst()) {
+            AppCompatActivity activity = (AppCompatActivity)getActivity();
+            if (mToolbar != null) {
+                activity.setSupportActionBar(mToolbar);
+                activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                activity.getSupportActionBar().setTitle(data.getString(data.getColumnIndex(QuoteColumns.NAME)));
+            }
+
+            stockSymbolTextview.setText(mStockSymbol);
+            stockPriceTextview.setText(data.getString(data.getColumnIndex(QuoteColumns.BIDPRICE)));
+            stockChangeTextview.setText(data.getString(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
+            stockPrevCloseTextview.setText(getResources().getString(R.string.data_not_available));
+            stockOpenTextview.setText(getResources().getString(R.string.data_not_available));
+            stockLowTextview.setText(getResources().getString(R.string.data_not_available));
+            stockHighTextview.setText(getResources().getString(R.string.data_not_available));
+            stock52wkLowTextview.setText(getResources().getString(R.string.data_not_available));
+            stock52wkHighTextview.setText(getResources().getString(R.string.data_not_available));
+            stockMktCapitalTextview.setText(getResources().getString(R.string.data_not_available));
+            stockVolumeTextview.setText(getResources().getString(R.string.data_not_available));
+            stock1yTargetTextview.setText(getResources().getString(R.string.data_not_available));
+            stockAvgVolumeTextview.setText(getResources().getString(R.string.data_not_available));
+
+            buildLineGraph(data.getInt(data.getColumnIndex(QuoteColumns.ISUP)));
+        }
     }
 
     @Override
