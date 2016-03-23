@@ -37,6 +37,26 @@ public class LineGraphFragment extends Fragment {
     TextView stockPriceTextview;
     @Bind(R.id.stock_change_textview)
     TextView stockChangeTextview;
+    @Bind(R.id.stock_prev_close_textview)
+    TextView stockPrevCloseTextview;
+    @Bind(R.id.stock_open_textview)
+    TextView stockOpenTextview;
+    @Bind(R.id.stock_low_textview)
+    TextView stockLowTextview;
+    @Bind(R.id.stock_high_textview)
+    TextView stockHighTextview;
+    @Bind(R.id.stock_52wk_low_textview)
+    TextView stock52wkLowTextview;
+    @Bind(R.id.stock_52wk_high_textview)
+    TextView stock52wkHighTextview;
+    @Bind(R.id.stock_mkt_capital_textview)
+    TextView stockMktCapitalTextview;
+    @Bind(R.id.stock_volume_textview)
+    TextView stockVolumeTextview;
+    @Bind(R.id.stock_1y_target_textview)
+    TextView stock1yTargetTextview;
+    @Bind(R.id.stock_avg_volume_textview)
+    TextView stockAvgVolumeTextview;
 
     private final float[][] mValues = {{3.5f, 4.7f, 4.3f, 8f, 6.5f, 9.9f, 7f, 8.3f, 7.0f},
             {4.5f, 2.5f, 2.5f, 9f, 4.5f, 9.5f, 5f, 8.3f, 1.8f}};
@@ -66,8 +86,18 @@ public class LineGraphFragment extends Fragment {
         mChart = (LineChartView) rootView.findViewById(R.id.line_chart);
         buildLineGraph();
         stockSymbolTextview.setText(mStockSymbol);
-        stockPriceTextview.setText("102.40");
-        stockChangeTextview.setText("+1.68%");
+        stockPriceTextview.setText(getResources().getString(R.string.data_not_available));
+        stockChangeTextview.setText(getResources().getString(R.string.data_not_available));
+        stockPrevCloseTextview.setText(getResources().getString(R.string.data_not_available));
+        stockOpenTextview.setText(getResources().getString(R.string.data_not_available));
+        stockLowTextview.setText(getResources().getString(R.string.data_not_available));
+        stockHighTextview.setText(getResources().getString(R.string.data_not_available));
+        stock52wkLowTextview.setText(getResources().getString(R.string.data_not_available));
+        stock52wkHighTextview.setText(getResources().getString(R.string.data_not_available));
+        stockMktCapitalTextview.setText(getResources().getString(R.string.data_not_available));
+        stockVolumeTextview.setText(getResources().getString(R.string.data_not_available));
+        stock1yTargetTextview.setText(getResources().getString(R.string.data_not_available));
+        stockAvgVolumeTextview.setText(getResources().getString(R.string.data_not_available));
         return rootView;
     }
 
