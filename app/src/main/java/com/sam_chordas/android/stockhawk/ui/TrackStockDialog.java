@@ -98,7 +98,7 @@ public class TrackStockDialog extends DialogFragment {
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    if (s.length() > 0 && s.length() < 8) {
+                    if (s.length() > 0 && s.length() <= 8) {
                         mPositiveButton.setEnabled(true);
                     } else {
                         mPositiveButton.setEnabled(false);

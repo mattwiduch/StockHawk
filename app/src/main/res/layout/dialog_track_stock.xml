@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:counterEnabled="true"
-        app:counterMaxLength="7"
+        app:counterMaxLength="8"
         app:errorEnabled="true"
         app:hintEnabled="false">
 
@@ -22,9 +22,9 @@
             android:id="@+id/dialog_track_stock_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.-"
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.-=^"
             android:hint="@string/dialog_track_input_hint"
-            android:maxLength="7"
+            android:maxLength="8"
             android:singleLine="true"/>
 
     </android.support.design.widget.TextInputLayout>
