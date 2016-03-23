@@ -230,6 +230,7 @@ public class StockTaskService extends GcmTaskService {
                 QuoteProvider.Quotes.CONTENT_URI);
         try {
             builder.withValue(QuoteColumns.SYMBOL, jsonObject.getString(YFQ_STOCK_SYMBOL));
+            builder.withValue(QuoteColumns.NAME, jsonObject.getString(YFQ_STOCK_NAME));
             String bidPrice = jsonObject.getString(YFQ_STOCK_BID).equals(YFQ_DATA_NOT_AVAILABLE)
                     ? mContext.getString(R.string.data_not_available)
                     : Utils.truncateBidPrice(jsonObject.getString(YFQ_STOCK_BID));
