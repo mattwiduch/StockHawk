@@ -1,5 +1,8 @@
 package com.sam_chordas.android.stockhawk.ui;
 
+import android.graphics.Color;
+import android.graphics.DashPathEffect;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,8 +13,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.db.chart.Tools;
+import com.db.chart.model.LineSet;
+import com.db.chart.view.AxisController;
+import com.db.chart.view.ChartView;
 import com.db.chart.view.LineChartView;
+import com.db.chart.view.animation.Animation;
+import com.db.chart.view.animation.easing.CircEase;
 import com.sam_chordas.android.stockhawk.R;
+
+import java.text.DecimalFormat;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -26,6 +37,9 @@ public class LineGraphFragment extends Fragment {
     TextView stockPriceTextview;
     @Bind(R.id.stock_change_textview)
     TextView stockChangeTextview;
+
+    private final float[][] mValues = {{3.5f, 4.7f, 4.3f, 8f, 6.5f, 9.9f, 7f, 8.3f, 7.0f},
+            {4.5f, 2.5f, 2.5f, 9f, 4.5f, 9.5f, 5f, 8.3f, 1.8f}};
 
     public LineGraphFragment() {
         setHasOptionsMenu(true);
@@ -50,10 +64,57 @@ public class LineGraphFragment extends Fragment {
             activity.getSupportActionBar().setTitle("Apple Inc.");
         }
         mChart = (LineChartView) rootView.findViewById(R.id.line_chart);
+        buildLineGraph();
         stockSymbolTextview.setText(mStockSymbol);
         stockPriceTextview.setText("102.40");
         stockChangeTextview.setText("+1.68%");
         return rootView;
+    }
+
+    private void buildLineGraph() {
+        int color = getResources().getColor(R.color.material_green_high);
+        // Line chart customization
+        LineSet dataset = new LineSet(new String[] {"", "", "", "", "", "", "", "", ""}, mValues[1]);
+        dataset.setThickness(Tools.fromDpToPx(2.5f));
+        dataset.setColor(Color.parseColor("#ffffff"));
+        dataset.setDotsRadius(Tools.fromDpToPx(4.5f));
+        dataset.setDotsColor(color);
+        dataset.setDotsStrokeColor(Color.parseColor("#ffffff"));
+        dataset.setDotsStrokeThickness(6f);
+        mChart.addData(dataset);
+
+// Generic chart customization
+        mChart.setXAxis(false);
+        mChart.setYAxis(false);
+        mChart.setBackgroundColor(color);
+        int padding = getResources().getDimensionPixelSize(R.dimen.content_padding);
+        mChart.setPadding(padding, padding*3, padding, padding + padding/2);
+
+
+// Paint object used to draw Grid
+        Paint gridPaint = new Paint();
+        gridPaint.setColor(getResources().getColor(R.color.text_light_hint));
+        gridPaint.setStyle(Paint.Style.STROKE);
+        gridPaint.setAntiAlias(true);
+        gridPaint.setStrokeWidth(Tools.fromDpToPx(1f));
+        gridPaint.setPathEffect(new DashPathEffect(new float[]{8.0f, 8.0f}, 0));
+        mChart.setGrid(ChartView.GridType.HORIZONTAL, gridPaint);
+
+// Labels
+        mChart.setXLabels(AxisController.LabelPosition.NONE);
+        mChart.setYLabels(AxisController.LabelPosition.OUTSIDE);
+        mChart.setAxisBorderValues(0, 100, 50);
+        mChart.setLabelsFormat(new DecimalFormat("#"));
+        mChart.setLabelsColor(getResources().getColor(R.color.text_light_secondary));
+        mChart.setFontSize(45);
+        mChart.setAxisLabelsSpacing(48f);
+
+// Animation customization
+        Animation anim = new Animation();
+        anim.setEasing(new CircEase());
+        anim.setOverlap(0.5f, new int[]{3, 2, 4, 1, 7, 5, 0, 6, 8});
+        anim.setStartPoint(0.0f, 1.0f);
+        mChart.show(anim);
     }
 
 //    /** Override up button behaviour so it navigates back to parent activity without recreating it. */
