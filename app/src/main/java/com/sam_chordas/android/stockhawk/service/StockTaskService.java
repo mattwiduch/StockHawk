@@ -26,6 +26,7 @@ import com.squareup.okhttp.Response;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.threeten.bp.Instant;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -243,6 +244,7 @@ public class StockTaskService extends GcmTaskService {
                     ? mContext.getString(R.string.data_not_available)
                     : Utils.truncateChange(jsonObject.getString(YFQ_STOCK_CHANGE_IN_PERCENT), true);
             builder.withValue(QuoteColumns.PERCENT_CHANGE, percentChange);
+            builder.withValue(QuoteColumns.CREATED, Instant.now().toString());
             builder.withValue(QuoteColumns.IS_CURRENT, 1);
             if (change.charAt(0) == '-') {
                 builder.withValue(QuoteColumns.IS_UP, 0);
