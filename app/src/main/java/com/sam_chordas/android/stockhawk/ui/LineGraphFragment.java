@@ -118,7 +118,7 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
 
         // Paint object used to draw Grid
         Paint gridPaint = new Paint();
-        gridPaint.setColor(ContextCompat.getColor(getContext(),R.color.text_light_hint));
+        gridPaint.setColor(ContextCompat.getColor(getContext(), R.color.text_light_hint));
         gridPaint.setStyle(Paint.Style.STROKE);
         gridPaint.setAntiAlias(true);
         gridPaint.setStrokeWidth(Tools.fromDpToPx(1f));
@@ -143,11 +143,13 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
         // Set Y axis labels using custom step
         int step = maxValue - minValue;
         if (step == 1) {
-            lineChart.setAxisBorderValues(minValue, maxValue);
-        } else if (step % 2 == 1) {
-            lineChart.setAxisBorderValues(minValue, maxValue + 1, (step + 1) / 2);
+            lineChart.setAxisBorderValues(minValue, maxValue, 1);
         } else {
-            lineChart.setAxisBorderValues(minValue, maxValue, step / 2);
+            if (step % 2 == 0) {
+                lineChart.setAxisBorderValues(minValue, maxValue, step / 2);
+            } else {
+                lineChart.setAxisBorderValues(minValue, maxValue + 1, (step + 1) / 2);
+            }
         }
 
         lineChart.setLabelsFormat(new DecimalFormat("#"));
@@ -211,33 +213,27 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
             float minBid = Float.MAX_VALUE;
             float maxBid = Float.MIN_VALUE;
 
-            // Duplicate data point if there is only one so line always shows on the graph
-            if (data.getCount() == 1) {
+            for (int position = 0; position < data.getCount(); position++) {
+                data.moveToPosition(position);
                 String bid = data.getString(data.getColumnIndex(QuoteColumns.BID_PRICE));
                 float bidValue = bid.equals(getString(R.string.data_not_available))
                         ? 0f : Float.parseFloat(bid);
-                stockValues.addAll(Arrays.asList(bidValue, bidValue, bidValue));
-                stockLabels.addAll(Arrays.asList("", "", ""));
-                minBid = Math.min(minBid, bidValue);
-                maxBid = Math.max(maxBid, bidValue);
-            } else {
-                for (int position = 0; position < data.getCount(); position++) {
-                    data.moveToPosition(position);
-                    String bid = data.getString(data.getColumnIndex(QuoteColumns.BID_PRICE));
-                    float bidValue = bid.equals(getString(R.string.data_not_available))
-                            ? 0f : Float.parseFloat(bid);
-                    if (position == 0) {
-                        stockValues.add(bidValue);
-                        stockLabels.add("");
-                        minBid = Math.min(minBid, bidValue);
-                        maxBid = Math.max(maxBid, bidValue);
-                    } else if (bidValue != stockValues.get(stockValues.size() - 1)) {
-                        stockValues.add(bidValue);
-                        stockLabels.add("");
-                        minBid = Math.min(minBid, bidValue);
-                        maxBid = Math.max(maxBid, bidValue);
-                    }
+                if (position == 0) {
+                    stockValues.add(bidValue);
+                    stockLabels.add("");
+                    minBid = Math.min(minBid, bidValue);
+                    maxBid = Math.max(maxBid, bidValue);
+                } else if (bidValue != stockValues.get(stockValues.size() - 1)) {
+                    stockValues.add(bidValue);
+                    stockLabels.add("");
+                    minBid = Math.min(minBid, bidValue);
+                    maxBid = Math.max(maxBid, bidValue);
                 }
+            }
+            // Duplicate data point if there is only one so line always shows on the graph
+            if (stockValues.size() == 1) {
+                stockValues.addAll(Arrays.asList(stockValues.get(0), stockValues.get(0)));
+                stockLabels.addAll(Arrays.asList("", ""));
             }
 
             float[] valuesArray = new float[stockValues.size()];
