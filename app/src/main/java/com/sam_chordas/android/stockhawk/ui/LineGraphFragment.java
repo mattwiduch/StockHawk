@@ -30,6 +30,9 @@ import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -203,28 +206,46 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
             stockAvgVolumeTextview.setText(getResources().getString(R.string.data_not_available));
 
             // Prepare data to be displayed on the graph
-            float[] stockValues = new float[data.getCount()];
-            String[] stockLabels = new String[data.getCount()];
+            List<Float> stockValues = new ArrayList<>();
+            List<String> stockLabels = new ArrayList<>();
             float minBid = Float.MAX_VALUE;
             float maxBid = Float.MIN_VALUE;
 
-            for (int position = 0; position < data.getCount(); position++) {
-                data.moveToPosition(position);
-                String bid = data.getString(data.getColumnIndex(QuoteColumns.BID_PRICE));
-                stockValues[position] = bid.equals(getString(R.string.data_not_available))
-                        ? 0f : Float.parseFloat(bid);
-                minBid = Math.min(minBid, stockValues[position]);
-                maxBid = Math.max(maxBid, stockValues[position]);
-                stockLabels[position] = "";
-            }
-
             // Duplicate data point if there is only one so line always shows on the graph
             if (data.getCount() == 1) {
-                stockValues = new float[]{stockValues[0], stockValues[0]};
-                stockLabels = new String[]{stockLabels[0], stockLabels[0]};
+                String bid = data.getString(data.getColumnIndex(QuoteColumns.BID_PRICE));
+                float bidValue = bid.equals(getString(R.string.data_not_available))
+                        ? 0f : Float.parseFloat(bid);
+                stockValues.addAll(Arrays.asList(bidValue, bidValue, bidValue));
+                stockLabels.addAll(Arrays.asList("", "", ""));
+                minBid = Math.min(minBid, bidValue);
+                maxBid = Math.max(maxBid, bidValue);
+            } else {
+                for (int position = 0; position < data.getCount(); position++) {
+                    data.moveToPosition(position);
+                    String bid = data.getString(data.getColumnIndex(QuoteColumns.BID_PRICE));
+                    float bidValue = bid.equals(getString(R.string.data_not_available))
+                            ? 0f : Float.parseFloat(bid);
+                    if (position == 0) {
+                        stockValues.add(bidValue);
+                        stockLabels.add("");
+                        minBid = Math.min(minBid, bidValue);
+                        maxBid = Math.max(maxBid, bidValue);
+                    } else if (bidValue != stockValues.get(stockValues.size() - 1)) {
+                        stockValues.add(bidValue);
+                        stockLabels.add("");
+                        minBid = Math.min(minBid, bidValue);
+                        maxBid = Math.max(maxBid, bidValue);
+                    }
+                }
             }
 
-            buildLineGraph(stockValues, stockLabels, minBid, maxBid, isUp);
+            float[] valuesArray = new float[stockValues.size()];
+            String[] labelsArray = stockLabels.toArray(new String[stockLabels.size()]);
+            for (int i = 0; i < valuesArray.length; i++) {
+                valuesArray[i] = stockValues.get(i);
+            }
+            buildLineGraph(valuesArray, labelsArray, minBid, maxBid, isUp);
         }
     }
 
