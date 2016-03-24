@@ -24,7 +24,7 @@ import com.db.chart.view.AxisController;
 import com.db.chart.view.ChartView;
 import com.db.chart.view.LineChartView;
 import com.db.chart.view.animation.Animation;
-import com.db.chart.view.animation.easing.CircEase;
+import com.db.chart.view.animation.easing.LinearEase;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
@@ -153,12 +153,14 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
         lineChart.setAxisLabelsSpacing(48f);
 
         // Animation customization
-        Animation anim = new Animation();
-        anim.setEasing(new CircEase());
-        anim.setOverlap(0.5f, new int[]{3, 2, 4, 1, 7, 5, 0, 6, 8});
-        anim.setStartPoint(0.0f, 1.0f);
-        //lineChart.show(anim);
-        lineChart.show();
+        int[] order = new int[values.length];
+        for (int i = 0; i < order.length; i++) {
+            order[i] = i;
+        }
+        Animation anim = new Animation(750);
+        anim.setEasing(new LinearEase());
+        anim.setOverlap(0.5f, order);
+        lineChart.show(anim);
     }
 
     @Override
