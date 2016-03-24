@@ -36,10 +36,12 @@ import butterknife.ButterKnife;
 
 public class LineGraphFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int CURSOR_LOADER_ID = 1;
-    private Toolbar mToolbar;
-    private LineChartView mChart;
     private String mStockSymbol;
 
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+    @Bind(R.id.line_chart)
+    LineChartView lineChart;
     @Bind(R.id.stock_symbol_textview)
     TextView stockSymbolTextview;
     @Bind(R.id.stock_price_textview)
@@ -89,8 +91,8 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_line_graph, container, false);
         ButterKnife.bind(this, rootView);
-        mToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        mChart = (LineChartView) rootView.findViewById(R.id.line_chart);
+        toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        lineChart = (LineChartView) rootView.findViewById(R.id.line_chart);
         return rootView;
     }
 
@@ -99,17 +101,17 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
         LineSet dataSet = new LineSet(labels, values);
         dataSet.setThickness(Tools.fromDpToPx(2.5f));
         dataSet.setColor(ContextCompat.getColor(getContext(), android.R.color.white));
-        mChart.addData(dataSet);
+        lineChart.addData(dataSet);
 
         // Generic chart customization
         @ColorInt
         int bgColor = isUp == 1 ? ContextCompat.getColor(getContext(), R.color.green_high)
                 : ContextCompat.getColor(getContext(), R.color.red_low);
-        mChart.setXAxis(false);
-        mChart.setYAxis(false);
-        mChart.setBackgroundColor(bgColor);
+        lineChart.setXAxis(false);
+        lineChart.setYAxis(false);
+        lineChart.setBackgroundColor(bgColor);
         int padding = getResources().getDimensionPixelSize(R.dimen.content_padding);
-        mChart.setPadding(padding, padding * 3, padding, padding + padding / 2);
+        lineChart.setPadding(padding, padding * 3, padding, padding + padding / 2);
 
         // Paint object used to draw Grid
         Paint gridPaint = new Paint();
@@ -118,11 +120,11 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
         gridPaint.setAntiAlias(true);
         gridPaint.setStrokeWidth(Tools.fromDpToPx(1f));
         gridPaint.setPathEffect(new DashPathEffect(new float[]{8.0f, 8.0f}, 0));
-        mChart.setGrid(ChartView.GridType.HORIZONTAL, 10, 10, gridPaint);
+        lineChart.setGrid(ChartView.GridType.HORIZONTAL, 10, 10, gridPaint);
 
         // Labels
-        mChart.setXLabels(AxisController.LabelPosition.NONE);
-        mChart.setYLabels(AxisController.LabelPosition.OUTSIDE);
+        lineChart.setXLabels(AxisController.LabelPosition.NONE);
+        lineChart.setYLabels(AxisController.LabelPosition.OUTSIDE);
         // Calculate min and max values to display on Y axis
         int minValue, maxValue;
         if (minBid - (int) minBid < 0.5) {
@@ -138,25 +140,25 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
         // Set Y axis labels using custom step
         int step = maxValue - minValue;
         if (step == 1) {
-            mChart.setAxisBorderValues(minValue, maxValue);
+            lineChart.setAxisBorderValues(minValue, maxValue);
         } else if (step % 2 == 1) {
-            mChart.setAxisBorderValues(minValue, maxValue + 1, (step + 1) / 2);
+            lineChart.setAxisBorderValues(minValue, maxValue + 1, (step + 1) / 2);
         } else {
-            mChart.setAxisBorderValues(minValue, maxValue, step / 2);
+            lineChart.setAxisBorderValues(minValue, maxValue, step / 2);
         }
 
-        mChart.setLabelsFormat(new DecimalFormat("#"));
-        mChart.setLabelsColor(ContextCompat.getColor(getContext(), R.color.text_light_secondary));
-        mChart.setFontSize(45);
-        mChart.setAxisLabelsSpacing(48f);
+        lineChart.setLabelsFormat(new DecimalFormat("#"));
+        lineChart.setLabelsColor(ContextCompat.getColor(getContext(), R.color.text_light_secondary));
+        lineChart.setFontSize(45);
+        lineChart.setAxisLabelsSpacing(48f);
 
         // Animation customization
         Animation anim = new Animation();
         anim.setEasing(new CircEase());
         anim.setOverlap(0.5f, new int[]{3, 2, 4, 1, 7, 5, 0, 6, 8});
         anim.setStartPoint(0.0f, 1.0f);
-        //mChart.show(anim);
-        mChart.show();
+        //lineChart.show(anim);
+        lineChart.show();
     }
 
     @Override
@@ -174,8 +176,8 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
         if (data.moveToLast()) {
             AppCompatActivity activity = (AppCompatActivity) getActivity();
-            if (mToolbar != null) {
-                activity.setSupportActionBar(mToolbar);
+            if (toolbar != null) {
+                activity.setSupportActionBar(toolbar);
                 ActionBar actionBar = activity.getSupportActionBar();
                 if (actionBar != null) {
                     actionBar.setDisplayHomeAsUpEnabled(true);
