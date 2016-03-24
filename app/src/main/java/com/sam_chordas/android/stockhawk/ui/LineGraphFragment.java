@@ -1,14 +1,16 @@
 package com.sam_chordas.android.stockhawk.ui;
 
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -65,9 +67,6 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
     @Bind(R.id.stock_avg_volume_textview)
     TextView stockAvgVolumeTextview;
 
-    private final float[][] mValues = {{3.5f, 4.7f, 4.3f, 8f, 6.5f, 9.9f, 7f, 8.3f, 7.0f},
-            {4.5f, 2.5f, 2.5f, 9f, 4.5f, 9.5f, 5f, 8.3f, 1.8f}};
-
     public LineGraphFragment() {
         setHasOptionsMenu(true);
     }
@@ -96,38 +95,34 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
     }
 
     private void buildLineGraph(float[] values, String[] labels, float minBid, float maxBid, int isUp) {
-        int color = isUp == 1 ? getResources().getColor(R.color.green_high) : getResources().getColor(R.color.red_low);
         // Line chart customization
-        LineSet dataset = new LineSet(labels, values);//new String[] {"", "", "", "", "", "", "", "", ""}, mValues[1]);
-        dataset.setThickness(Tools.fromDpToPx(2.5f));
-        dataset.setColor(Color.parseColor("#ffffff"));
-//        dataset.setDotsRadius(Tools.fromDpToPx(4.5f));
-//        dataset.setDotsColor(color);
-//        dataset.setDotsStrokeColor(Color.parseColor("#ffffff"));
-//        dataset.setDotsStrokeThickness(6f);
-        mChart.addData(dataset);
+        LineSet dataSet = new LineSet(labels, values);
+        dataSet.setThickness(Tools.fromDpToPx(2.5f));
+        dataSet.setColor(ContextCompat.getColor(getContext(), android.R.color.white));
+        mChart.addData(dataSet);
 
-// Generic chart customization
+        // Generic chart customization
+        @ColorInt
+        int bgColor = isUp == 1 ? ContextCompat.getColor(getContext(), R.color.green_high)
+                : ContextCompat.getColor(getContext(), R.color.red_low);
         mChart.setXAxis(false);
         mChart.setYAxis(false);
-        mChart.setBackgroundColor(color);
+        mChart.setBackgroundColor(bgColor);
         int padding = getResources().getDimensionPixelSize(R.dimen.content_padding);
         mChart.setPadding(padding, padding * 3, padding, padding + padding / 2);
 
-
-// Paint object used to draw Grid
+        // Paint object used to draw Grid
         Paint gridPaint = new Paint();
-        gridPaint.setColor(getResources().getColor(R.color.text_light_hint));
+        gridPaint.setColor(ContextCompat.getColor(getContext(),R.color.text_light_hint));
         gridPaint.setStyle(Paint.Style.STROKE);
         gridPaint.setAntiAlias(true);
         gridPaint.setStrokeWidth(Tools.fromDpToPx(1f));
         gridPaint.setPathEffect(new DashPathEffect(new float[]{8.0f, 8.0f}, 0));
         mChart.setGrid(ChartView.GridType.HORIZONTAL, 10, 10, gridPaint);
 
-// Labels
+        // Labels
         mChart.setXLabels(AxisController.LabelPosition.NONE);
         mChart.setYLabels(AxisController.LabelPosition.OUTSIDE);
-
         // Calculate min and max values to display on Y axis
         int minValue, maxValue;
         if (minBid - (int) minBid < 0.5) {
@@ -140,7 +135,6 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
         } else {
             maxValue = (int) maxBid + 2;
         }
-
         // Set Y axis labels using custom step
         int step = maxValue - minValue;
         if (step == 1) {
@@ -152,11 +146,11 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
         }
 
         mChart.setLabelsFormat(new DecimalFormat("#"));
-        mChart.setLabelsColor(getResources().getColor(R.color.text_light_secondary));
+        mChart.setLabelsColor(ContextCompat.getColor(getContext(), R.color.text_light_secondary));
         mChart.setFontSize(45);
         mChart.setAxisLabelsSpacing(48f);
 
-// Animation customization
+        // Animation customization
         Animation anim = new Animation();
         anim.setEasing(new CircEase());
         anim.setOverlap(0.5f, new int[]{3, 2, 4, 1, 7, 5, 0, 6, 8});
@@ -170,7 +164,7 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
         return new CursorLoader(getActivity(),
                 QuoteProvider.Quotes.CONTENT_URI,
                 new String[]{QuoteColumns._ID, QuoteColumns.SYMBOL, QuoteColumns.NAME, QuoteColumns.BID_PRICE,
-                        QuoteColumns.PERCENT_CHANGE, QuoteColumns.CHANGE, QuoteColumns.IS_UP},
+                        QuoteColumns.PERCENT_CHANGE, QuoteColumns.CHANGE, QuoteColumns.CREATED, QuoteColumns.IS_UP},
                 QuoteColumns.SYMBOL + " = ?",
                 new String[]{mStockSymbol},
                 QuoteColumns.CREATED + " ASC");
@@ -182,8 +176,11 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
             AppCompatActivity activity = (AppCompatActivity) getActivity();
             if (mToolbar != null) {
                 activity.setSupportActionBar(mToolbar);
-                activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                activity.getSupportActionBar().setTitle(data.getString(data.getColumnIndex(QuoteColumns.NAME)));
+                ActionBar actionBar = activity.getSupportActionBar();
+                if (actionBar != null) {
+                    actionBar.setDisplayHomeAsUpEnabled(true);
+                    actionBar.setTitle(data.getString(data.getColumnIndex(QuoteColumns.NAME)));
+                }
             }
 
             int isUp = data.getInt(data.getColumnIndex(QuoteColumns.IS_UP));
