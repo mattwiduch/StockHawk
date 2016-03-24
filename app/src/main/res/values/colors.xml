@@ -8,6 +8,7 @@
     <color name="orange_accent">#FF9100</color>
     <color name="green_action">#00E676</color>
     <color name="divider_light">#1FFFFFFF</color>
+    <color name="control_highlight">#20FFFFFF</color>
 
     <!-- Stock Tendency Colors -->
     <color name="green_high">#4BC98A</color>

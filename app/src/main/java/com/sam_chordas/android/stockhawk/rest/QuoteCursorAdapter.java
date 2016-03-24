@@ -3,10 +3,11 @@ package com.sam_chordas.android.stockhawk.rest;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -138,12 +139,18 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
 
         @Override
         public void onItemSelected() {
-            itemView.setBackgroundColor(Color.LTGRAY);
+            itemView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.control_highlight));
         }
 
         @Override
         public void onItemClear() {
-            itemView.setBackgroundColor(0);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                // If we're running on Honeycomb or newer, then we can use the Theme's
+                // selectableItemBackground to ensure that the View has a pressed state
+                TypedValue outValue = new TypedValue();
+                mContext.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+                itemView.setBackgroundResource(outValue.resourceId);
+            }
         }
 
         @Override
