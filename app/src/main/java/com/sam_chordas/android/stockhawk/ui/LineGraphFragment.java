@@ -87,7 +87,7 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public void onResume() {
         super.onResume();
-        getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
+        //getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
     }
 
     @Nullable
