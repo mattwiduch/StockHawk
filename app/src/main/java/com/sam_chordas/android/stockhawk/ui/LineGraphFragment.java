@@ -32,6 +32,7 @@ import com.sam_chordas.android.stockhawk.rest.Utils;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;
@@ -212,45 +213,74 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
             List<String> stockLabels = new ArrayList<>();
             float minBid = Float.MAX_VALUE;
             float maxBid = Float.MIN_VALUE;
-            int dateStamp2 = -1;
-            int dateStamp3 = -1;
-            int dateStamp4 = -1;
+            Integer[] dateStamps = new Integer[]{0, 1, 2, 3, 4};
+            int offset = 0;
 
-            if (data.getCount() > 3) {
-                dateStamp2 = data.getCount() / 4;
-                dateStamp3 = data.getCount() / 2;
-                dateStamp4 = data.getCount() / 4 + data.getCount() / 2;
+            // Calculate positions of labels to be displayed on x axis
+            if (data.getCount() % 4 == 1) {
+                dateStamps[1] = (data.getCount() - 1) / 4;
+                dateStamps[2] = (data.getCount() - 1) / 2;
+                dateStamps[3] = (data.getCount() - 1) / 4 + (data.getCount() - 1) / 2;
+                dateStamps[4] = data.getCount() - 1;
+            } else if (data.getCount() > 4) {
+                offset = (data.getCount() % 4) == 0 ? 1 : 5 - data.getCount() % 4;
+                int count = data.getCount() + offset;
+                if (offset == 1) {
+                    dateStamps[1] = ((count - 1) / 4) - 1;
+                    dateStamps[2] = ((count - 1) / 2) - 1;
+                    dateStamps[3] = ((count - 1) / 4 + (count - 1) / 2) - 1;
+                }
+                if (offset == 2) {
+                    dateStamps[1] = ((count - 1) / 4) - 1;
+                    dateStamps[2] = ((count - 1) / 2) - 2;
+                    dateStamps[3] = ((count - 1) / 4 + (count - 1) / 2) - 2;
+                }
+                if (offset == 3) {
+                    dateStamps[1] = ((count - 1) / 4) - 1;
+                    dateStamps[2] = ((count - 1) / 2) - 2;
+                    dateStamps[3] = ((count - 1) / 4 + (count - 1) / 2) - 3;
+                }
+                dateStamps[4] = data.getCount() - 1;
             }
 
+            // Get stock values
             for (int position = 0; position < data.getCount(); position++) {
                 data.moveToPosition(position);
                 String bid = data.getString(data.getColumnIndex(QuoteColumns.BID_PRICE));
                 float bidValue = bid.equals(getString(R.string.data_not_available))
                         ? 0f : Float.parseFloat(bid);
-                if (position == 0) {
-                    stockValues.add(bidValue);
+                minBid = Math.min(minBid, bidValue);
+                maxBid = Math.max(maxBid, bidValue);
+                stockValues.add(bidValue);
+                if (Arrays.asList(dateStamps).contains(position)) {
                     stockLabels.add(Utils.formatGraphDateLabels(
                             data.getString(data.getColumnIndex(QuoteColumns.CREATED))));
-                    minBid = Math.min(minBid, bidValue);
-                    maxBid = Math.max(maxBid, bidValue);
-                } else {//if (bidValue != stockValues.get(stockValues.size() - 1)) {
-                    stockValues.add(bidValue);
-                    if (position == dateStamp2 || position == dateStamp3 || position == dateStamp4
-                            ||position == data.getCount() - 1) {
-                        stockLabels.add(Utils.formatGraphDateLabels(
-                                data.getString(data.getColumnIndex(QuoteColumns.CREATED))));
-                    } else {
-                        stockLabels.add("");
-                    }
-                    minBid = Math.min(minBid, bidValue);
-                    maxBid = Math.max(maxBid, bidValue);
+                } else {
+                    stockLabels.add("");
                 }
             }
+
             // Duplicate data point if there is only one so line always shows on the graph
             if (stockValues.size() == 1) {
                 stockValues.add(stockValues.get(0));
                 stockLabels.add(Utils.formatGraphDateLabels(
                         data.getString(data.getColumnIndex(QuoteColumns.CREATED))));
+            }
+
+            // Add arbitrary points so labels format nicely
+            if (offset > 0) {
+                stockValues.add(1, (stockValues.get(0) + stockValues.get(1)) / 2);
+                stockLabels.add(1, "");
+                if (offset > 1) {
+                    stockValues.add(dateStamps[1] + 2,
+                            (stockValues.get(dateStamps[1]) + stockValues.get(dateStamps[1] + 1)) / 2);
+                    stockLabels.add(dateStamps[1] + 2, "");
+                    if (offset > 2) {
+                        stockValues.add(dateStamps[2] + 3,
+                                (stockValues.get(dateStamps[2]) + stockValues.get(dateStamps[2] + 1)) / 2);
+                        stockLabels.add(dateStamps[2] + 3, "");
+                    }
+                }
             }
 
             float[] valuesArray = new float[stockValues.size()];

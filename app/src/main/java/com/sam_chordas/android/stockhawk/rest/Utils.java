@@ -81,13 +81,15 @@ public class Utils {
 
     static public String formatGraphDateLabels(String date) {
         String currentDate = Instant.now().toString();
-        String formattedDate = "";
+        String formattedDate;
 
         if (currentDate.substring(0, 9).equals(date.substring(0, 9))) {
             if (Integer.parseInt(currentDate.substring(9, 10)) == Integer.parseInt(date.substring(9, 10))
                 || Integer.parseInt(currentDate.substring(9, 10)) - 1 == Integer.parseInt(date.substring(9, 10)))
             {
                 formattedDate = date.substring(11, 16);
+            } else {
+                formattedDate = date.substring(5, 10);
             }
         } else {
             formattedDate = date.substring(5, 10);
