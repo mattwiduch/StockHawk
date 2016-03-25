@@ -28,10 +28,10 @@ import com.db.chart.view.animation.easing.LinearEase;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
+import com.sam_chordas.android.stockhawk.rest.Utils;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;
@@ -114,7 +114,7 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
         lineChart.setYAxis(false);
         lineChart.setBackgroundColor(bgColor);
         int padding = getResources().getDimensionPixelSize(R.dimen.content_padding);
-        lineChart.setPadding(padding, padding * 3, padding, padding + padding / 2);
+        lineChart.setPadding(padding, padding * 3, padding, padding);
 
         // Paint object used to draw Grid
         Paint gridPaint = new Paint();
@@ -126,7 +126,7 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
         lineChart.setGrid(ChartView.GridType.HORIZONTAL, 10, 10, gridPaint);
 
         // Labels
-        lineChart.setXLabels(AxisController.LabelPosition.NONE);
+        lineChart.setXLabels(AxisController.LabelPosition.OUTSIDE);
         lineChart.setYLabels(AxisController.LabelPosition.OUTSIDE);
         // Calculate min and max values to display on Y axis
         int minValue, maxValue;
@@ -154,7 +154,7 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
 
         lineChart.setLabelsFormat(new DecimalFormat("#"));
         lineChart.setLabelsColor(ContextCompat.getColor(getContext(), R.color.text_light_secondary));
-        lineChart.setFontSize(45);
+        lineChart.setFontSize(42);
         lineChart.setAxisLabelsSpacing(48f);
 
         // Animation customization
@@ -212,6 +212,15 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
             List<String> stockLabels = new ArrayList<>();
             float minBid = Float.MAX_VALUE;
             float maxBid = Float.MIN_VALUE;
+            int dateStamp2 = -1;
+            int dateStamp3 = -1;
+            int dateStamp4 = -1;
+
+            if (data.getCount() > 3) {
+                dateStamp2 = data.getCount() / 4;
+                dateStamp3 = data.getCount() / 2;
+                dateStamp4 = data.getCount() / 4 + data.getCount() / 2;
+            }
 
             for (int position = 0; position < data.getCount(); position++) {
                 data.moveToPosition(position);
@@ -220,20 +229,28 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
                         ? 0f : Float.parseFloat(bid);
                 if (position == 0) {
                     stockValues.add(bidValue);
-                    stockLabels.add("");
+                    stockLabels.add(Utils.formatGraphDateLabels(
+                            data.getString(data.getColumnIndex(QuoteColumns.CREATED))));
                     minBid = Math.min(minBid, bidValue);
                     maxBid = Math.max(maxBid, bidValue);
-                } else if (bidValue != stockValues.get(stockValues.size() - 1)) {
+                } else {//if (bidValue != stockValues.get(stockValues.size() - 1)) {
                     stockValues.add(bidValue);
-                    stockLabels.add("");
+                    if (position == dateStamp2 || position == dateStamp3 || position == dateStamp4
+                            ||position == data.getCount() - 1) {
+                        stockLabels.add(Utils.formatGraphDateLabels(
+                                data.getString(data.getColumnIndex(QuoteColumns.CREATED))));
+                    } else {
+                        stockLabels.add("");
+                    }
                     minBid = Math.min(minBid, bidValue);
                     maxBid = Math.max(maxBid, bidValue);
                 }
             }
             // Duplicate data point if there is only one so line always shows on the graph
             if (stockValues.size() == 1) {
-                stockValues.addAll(Arrays.asList(stockValues.get(0), stockValues.get(0)));
-                stockLabels.addAll(Arrays.asList("", ""));
+                stockValues.add(stockValues.get(0));
+                stockLabels.add(Utils.formatGraphDateLabels(
+                        data.getString(data.getColumnIndex(QuoteColumns.CREATED))));
             }
 
             float[] valuesArray = new float[stockValues.size()];
