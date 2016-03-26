@@ -55,4 +55,14 @@
     <string name="stock_avg_volume_label">Avg Vol (3m)</string>
     <string name="stock_symbol_label">Symbol</string>
 
+    <!-- Strings related to Sort Stocks Dialog -->
+    <string name="sort_dialog_title">Sort stocks by:</string>
+    <string name="sort_default">Default</string>
+    <string name="sort_symbol_asc">Symbol (Ascending)</string>
+    <string name="sort_symbol_dsc">Symbol (Descending)</string>
+    <string name="sort_bid_asc">Price (Ascending)</string>
+    <string name="sort_bid_dsc">Price (Descending)</string>
+    <string name="sort_change_asc">Change (Ascending)</string>
+    <string name="sort_change_dsc">Change (Descending)</string>
+
 </resources>

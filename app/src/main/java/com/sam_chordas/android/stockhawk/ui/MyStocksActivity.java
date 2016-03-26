@@ -3,6 +3,7 @@ package com.sam_chordas.android.stockhawk.ui;
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
@@ -14,6 +15,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -200,8 +202,34 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
             this.getContentResolver().notifyChange(QuoteProvider.Quotes.CONTENT_URI, null);
         }
 
+        if (id == R.id.action_sort) {
+            createSortDialog();
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * Creates dialog that lets user choose stock sorting method.
+     */
+    private void createSortDialog() {
+        int defaultChoice = 0;
+
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this, R.style.DialogSortStocks);
+        dialogBuilder.setTitle(R.string.sort_dialog_title);
+        dialogBuilder.setSingleChoiceItems(R.array.sort_type, defaultChoice, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                //dialog.dismiss();
+            }
+        });
+
+        // Creates dialog
+        AlertDialog sortDialog = dialogBuilder.create();
+        // Shows dialog
+        sortDialog.show();
+    }
+
 
     private void networkSnackbar() {
         mSwipeRefreshLayout.setRefreshing(false);
@@ -261,7 +289,8 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                     showSnackbar(getString(R.string.error_server_invalid));
                     break;
                 case StockTaskService.HAWK_STATUS_SYMBOL_INVALID:
-                    if (mDialog != null) mDialog.setErrorMessage(getString(R.string.error_symbol_invalid));
+                    if (mDialog != null)
+                        mDialog.setErrorMessage(getString(R.string.error_symbol_invalid));
                     break;
                 case StockTaskService.HAWK_STATUS_DATA_CORRUPTED:
                     showSnackbar(getString(R.string.error_corrupted_data));

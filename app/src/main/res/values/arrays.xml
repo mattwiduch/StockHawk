@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sort_type">
+        <item>@string/sort_default</item>
+        <item>@string/sort_symbol_asc</item>
+        <item>@string/sort_symbol_dsc</item>
+        <item>@string/sort_bid_asc</item>
+        <item>@string/sort_bid_dsc</item>
+        <item>@string/sort_change_asc</item>
+        <item>@string/sort_change_dsc</item>
+        </string-array>
+</resources>
