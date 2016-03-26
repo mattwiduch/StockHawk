@@ -47,6 +47,7 @@ public class StockTaskService extends GcmTaskService {
     private static Context mContext;
     private StringBuilder mStoredSymbols = new StringBuilder();
     private boolean isUpdate;
+    private static String mTaskType;
 
     // Names of the JSON objects that need to be extracted
     private static final String YFQ_COUNT = "count";
@@ -60,7 +61,7 @@ public class StockTaskService extends GcmTaskService {
     private static final String YFQ_STOCK_CHANGE_IN_PERCENT = "ChangeinPercent";
     private static final String YFQ_STOCK_CHANGE_FLAT = "0.00";
     private static final String YFQ_DATA_NOT_AVAILABLE = "null";
-    
+
     // Define Error States
     public static final int HAWK_STATUS_OK = 100;
     public static final int HAWK_STATUS_SERVER_DOWN = 101;
@@ -69,13 +70,15 @@ public class StockTaskService extends GcmTaskService {
     public static final int HAWK_STATUS_SYMBOL_INVALID = 104;
     public static final int HAWK_STATUS_UTF8_NOT_SUPPORTED = 105;
     public static final int HAWK_STATUS_UNKNOWN = 106;
+
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({HAWK_STATUS_OK, HAWK_STATUS_SERVER_DOWN, HAWK_STATUS_SERVER_INVALID, HAWK_STATUS_DATA_CORRUPTED,
             HAWK_STATUS_SYMBOL_INVALID, HAWK_STATUS_UTF8_NOT_SUPPORTED, HAWK_STATUS_UNKNOWN})
     public @interface HawkStatus {
     }
 
-    public StockTaskService() {}
+    public StockTaskService() {
+    }
 
     public StockTaskService(Context context) {
         mContext = context;
@@ -93,6 +96,7 @@ public class StockTaskService extends GcmTaskService {
     @Override
     public int onRunTask(TaskParams params) {
         Cursor initQueryCursor;
+        mTaskType = params.getTag();
         if (mContext == null) {
             mContext = this;
         }
@@ -106,8 +110,8 @@ public class StockTaskService extends GcmTaskService {
             setHawkStatus(HAWK_STATUS_UTF8_NOT_SUPPORTED);
             e.printStackTrace();
         }
-        if (params.getTag().equals(StockIntentService.TASK_TYPE_INIT)
-                || params.getTag().equals(StockIntentService.TASK_TYPE_PERIODIC)) {
+        if (mTaskType.equals(StockIntentService.TASK_TYPE_INIT)
+                || mTaskType.equals(StockIntentService.TASK_TYPE_PERIODIC)) {
             isUpdate = true;
             initQueryCursor = mContext.getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
                     new String[]{"DISTINCT " + QuoteColumns.SYMBOL}, null,
@@ -138,7 +142,7 @@ public class StockTaskService extends GcmTaskService {
                 }
                 initQueryCursor.close();
             }
-        } else if (params.getTag().equals(StockIntentService.TASK_TYPE_ADD)) {
+        } else if (mTaskType.equals(StockIntentService.TASK_TYPE_ADD)) {
             isUpdate = false;
             // get symbol from params.getExtra and build query
             String stockInput = params.getExtras().getString(YFQ_STOCK_SYMBOL);
@@ -223,7 +227,13 @@ public class StockTaskService extends GcmTaskService {
             setHawkStatus(HAWK_STATUS_SERVER_INVALID);
         }
 
-        if (!batchOperations.isEmpty()) setHawkStatus(HAWK_STATUS_OK);
+        if (!batchOperations.isEmpty()) {
+            setHawkStatus(HAWK_STATUS_OK);
+            if (mTaskType.equals(StockIntentService.TASK_TYPE_INIT)
+                    || mTaskType.equals(StockIntentService.TASK_TYPE_PERIODIC)) {
+                setUpdateTime(Instant.now());
+            }
+        }
         return batchOperations;
     }
 
@@ -249,7 +259,7 @@ public class StockTaskService extends GcmTaskService {
             builder.withValue(QuoteColumns.IS_CURRENT, 1);
             if (percentChange.charAt(0) == '-') {
                 builder.withValue(QuoteColumns.IS_UP, -1);
-            } else if (percentChange.contains(YFQ_STOCK_CHANGE_FLAT)){
+            } else if (percentChange.contains(YFQ_STOCK_CHANGE_FLAT)) {
                 builder.withValue(QuoteColumns.IS_UP, 0);
             } else {
                 builder.withValue(QuoteColumns.IS_UP, 1);
@@ -267,10 +277,22 @@ public class StockTaskService extends GcmTaskService {
      *
      * @param hawkStatus The IntDef value to set
      */
-    private static void setHawkStatus(@HawkStatus int hawkStatus){
+    private static void setHawkStatus(@HawkStatus int hawkStatus) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor spe = sp.edit();
         spe.putInt(mContext.getString(R.string.pref_hawk_status_key), hawkStatus);
+        spe.apply();
+    }
+
+    /**
+     * Saves last update time in shared preference.
+     *
+     * @param updateTime Instant representing last update time
+     */
+    private static void setUpdateTime(Instant updateTime) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences.Editor spe = sp.edit();
+        spe.putString(mContext.getString(R.string.pref_last_update), updateTime.toString());
         spe.apply();
     }
 }

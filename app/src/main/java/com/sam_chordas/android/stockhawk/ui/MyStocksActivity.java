@@ -3,17 +3,20 @@ package com.sam_chordas.android.stockhawk.ui;
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +25,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.facebook.stetho.Stetho;
 import com.google.android.gms.gcm.GcmNetworkManager;
@@ -48,6 +52,14 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     private static final int CURSOR_LOADER_ID = 0;
     private static final String DIALOG_TAG = "track_stock_dialog";
 
+    private static final String SORT_DEFAULT = "null";
+    private static final String SORT_SYMBOL_ASC = QuoteColumns.SYMBOL + " ASC";
+    private static final String SORT_SYMBOL_DSC = QuoteColumns.SYMBOL + " DESC";
+    private static final String SORT_PRICE_ASC = QuoteColumns.BID_PRICE + " ASC";
+    private static final String SORT_PRICE_DSC = QuoteColumns.BID_PRICE + " DESC";
+    private static final String SORT_CHANGE_ASC = QuoteColumns.PERCENT_CHANGE + " ASC";
+    private static final String SORT_CHANGE_DSC = QuoteColumns.PERCENT_CHANGE + " DESC";
+
     private Intent mServiceIntent;
     private ItemTouchHelper mItemTouchHelper;
     private QuoteCursorAdapter mCursorAdapter;
@@ -55,6 +67,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     private Cursor mCursor;
     private TrackStockDialog mDialog;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private String mSortOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +78,27 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mContext = this;
+
+        // Retrieve user's preferred sort order
+        final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        mSortOrder = sp.getString(getString(R.string.pref_sort_order), SORT_DEFAULT);
+
+        // Update last updated text view periodically
+        final TextView lastUpdatedTextView = (TextView) findViewById(R.id.last_update_textview);
+        final Handler handler = new Handler();
+        final Runnable updateTask = new Runnable() {
+            @Override
+            public void run() {
+                if (lastUpdatedTextView != null) {
+                    lastUpdatedTextView.setText(getString(R.string.last_updated,
+                            Utils.formatLastUpdateTime(MyStocksActivity.this,
+                                    sp.getString(getString(R.string.pref_last_update),
+                                            getString(R.string.last_updated_never)))));
+                }
+                handler.postDelayed(this, 30000);
+            }
+        };
+        handler.postDelayed(updateTask, 1000);
 
         // The intent service is for executing immediate pulls from the Yahoo API
         // GCMTaskService can only schedule tasks, they cannot execute immediately
@@ -191,15 +225,81 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 
         if (id == R.id.action_change_units) {
             // this is for changing stock changes from percent value to dollar value
+            if (Utils.showPercent) {
+                item.setIcon(R.drawable.ic_action_percent_white);
+            } else {
+                item.setIcon(R.drawable.ic_attach_money_white_24dp);
+            }
             Utils.showPercent = !Utils.showPercent;
             this.getContentResolver().notifyChange(QuoteProvider.Quotes.CONTENT_URI, null);
+        }
+
+        if (id == R.id.action_sort) {
+            createSortDialog();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Creates dialog that lets user choose stock sorting method.
+     */
+    private void createSortDialog() {
+        int defaultChoice = 0;
+        if (mSortOrder.equals(SORT_SYMBOL_ASC)) defaultChoice = 1;
+        if (mSortOrder.equals(SORT_SYMBOL_DSC)) defaultChoice = 2;
+        if (mSortOrder.equals(SORT_PRICE_ASC)) defaultChoice = 3;
+        if (mSortOrder.equals(SORT_PRICE_DSC)) defaultChoice = 4;
+        if (mSortOrder.equals(SORT_CHANGE_ASC)) defaultChoice = 5;
+        if (mSortOrder.equals(SORT_CHANGE_DSC)) defaultChoice = 6;
+
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this, R.style.DialogSortStocks);
+        dialogBuilder.setTitle(R.string.sort_dialog_title);
+        dialogBuilder.setSingleChoiceItems(R.array.sort_type, defaultChoice, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MyStocksActivity.this);
+                SharedPreferences.Editor spe = sp.edit();
+
+                switch (which) {
+                    case 0:
+                        spe.putString(MyStocksActivity.this.getString(R.string.pref_sort_order), SORT_DEFAULT);
+                        break;
+                    case 1:
+                        spe.putString(MyStocksActivity.this.getString(R.string.pref_sort_order), SORT_SYMBOL_ASC);
+                        break;
+                    case 2:
+                        spe.putString(MyStocksActivity.this.getString(R.string.pref_sort_order), SORT_SYMBOL_DSC);
+                        break;
+                    case 3:
+                        spe.putString(MyStocksActivity.this.getString(R.string.pref_sort_order), SORT_PRICE_ASC);
+                        break;
+                    case 4:
+                        spe.putString(MyStocksActivity.this.getString(R.string.pref_sort_order), SORT_PRICE_DSC);
+                        break;
+                    case 5:
+                        spe.putString(MyStocksActivity.this.getString(R.string.pref_sort_order), SORT_CHANGE_ASC);
+                        break;
+                    case 6:
+                        spe.putString(MyStocksActivity.this.getString(R.string.pref_sort_order), SORT_CHANGE_DSC);
+                        break;
+                }
+
+                spe.apply();
+                dialog.dismiss();
+                getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, MyStocksActivity.this);
+            }
+        });
+
+        // Creates dialog
+        AlertDialog sortDialog = dialogBuilder.create();
+        // Shows dialog
+        sortDialog.show();
+    }
+
+
     private void networkSnackbar() {
-        mSwipeRefreshLayout.setRefreshing(false);
+        if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(false);
         Snackbar snackbar = Snackbar
                 .make(findViewById(R.id.layout_my_stocks), getString(R.string.error_no_network),
                         Snackbar.LENGTH_INDEFINITE)
@@ -216,6 +316,8 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                     }
                 })
                 .setActionTextColor(ContextCompat.getColor(mContext, R.color.green_action));
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(ContextCompat.getColor(this, R.color.grey_primary));
         snackbar.show();
     }
 
@@ -227,7 +329,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                         QuoteColumns.PERCENT_CHANGE, QuoteColumns.CHANGE, QuoteColumns.IS_UP},
                 QuoteColumns.IS_CURRENT + " = ?",
                 new String[]{"1"},
-                null);
+                mSortOrder);
     }
 
     @Override
@@ -244,6 +346,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        // Stock Hawk Status
         if (key.equals(getString(R.string.pref_hawk_status_key))) {
             @StockTaskService.HawkStatus int status = Utils.getHawkStatus(this);
             switch (status) {
@@ -256,7 +359,8 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                     showSnackbar(getString(R.string.error_server_invalid));
                     break;
                 case StockTaskService.HAWK_STATUS_SYMBOL_INVALID:
-                    if (mDialog != null) mDialog.setErrorMessage(getString(R.string.error_symbol_invalid));
+                    if (mDialog != null)
+                        mDialog.setErrorMessage(getString(R.string.error_symbol_invalid));
                     break;
                 case StockTaskService.HAWK_STATUS_DATA_CORRUPTED:
                     showSnackbar(getString(R.string.error_corrupted_data));
@@ -276,6 +380,19 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
             }
             mSwipeRefreshLayout.setRefreshing(false);
         }
+        // Sort Order
+        if (key.equals(getString(R.string.pref_sort_order))) {
+            mSortOrder = sharedPreferences.getString(getString(R.string.pref_sort_order), SORT_DEFAULT);
+        }
+        // Last Update Time
+        if (key.equals(getString(R.string.pref_last_update))) {
+            TextView textView = (TextView) findViewById(R.id.last_update_textview);
+            if (textView != null) {
+                textView.setText(getString(R.string.last_updated, Utils.formatLastUpdateTime(
+                        this, sharedPreferences.getString(getString(R.string.pref_last_update),
+                                getString(R.string.last_updated_never)))));
+            }
+        }
     }
 
     /*
@@ -284,6 +401,8 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     private void showSnackbar(String message) {
         Snackbar snackbar = Snackbar
                 .make(findViewById(R.id.layout_my_stocks), message, Snackbar.LENGTH_LONG);
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(ContextCompat.getColor(this, R.color.grey_primary));
         snackbar.show();
     }
 

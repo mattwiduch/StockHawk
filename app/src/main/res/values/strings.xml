@@ -5,15 +5,16 @@
     <!-- Labels for toolbar buttons -->
     <string name="action_settings">Settings</string>
     <string name="action_change_units">Change Units</string>
+    <string name="action_sort">Sort stocks</string>
 
     <!-- Error Messages -->
     <string name="empty_stocks_list">Uh-oh! You are not tracking any stocks.</string>
-    <string name="error_no_network">Stock Hawk requires internet connection.\nYour data might be out of date.</string>
+    <string name="error_no_network">Stock Hawk requires internet connection.</string>
     <string name="error_utf8_not_supported">Stock Hawk requires UTF-8 encoding which is not supported by your device.</string>
     <string name="error_corrupted_data">Something went wrong while adding data. Please try again.</string>
     <string name="error_server_down">Stock server is not responding. Please try again later.</string>
     <string name="error_server_invalid">Stock server provided invalid data. Please try again.</string>
-    <string name="error_symbol_saved">You are already tracking it. </string>
+    <string name="error_symbol_saved">You are already tracking this symbol.</string>
     <string name="error_symbol_invalid">Symbol not found.</string>
 
     <!-- Strings related to Track Stock Dialog -->
@@ -30,6 +31,12 @@
 
     <!-- Key name for storing application status in SharedPreferences -->
     <string name="pref_hawk_status_key">hawk_status</string>
+
+    <!-- Key name for storing stocks sort order in SharedPreferences -->
+    <string name="pref_sort_order">stocks_sort_order</string>
+
+    <!-- Key name for storing last update time in SharedPreferences -->
+    <string name="pref_last_update">last_update_time</string>
 
     <!-- Strings related to Stock Value Graph -->
     <string name="line_graph_activity_title">Stock Value Graph</string>
@@ -53,5 +60,20 @@
     <string name="stock_volume_label">Volume</string>
     <string name="stock_avg_volume_label">Avg Vol (3m)</string>
     <string name="stock_symbol_label">Symbol</string>
+
+    <!-- Strings related to Sort Stocks Dialog -->
+    <string name="sort_dialog_title">Sort stocks by:</string>
+    <string name="sort_default">Default</string>
+    <string name="sort_symbol_asc">Symbol (Ascending)</string>
+    <string name="sort_symbol_dsc">Symbol (Descending)</string>
+    <string name="sort_bid_asc">Price (Ascending)</string>
+    <string name="sort_bid_dsc">Price (Descending)</string>
+    <string name="sort_change_asc">Change (Ascending)</string>
+    <string name="sort_change_dsc">Change (Descending)</string>
+
+    <!-- String used to display time of last update -->
+    <string name="last_updated">Last updated: %1$s.</string>
+    <string name="last_updated_never">1970–01–01T00:00:00Z</string>
+    <string name="last_updated_minute">less than a minute ago</string>
 
 </resources>

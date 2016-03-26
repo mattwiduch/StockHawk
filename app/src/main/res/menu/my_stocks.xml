@@ -5,9 +5,15 @@
     <item
         android:id="@+id/action_change_units"
         android:icon="@drawable/ic_attach_money_white_24dp"
-        android:orderInCategory="99"
+        android:orderInCategory="98"
         android:title="@string/action_change_units"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_sort"
+        android:icon="@drawable/ic_sort_white_24dp"
+        android:orderInCategory="99"
+        android:title="@string/action_sort"
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"

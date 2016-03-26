@@ -28,18 +28,19 @@
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingBottom="@dimen/tooltip_height"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:clipToPadding="false"
-        android:scrollbarStyle="outsideOverlay"
-        android:smoothScrollbar="true"
-        android:paddingTop="@dimen/content_spacing"
-/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="@dimen/content_spacing"
+            android:scrollbarStyle="outsideOverlay"
+            android:scrollbars="vertical"
+            android:smoothScrollbar="true"
+            />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -57,16 +58,38 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:text="@string/empty_stocks_list"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"
+        android:visibility="gone"
         app:layout_anchor="@+id/recycler_view"
-        app:layout_anchorGravity="fill"
-        android:visibility="gone"/>
+        app:layout_anchorGravity="fill"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
+        android:layout_marginLeft="@dimen/fab_margin"
+        android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/fab_margin"
+        android:layout_marginBottom="@dimen/fab_bottom_margin"
         android:src="@drawable/ic_add_white_24dp"
         app:fabSize="normal"/>
+
+    <TextView
+        android:id="@+id/last_update_textview"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tooltip_height"
+        android:gravity="start|center_vertical"
+        android:paddingEnd="@dimen/content_padding"
+        android:paddingLeft="@dimen/content_padding"
+        android:paddingRight="@dimen/content_padding"
+        android:paddingStart="@dimen/content_padding"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/text_light_secondary"
+        android:background="@color/grey_primary"
+        app:layout_anchorGravity="bottom|start"
+        app:layout_anchor="@+id/swipeRefreshLayout"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
 </android.support.design.widget.CoordinatorLayout>

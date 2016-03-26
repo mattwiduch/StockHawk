@@ -21,5 +21,8 @@
     <dimen name="list_item_left_padding">56dp</dimen>
     <dimen name="list_item_vertical_text_spacing">4dp</dimen>
     <dimen name="list_icon_padding">16dp</dimen>
+    <dimen name="tooltip_height">48dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="fab_bottom_margin">20dp</dimen>
 
 </resources>

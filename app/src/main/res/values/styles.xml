@@ -22,6 +22,15 @@
         <item name="android:textColorPrimary">@color/text_light_secondary</item>
     </style>
 
+    <!-- Sort stocks dialog theme -->
+    <style name="DialogSortStocks" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/grey_card</item>
+        <item name="colorAccent">@color/orange_accent</item>
+        <item name="colorControlNormal">@color/control_highlight</item>
+        <item name="android:textColor">@color/text_light_primary</item>
+        <item name="textColorAlertDialogListItem">@color/text_light_secondary</item>
+    </style>
+
     <style name="PercentChangeTextStyle">
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">#FFF</item>
