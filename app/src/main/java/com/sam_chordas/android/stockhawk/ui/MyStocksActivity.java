@@ -65,7 +65,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     private Cursor mCursor;
     private TrackStockDialog mDialog;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private String mSortOrder = SORT_DEFAULT;
+    private String mSortOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +76,10 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mContext = this;
+
+        // Retrieve user's preferred sort order
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        mSortOrder = sp.getString(getString(R.string.pref_sort_order), SORT_DEFAULT);
 
         // The intent service is for executing immediate pulls from the Yahoo API
         // GCMTaskService can only schedule tasks, they cannot execute immediately
@@ -235,29 +239,34 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         dialogBuilder.setTitle(R.string.sort_dialog_title);
         dialogBuilder.setSingleChoiceItems(R.array.sort_type, defaultChoice, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
+                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MyStocksActivity.this);
+                SharedPreferences.Editor spe = sp.edit();
+
                 switch (which) {
                     case 0:
-                        mSortOrder = SORT_DEFAULT;
+                        spe.putString(MyStocksActivity.this.getString(R.string.pref_sort_order), SORT_DEFAULT);
                         break;
                     case 1:
-                        mSortOrder = SORT_SYMBOL_ASC;
+                        spe.putString(MyStocksActivity.this.getString(R.string.pref_sort_order), SORT_SYMBOL_ASC);
                         break;
                     case 2:
-                        mSortOrder = SORT_SYMBOL_DSC;
+                        spe.putString(MyStocksActivity.this.getString(R.string.pref_sort_order), SORT_SYMBOL_DSC);
                         break;
                     case 3:
-                        mSortOrder = SORT_PRICE_ASC;
+                        spe.putString(MyStocksActivity.this.getString(R.string.pref_sort_order), SORT_PRICE_ASC);
                         break;
                     case 4:
-                        mSortOrder = SORT_PRICE_DSC;
+                        spe.putString(MyStocksActivity.this.getString(R.string.pref_sort_order), SORT_PRICE_DSC);
                         break;
                     case 5:
-                        mSortOrder = SORT_CHANGE_ASC;
+                        spe.putString(MyStocksActivity.this.getString(R.string.pref_sort_order), SORT_CHANGE_ASC);
                         break;
                     case 6:
-                        mSortOrder = SORT_CHANGE_DSC;
+                        spe.putString(MyStocksActivity.this.getString(R.string.pref_sort_order), SORT_CHANGE_DSC);
                         break;
                 }
+
+                spe.apply();
                 dialog.dismiss();
                 getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, MyStocksActivity.this);
             }
@@ -316,6 +325,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        // Stock Hawk Status
         if (key.equals(getString(R.string.pref_hawk_status_key))) {
             @StockTaskService.HawkStatus int status = Utils.getHawkStatus(this);
             switch (status) {
@@ -348,6 +358,10 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                 if (mDialog != null) mDialog.dismiss();
             }
             mSwipeRefreshLayout.setRefreshing(false);
+        }
+        // Sort Order
+        if (key.equals(getString(R.string.pref_sort_order))) {
+            mSortOrder = sharedPreferences.getString(getString(R.string.pref_sort_order), SORT_DEFAULT);
         }
     }
 

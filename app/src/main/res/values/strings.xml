@@ -32,6 +32,9 @@
     <!-- Key name for storing application status in SharedPreferences -->
     <string name="pref_hawk_status_key">hawk_status</string>
 
+    <!-- Key name for storing stocks sort order in SharedPreferences -->
+    <string name="pref_sort_order">stocks_sort_order</string>
+
     <!-- Strings related to Stock Value Graph -->
     <string name="line_graph_activity_title">Stock Value Graph</string>
     <string name="line_graph_extra">stock_symbol</string>
