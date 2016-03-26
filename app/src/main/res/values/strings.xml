@@ -9,12 +9,12 @@
 
     <!-- Error Messages -->
     <string name="empty_stocks_list">Uh-oh! You are not tracking any stocks.</string>
-    <string name="error_no_network">Stock Hawk requires internet connection.\nYour data might be out of date.</string>
+    <string name="error_no_network">Stock Hawk requires internet connection.</string>
     <string name="error_utf8_not_supported">Stock Hawk requires UTF-8 encoding which is not supported by your device.</string>
     <string name="error_corrupted_data">Something went wrong while adding data. Please try again.</string>
     <string name="error_server_down">Stock server is not responding. Please try again later.</string>
     <string name="error_server_invalid">Stock server provided invalid data. Please try again.</string>
-    <string name="error_symbol_saved">You are already tracking it. </string>
+    <string name="error_symbol_saved">You are already tracking this symbol.</string>
     <string name="error_symbol_invalid">Symbol not found.</string>
 
     <!-- Strings related to Track Stock Dialog -->
@@ -72,8 +72,8 @@
     <string name="sort_change_dsc">Change (Descending)</string>
 
     <!-- String used to display time of last update -->
-    <string name="last_updated">Last updated: %1$s</string>
+    <string name="last_updated">Last updated: %1$s.</string>
     <string name="last_updated_never">1970–01–01T00:00:00Z</string>
-    <string name="last_updated_minute">less than a minute ago</string>
+    <string name="last_updated_minute">less than a minute ago.</string>
 
 </resources>
