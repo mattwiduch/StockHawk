@@ -35,6 +35,9 @@
     <!-- Key name for storing stocks sort order in SharedPreferences -->
     <string name="pref_sort_order">stocks_sort_order</string>
 
+    <!-- Key name for storing last update time in SharedPreferences -->
+    <string name="pref_last_update">last_update_time</string>
+
     <!-- Strings related to Stock Value Graph -->
     <string name="line_graph_activity_title">Stock Value Graph</string>
     <string name="line_graph_extra">stock_symbol</string>
@@ -69,6 +72,7 @@
     <string name="sort_change_dsc">Change (Descending)</string>
 
     <!-- String used to display time of last update -->
-    <string name="last_updated">Last updated: %s</string>
+    <string name="last_updated">Last updated: %1$s.</string>
+    <string name="last_updated_never">Never</string>
 
 </resources>

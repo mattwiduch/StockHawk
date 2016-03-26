@@ -24,6 +24,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.facebook.stetho.Stetho;
 import com.google.android.gms.gcm.GcmNetworkManager;
@@ -80,6 +81,12 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         // Retrieve user's preferred sort order
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         mSortOrder = sp.getString(getString(R.string.pref_sort_order), SORT_DEFAULT);
+        TextView lastUpdatedTextView = (TextView) findViewById(R.id.last_update_textview);
+        if (lastUpdatedTextView != null) {
+            lastUpdatedTextView.setText(getString(R.string.last_updated,
+                    sp.getString(getString(R.string.pref_last_update),
+                    getString(R.string.last_updated_never))));
+        }
 
         // The intent service is for executing immediate pulls from the Yahoo API
         // GCMTaskService can only schedule tasks, they cannot execute immediately
@@ -364,6 +371,15 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         // Sort Order
         if (key.equals(getString(R.string.pref_sort_order))) {
             mSortOrder = sharedPreferences.getString(getString(R.string.pref_sort_order), SORT_DEFAULT);
+        }
+        // Last Update Time
+        if (key.equals(getString(R.string.pref_last_update))) {
+            TextView textView = (TextView) findViewById(R.id.last_update_textview);
+            if (textView != null) {
+                textView.setText(getString(R.string.last_updated,
+                        sharedPreferences.getString(getString(R.string.pref_last_update),
+                                getString(R.string.last_updated_never))));
+            }
         }
     }
 
