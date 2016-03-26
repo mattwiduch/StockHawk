@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.text.format.DateUtils;
 
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.service.StockTaskService;
@@ -96,5 +97,13 @@ public class Utils {
         }
 
         return formattedDate;
+    }
+
+    /** Returns relative time since update time */
+    static public String formatLastUpdateTime(Context context, String updateTime) {
+        String formattedUpdateTime = DateUtils.getRelativeTimeSpanString(Instant.parse(updateTime).toEpochMilli(),
+                Instant.now().toEpochMilli(), DateUtils.MINUTE_IN_MILLIS).toString();
+        return formattedUpdateTime.charAt(0) == '0' ? context.getString(R.string.last_updated_minute)
+                : formattedUpdateTime;
     }
 }

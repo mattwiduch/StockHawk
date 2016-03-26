@@ -231,7 +231,7 @@ public class StockTaskService extends GcmTaskService {
             setHawkStatus(HAWK_STATUS_OK);
             if (mTaskType.equals(StockIntentService.TASK_TYPE_INIT)
                     || mTaskType.equals(StockIntentService.TASK_TYPE_PERIODIC)) {
-                setUpdateTime(Instant.now().toString());
+                setUpdateTime(Instant.now());
             }
         }
         return batchOperations;
@@ -287,12 +287,12 @@ public class StockTaskService extends GcmTaskService {
     /**
      * Saves last update time in shared preference.
      *
-     * @param updateTime String representing last update time
+     * @param updateTime Instant representing last update time
      */
-    private static void setUpdateTime(String updateTime) {
+    private static void setUpdateTime(Instant updateTime) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor spe = sp.edit();
-        spe.putString(mContext.getString(R.string.pref_last_update), updateTime);
+        spe.putString(mContext.getString(R.string.pref_last_update), updateTime.toString());
         spe.apply();
     }
 }

@@ -9,6 +9,7 @@ import android.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -79,14 +80,25 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         mContext = this;
 
         // Retrieve user's preferred sort order
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         mSortOrder = sp.getString(getString(R.string.pref_sort_order), SORT_DEFAULT);
-        TextView lastUpdatedTextView = (TextView) findViewById(R.id.last_update_textview);
-        if (lastUpdatedTextView != null) {
-            lastUpdatedTextView.setText(getString(R.string.last_updated,
-                    sp.getString(getString(R.string.pref_last_update),
-                    getString(R.string.last_updated_never))));
-        }
+
+        // Update last updated text view periodically
+        final TextView lastUpdatedTextView = (TextView) findViewById(R.id.last_update_textview);
+        final Handler handler = new Handler();
+        final Runnable updateTask = new Runnable() {
+            @Override
+            public void run() {
+                if (lastUpdatedTextView != null) {
+                    lastUpdatedTextView.setText(getString(R.string.last_updated,
+                            Utils.formatLastUpdateTime(MyStocksActivity.this,
+                                    sp.getString(getString(R.string.pref_last_update),
+                                            getString(R.string.last_updated_never)))));
+                }
+                handler.postDelayed(this, 30000);
+            }
+        };
+        handler.postDelayed(updateTask, 1000);
 
         // The intent service is for executing immediate pulls from the Yahoo API
         // GCMTaskService can only schedule tasks, they cannot execute immediately
@@ -376,9 +388,9 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         if (key.equals(getString(R.string.pref_last_update))) {
             TextView textView = (TextView) findViewById(R.id.last_update_textview);
             if (textView != null) {
-                textView.setText(getString(R.string.last_updated,
-                        sharedPreferences.getString(getString(R.string.pref_last_update),
-                                getString(R.string.last_updated_never))));
+                textView.setText(getString(R.string.last_updated, Utils.formatLastUpdateTime(
+                        this, sharedPreferences.getString(getString(R.string.pref_last_update),
+                                getString(R.string.last_updated_never)))));
             }
         }
     }
