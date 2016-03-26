@@ -26,6 +26,7 @@ import com.squareup.okhttp.Response;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.threeten.bp.Instant;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -42,6 +43,24 @@ import java.util.ArrayList;
 public class StockTaskService extends GcmTaskService {
     private static String LOG_TAG = StockTaskService.class.getSimpleName();
 
+    private OkHttpClient client = new OkHttpClient();
+    private static Context mContext;
+    private StringBuilder mStoredSymbols = new StringBuilder();
+    private boolean isUpdate;
+
+    // Names of the JSON objects that need to be extracted
+    private static final String YFQ_COUNT = "count";
+    private static final String YFQ_QUERY = "query";
+    private static final String YFQ_QUOTE = "quote";
+    private static final String YFQ_RESULTS = "results";
+    private static final String YFQ_STOCK_SYMBOL = "symbol";
+    private static final String YFQ_STOCK_NAME = "Name";
+    private static final String YFQ_STOCK_BID = "Bid";
+    private static final String YFQ_STOCK_CHANGE = "Change";
+    private static final String YFQ_STOCK_CHANGE_IN_PERCENT = "ChangeinPercent";
+    private static final String YFQ_STOCK_CHANGE_FLAT = "0.00";
+    private static final String YFQ_DATA_NOT_AVAILABLE = "null";
+    
     // Define Error States
     public static final int HAWK_STATUS_OK = 100;
     public static final int HAWK_STATUS_SERVER_DOWN = 101;
@@ -56,13 +75,7 @@ public class StockTaskService extends GcmTaskService {
     public @interface HawkStatus {
     }
 
-    private OkHttpClient client = new OkHttpClient();
-    private static Context mContext;
-    private StringBuilder mStoredSymbols = new StringBuilder();
-    private boolean isUpdate;
-
-    public StockTaskService() {
-    }
+    public StockTaskService() {}
 
     public StockTaskService(Context context) {
         mContext = context;
@@ -87,16 +100,17 @@ public class StockTaskService extends GcmTaskService {
         try {
             // Base URL for the Yahoo query
             urlStringBuilder.append("https://query.yahooapis.com/v1/public/yql?q=");
-            urlStringBuilder.append(URLEncoder.encode("select * from yahoo.finance.quotes where symbol "
-                    + "in (", "UTF-8"));
+            urlStringBuilder.append(URLEncoder.encode("SELECT * FROM yahoo.finance.quotes WHERE symbol "
+                    + "IN (", "UTF-8"));
         } catch (UnsupportedEncodingException e) {
             setHawkStatus(HAWK_STATUS_UTF8_NOT_SUPPORTED);
             e.printStackTrace();
         }
-        if (params.getTag().equals("init") || params.getTag().equals("periodic")) {
+        if (params.getTag().equals(StockIntentService.TASK_TYPE_INIT)
+                || params.getTag().equals(StockIntentService.TASK_TYPE_PERIODIC)) {
             isUpdate = true;
             initQueryCursor = mContext.getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
-                    new String[]{"Distinct " + QuoteColumns.SYMBOL}, null,
+                    new String[]{"DISTINCT " + QuoteColumns.SYMBOL}, null,
                     null, null);
             if (initQueryCursor.getCount() == 0 || initQueryCursor == null) {
                 // Init task. Populates DB with quotes for the symbols seen below
@@ -112,7 +126,7 @@ public class StockTaskService extends GcmTaskService {
                 initQueryCursor.moveToFirst();
                 for (int i = 0; i < initQueryCursor.getCount(); i++) {
                     mStoredSymbols.append("\"" +
-                            initQueryCursor.getString(initQueryCursor.getColumnIndex("symbol")) + "\",");
+                            initQueryCursor.getString(initQueryCursor.getColumnIndex(YFQ_STOCK_SYMBOL)) + "\",");
                     initQueryCursor.moveToNext();
                 }
                 mStoredSymbols.replace(mStoredSymbols.length() - 1, mStoredSymbols.length(), ")");
@@ -122,11 +136,12 @@ public class StockTaskService extends GcmTaskService {
                     setHawkStatus(HAWK_STATUS_UTF8_NOT_SUPPORTED);
                     e.printStackTrace();
                 }
+                initQueryCursor.close();
             }
-        } else if (params.getTag().equals("add")) {
+        } else if (params.getTag().equals(StockIntentService.TASK_TYPE_ADD)) {
             isUpdate = false;
             // get symbol from params.getExtra and build query
-            String stockInput = params.getExtras().getString("symbol");
+            String stockInput = params.getExtras().getString(YFQ_STOCK_SYMBOL);
             try {
                 urlStringBuilder.append(URLEncoder.encode("\"" + stockInput + "\")", "UTF-8"));
             } catch (UnsupportedEncodingException e) {
@@ -149,9 +164,9 @@ public class StockTaskService extends GcmTaskService {
                 result = GcmNetworkManager.RESULT_SUCCESS;
                 try {
                     ContentValues contentValues = new ContentValues();
-                    // update ISCURRENT to 0 (false) so new data is current
+                    // update IS_CURRENT to 0 (false) so new data is current
                     if (isUpdate) {
-                        contentValues.put(QuoteColumns.ISCURRENT, 0);
+                        contentValues.put(QuoteColumns.IS_CURRENT, 0);
                         mContext.getContentResolver().update(QuoteProvider.Quotes.CONTENT_URI, contentValues,
                                 null, null);
                     }
@@ -178,23 +193,23 @@ public class StockTaskService extends GcmTaskService {
         try {
             jsonObject = new JSONObject(JSON);
             if (jsonObject != null && jsonObject.length() != 0) {
-                jsonObject = jsonObject.getJSONObject("query");
-                int count = Integer.parseInt(jsonObject.getString("count"));
+                jsonObject = jsonObject.getJSONObject(YFQ_QUERY);
+                int count = Integer.parseInt(jsonObject.getString(YFQ_COUNT));
                 if (count == 1) {
-                    jsonObject = jsonObject.getJSONObject("results")
-                            .getJSONObject("quote");
-                    if (!jsonObject.getString("Name").equals("null")) {
+                    jsonObject = jsonObject.getJSONObject(YFQ_RESULTS)
+                            .getJSONObject(YFQ_QUOTE);
+                    if (!jsonObject.getString(YFQ_STOCK_NAME).equals(YFQ_DATA_NOT_AVAILABLE)) {
                         batchOperations.add(buildBatchOperation(jsonObject));
                     } else {
                         setHawkStatus(HAWK_STATUS_SYMBOL_INVALID);
                     }
                 } else {
-                    resultsArray = jsonObject.getJSONObject("results").getJSONArray("quote");
+                    resultsArray = jsonObject.getJSONObject(YFQ_RESULTS).getJSONArray(YFQ_QUOTE);
 
                     if (resultsArray != null && resultsArray.length() != 0) {
                         for (int i = 0; i < resultsArray.length(); i++) {
                             jsonObject = resultsArray.getJSONObject(i);
-                            if (!jsonObject.getString("Name").equals("null")) {
+                            if (!jsonObject.getString(YFQ_STOCK_NAME).equals(YFQ_DATA_NOT_AVAILABLE)) {
                                 batchOperations.add(buildBatchOperation(jsonObject));
                             } else {
                                 setHawkStatus(HAWK_STATUS_SYMBOL_INVALID);
@@ -216,19 +231,29 @@ public class StockTaskService extends GcmTaskService {
         ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(
                 QuoteProvider.Quotes.CONTENT_URI);
         try {
-            String change = jsonObject.getString("Change");
-            builder.withValue(QuoteColumns.SYMBOL, jsonObject.getString("symbol"));
-            builder.withValue(QuoteColumns.BIDPRICE, Utils.truncateBidPrice(jsonObject.getString("Bid")));
-            builder.withValue(QuoteColumns.PERCENT_CHANGE, Utils.truncateChange(
-                    jsonObject.getString("ChangeinPercent"), true));
-            builder.withValue(QuoteColumns.CHANGE, Utils.truncateChange(change, false));
-            builder.withValue(QuoteColumns.ISCURRENT, 1);
-            if (change.charAt(0) == '-') {
-                builder.withValue(QuoteColumns.ISUP, 0);
+            builder.withValue(QuoteColumns.SYMBOL, jsonObject.getString(YFQ_STOCK_SYMBOL));
+            builder.withValue(QuoteColumns.NAME, jsonObject.getString(YFQ_STOCK_NAME));
+            String bidPrice = jsonObject.getString(YFQ_STOCK_BID).equals(YFQ_DATA_NOT_AVAILABLE)
+                    ? mContext.getString(R.string.data_not_available)
+                    : Utils.truncateBidPrice(jsonObject.getString(YFQ_STOCK_BID));
+            builder.withValue(QuoteColumns.BID_PRICE, bidPrice);
+            String change = jsonObject.getString(YFQ_STOCK_CHANGE).equals(YFQ_DATA_NOT_AVAILABLE)
+                    ? mContext.getString(R.string.data_not_available)
+                    : Utils.truncateChange(jsonObject.getString(YFQ_STOCK_CHANGE), false);
+            builder.withValue(QuoteColumns.CHANGE, change);
+            String percentChange = jsonObject.getString(YFQ_STOCK_CHANGE_IN_PERCENT).equals(YFQ_DATA_NOT_AVAILABLE)
+                    ? mContext.getString(R.string.data_not_available)
+                    : Utils.truncateChange(jsonObject.getString(YFQ_STOCK_CHANGE_IN_PERCENT), true);
+            builder.withValue(QuoteColumns.PERCENT_CHANGE, percentChange);
+            builder.withValue(QuoteColumns.CREATED, Instant.now().toString());
+            builder.withValue(QuoteColumns.IS_CURRENT, 1);
+            if (percentChange.charAt(0) == '-') {
+                builder.withValue(QuoteColumns.IS_UP, -1);
+            } else if (percentChange.contains(YFQ_STOCK_CHANGE_FLAT)){
+                builder.withValue(QuoteColumns.IS_UP, 0);
             } else {
-                builder.withValue(QuoteColumns.ISUP, 1);
+                builder.withValue(QuoteColumns.IS_UP, 1);
             }
-
 
         } catch (JSONException e) {
             setHawkStatus(HAWK_STATUS_SERVER_INVALID);
@@ -246,6 +271,6 @@ public class StockTaskService extends GcmTaskService {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor spe = sp.edit();
         spe.putInt(mContext.getString(R.string.pref_hawk_status_key), hawkStatus);
-        spe.commit();
+        spe.apply();
     }
 }

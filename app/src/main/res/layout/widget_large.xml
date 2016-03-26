@@ -39,7 +39,7 @@
             style="@style/PercentChangeTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/percent_change_pill"
+
             android:paddingLeft="3dp"
             android:paddingRight="3dp"
             tools:text="100%"

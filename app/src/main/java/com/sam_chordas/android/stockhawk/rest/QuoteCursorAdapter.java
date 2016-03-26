@@ -3,13 +3,18 @@ package com.sam_chordas.android.stockhawk.rest;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.ColorInt;
+import android.support.annotation.DrawableRes;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sam_chordas.android.stockhawk.R;
@@ -66,30 +71,33 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final Cursor cursor) {
-        viewHolder.symbol.setText(cursor.getString(cursor.getColumnIndex("symbol")));
-        viewHolder.bidPrice.setText(cursor.getString(cursor.getColumnIndex("bid_price")));
-        int sdk = Build.VERSION.SDK_INT;
-        if (cursor.getInt(cursor.getColumnIndex("is_up")) == 1) {
-            if (sdk < Build.VERSION_CODES.JELLY_BEAN) {
-                viewHolder.change.setBackgroundDrawable(
-                        mContext.getResources().getDrawable(R.drawable.percent_change_pill_green));
-            } else {
-                viewHolder.change.setBackground(
-                        mContext.getResources().getDrawable(R.drawable.percent_change_pill_green));
-            }
+        @ColorInt
+        int color;
+        @DrawableRes
+        Drawable icon;
+        if (cursor.getInt(cursor.getColumnIndex(QuoteColumns.IS_UP)) == -1) {
+            icon = ContextCompat.getDrawable(mContext, R.drawable.ic_trending_down_white_18dp);
+            color = ContextCompat.getColor(mContext, R.color.red_low);
+        } else if (cursor.getInt(cursor.getColumnIndex(QuoteColumns.IS_UP)) == 0) {
+            icon = ContextCompat.getDrawable(mContext, R.drawable.ic_trending_flat_white_18dp);
+            color = ContextCompat.getColor(mContext, R.color.blue_flat);
         } else {
-            if (sdk < Build.VERSION_CODES.JELLY_BEAN) {
-                viewHolder.change.setBackgroundDrawable(
-                        mContext.getResources().getDrawable(R.drawable.percent_change_pill_red));
-            } else {
-                viewHolder.change.setBackground(
-                        mContext.getResources().getDrawable(R.drawable.percent_change_pill_red));
-            }
+            icon = ContextCompat.getDrawable(mContext, R.drawable.ic_trending_up_white_18dp);
+            color = ContextCompat.getColor(mContext, R.color.green_high);
         }
+
+        viewHolder.icon.setImageDrawable(icon);
+        viewHolder.icon.setColorFilter(color);
+        viewHolder.symbol.setText(cursor.getString(cursor.getColumnIndex(QuoteColumns.SYMBOL)));
+        viewHolder.name.setText(cursor.getString(cursor.getColumnIndex(QuoteColumns.NAME)));
+        viewHolder.bidPrice.setText(cursor.getString(cursor.getColumnIndex(QuoteColumns.BID_PRICE)));
+
+        viewHolder.change.setTextColor(color);
+        //viewHolder.change.setAlpha(0.7f);
         if (Utils.showPercent) {
-            viewHolder.change.setText(cursor.getString(cursor.getColumnIndex("percent_change")));
+            viewHolder.change.setText(cursor.getString(cursor.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
         } else {
-            viewHolder.change.setText(cursor.getString(cursor.getColumnIndex("change")));
+            viewHolder.change.setText(cursor.getString(cursor.getColumnIndex(QuoteColumns.CHANGE)));
         }
     }
 
@@ -125,25 +133,35 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
 
     public static class ViewHolder extends RecyclerView.ViewHolder
             implements ItemTouchHelperViewHolder, View.OnClickListener {
+        public final ImageView icon;
         public final TextView symbol;
+        public final TextView name;
         public final TextView bidPrice;
         public final TextView change;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            icon = (ImageView) itemView.findViewById(R.id.list_item_icon);
             symbol = (TextView) itemView.findViewById(R.id.stock_symbol);
+            name = (TextView) itemView.findViewById(R.id.stock_name);
             bidPrice = (TextView) itemView.findViewById(R.id.bid_price);
             change = (TextView) itemView.findViewById(R.id.change);
         }
 
         @Override
         public void onItemSelected() {
-            itemView.setBackgroundColor(Color.LTGRAY);
+            itemView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.control_highlight));
         }
 
         @Override
         public void onItemClear() {
-            itemView.setBackgroundColor(0);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                // If we're running on Honeycomb or newer, then we can use the Theme's
+                // selectableItemBackground to ensure that the View has a pressed state
+                TypedValue outValue = new TypedValue();
+                mContext.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+                itemView.setBackgroundResource(outValue.resourceId);
+            }
         }
 
         @Override

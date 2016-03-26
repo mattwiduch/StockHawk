@@ -6,7 +6,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Theme.AppCompat">
 
         <uses-permission android:name="android.permission.INTERNET"/>
         <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
@@ -19,13 +19,24 @@
         <uses-permission
             android:name="com.google.android.gcm.demo.permission.C2D_MESSAGE"/>
         <activity
+            android:launchMode="singleTop"
             android:name="com.sam_chordas.android.stockhawk.ui.MyStocksActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.LineGraphActivity"
+
+            android:theme="@style/GraphActivityTheme"
+            android:parentActivityName=".ui.MyStocksActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sam_chordas.android.stockhawk.ui.MyStocksActivity" />
         </activity>
 
         <service
