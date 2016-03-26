@@ -17,4 +17,5 @@
     <dimen name="underline_padding">4dp</dimen>
     <dimen name="underline_height">1dp</dimen>
     <dimen name="graph_label_padding">10dp</dimen>
+    <dimen name="list_item_height">72dp</dimen>
 </resources>
