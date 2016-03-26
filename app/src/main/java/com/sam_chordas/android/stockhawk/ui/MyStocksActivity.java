@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -22,9 +23,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.facebook.stetho.Stetho;
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
+import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
@@ -43,6 +46,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
      */
 
     private static final int CURSOR_LOADER_ID = 0;
+    private static final String DIALOG_TAG = "track_stock_dialog";
 
     private Intent mServiceIntent;
     private ItemTouchHelper mItemTouchHelper;
@@ -55,7 +59,8 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        Stetho.initializeWithDefaults(this);
+        Stetho.initializeWithDefaults(this);
+        AndroidThreeTen.init(getApplication());
         setContentView(R.layout.activity_my_stocks);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -67,7 +72,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 
         if (savedInstanceState == null) {
             // Run the initialize task service so that some stocks appear upon an empty database
-            mServiceIntent.putExtra("tag", "init");
+            mServiceIntent.putExtra(StockIntentService.TASK_TAG, StockIntentService.TASK_TYPE_INIT);
             if (Utils.isNetworkAvailable(this)) {
                 startService(mServiceIntent);
             } else {
@@ -76,21 +81,31 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         }
 
         // Prepare RecyclerView
+        getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, R.drawable.divider));
 
         View emptyView = findViewById(R.id.recycler_view_empty);
         mCursorAdapter = new QuoteCursorAdapter(this, null, emptyView);
+
         recyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(this,
                 new RecyclerViewItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View v, int position) {
-                        //TODO:
-                        // do something on item click
+                        if (position < mCursor.getCount()) {
+                            mCursor = mCursorAdapter.getCursor();
+                            mCursor.moveToPosition(position);
+                            String symbol = mCursor.getString(mCursor.getColumnIndex("symbol"));
+                            Intent intent = new Intent(MyStocksActivity.this, LineGraphActivity.class)
+                                    .putExtra(getString(R.string.line_graph_extra), symbol);
+
+                            ActivityCompat.startActivity(MyStocksActivity.this, intent, null);
+                        }
                     }
                 }));
         recyclerView.setAdapter(mCursorAdapter);
+
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mCursorAdapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
@@ -99,10 +114,9 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mServiceIntent.putExtra("tag", "init");
+                mServiceIntent.putExtra(StockIntentService.TASK_TAG, StockIntentService.TASK_TYPE_INIT);
                 if (Utils.isNetworkAvailable(mContext)) {
                     startService(mServiceIntent);
-
                 } else {
                     networkSnackbar();
                 }
@@ -115,7 +129,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
             public void onClick(View v) {
                 if (Utils.isNetworkAvailable(mContext)) {
                     mDialog = new TrackStockDialog();
-                    mDialog.show(getSupportFragmentManager(), "TRACK_STOCK_DIALOG");
+                    mDialog.show(getSupportFragmentManager(), DIALOG_TAG);
                 } else {
                     networkSnackbar();
                 }
@@ -125,7 +139,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         if (Utils.isNetworkAvailable(this)) {
             long period = 3600L;
             long flex = 10L;
-            String periodicTag = "periodic";
 
             // create a periodic task to pull stocks once every hour after the app has been opened. This
             // is so Widget data stays up to date.
@@ -133,7 +146,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                     .setService(StockTaskService.class)
                     .setPeriod(period)
                     .setFlex(flex)
-                    .setTag(periodicTag)
+                    .setTag(StockIntentService.TASK_TYPE_PERIODIC)
                     .setRequiredNetwork(Task.NETWORK_STATE_CONNECTED)
                     .setRequiresCharging(false)
                     .build();
@@ -193,7 +206,8 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                 .setAction("RETRY", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        mServiceIntent.putExtra("tag", "init");
+                        mServiceIntent.putExtra(StockIntentService.TASK_TAG,
+                                StockIntentService.TASK_TYPE_INIT);
                         if (Utils.isNetworkAvailable(mContext)) {
                             startService(mServiceIntent);
                         } else {
@@ -201,7 +215,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                         }
                     }
                 })
-                .setActionTextColor(ContextCompat.getColor(mContext, R.color.material_green_A400));
+                .setActionTextColor(ContextCompat.getColor(mContext, R.color.green_action));
         snackbar.show();
     }
 
@@ -209,9 +223,9 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         // This narrows the return to only the stocks that are most current.
         return new CursorLoader(this, QuoteProvider.Quotes.CONTENT_URI,
-                new String[]{QuoteColumns._ID, QuoteColumns.SYMBOL, QuoteColumns.BIDPRICE,
-                        QuoteColumns.PERCENT_CHANGE, QuoteColumns.CHANGE, QuoteColumns.ISUP},
-                QuoteColumns.ISCURRENT + " = ?",
+                new String[]{QuoteColumns._ID, QuoteColumns.SYMBOL, QuoteColumns.NAME, QuoteColumns.BID_PRICE,
+                        QuoteColumns.PERCENT_CHANGE, QuoteColumns.CHANGE, QuoteColumns.IS_UP},
+                QuoteColumns.IS_CURRENT + " = ?",
                 new String[]{"1"},
                 null);
     }
@@ -232,40 +246,33 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.pref_hawk_status_key))) {
             @StockTaskService.HawkStatus int status = Utils.getHawkStatus(this);
-            if (status != StockTaskService.HAWK_STATUS_UNKNOWN &&
-                    status != StockTaskService.HAWK_STATUS_SYMBOL_INVALID && mDialog != null) {
-                mDialog.dismiss();
-            }
             switch (status) {
                 case StockTaskService.HAWK_STATUS_UNKNOWN:
                     break;
                 case StockTaskService.HAWK_STATUS_SERVER_DOWN:
                     showSnackbar(getString(R.string.error_server_down));
-                    Utils.resetHawkStatus(this);
                     break;
                 case StockTaskService.HAWK_STATUS_SERVER_INVALID:
                     showSnackbar(getString(R.string.error_server_invalid));
-                    Utils.resetHawkStatus(this);
                     break;
                 case StockTaskService.HAWK_STATUS_SYMBOL_INVALID:
-                    if (mDialog != null) {
-                        mDialog.setErrorMessage(getString(R.string.error_symbol_invalid));
-                    }
-                    Utils.resetHawkStatus(this);
+                    if (mDialog != null) mDialog.setErrorMessage(getString(R.string.error_symbol_invalid));
                     break;
                 case StockTaskService.HAWK_STATUS_DATA_CORRUPTED:
                     showSnackbar(getString(R.string.error_corrupted_data));
-                    Utils.resetHawkStatus(this);
                     break;
                 case StockTaskService.HAWK_STATUS_UTF8_NOT_SUPPORTED:
                     showSnackbar(getString(R.string.error_utf8_not_supported));
-                    Utils.resetHawkStatus(this);
                     break;
                 case StockTaskService.HAWK_STATUS_OK:
-                    Utils.resetHawkStatus(this);
                     break;
                 default:
                     break;
+            }
+
+            if (status != StockTaskService.HAWK_STATUS_UNKNOWN
+                    && status != StockTaskService.HAWK_STATUS_SYMBOL_INVALID) {
+                if (mDialog != null) mDialog.dismiss();
             }
             mSwipeRefreshLayout.setRefreshing(false);
         }
@@ -283,6 +290,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mDialog = (TrackStockDialog) getSupportFragmentManager().findFragmentByTag("TRACK_STOCK_DIALOG");
+        mDialog = (TrackStockDialog) getSupportFragmentManager().findFragmentByTag(DIALOG_TAG);
     }
 }

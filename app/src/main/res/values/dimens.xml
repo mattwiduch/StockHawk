@@ -10,4 +10,16 @@
     <dimen name="widget_default_height">110dp</dimen>
     <dimen name="widget_default_width">110dp</dimen>
     <dimen name="appbar_elevation">4dp</dimen>
+    <dimen name="cardview_corner_radius">2dp</dimen>
+    <dimen name="content_spacing">8dp</dimen>
+    <dimen name="content_padding">16dp</dimen>
+    <dimen name="title_padding">24dp</dimen>
+    <dimen name="underline_padding">4dp</dimen>
+    <dimen name="divider_height">1dp</dimen>
+    <dimen name="graph_label_padding">10dp</dimen>
+    <dimen name="list_item_height">72dp</dimen>
+    <dimen name="list_item_left_padding">56dp</dimen>
+    <dimen name="list_item_vertical_text_spacing">4dp</dimen>
+    <dimen name="list_icon_padding">16dp</dimen>
+
 </resources>

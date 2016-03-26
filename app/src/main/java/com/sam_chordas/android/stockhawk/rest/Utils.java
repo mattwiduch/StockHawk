@@ -9,6 +9,8 @@ import android.preference.PreferenceManager;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.service.StockTaskService;
 
+import org.threeten.bp.Instant;
+
 /**
  * Created by sam_chordas on 10/8/15.
  */
@@ -75,5 +77,24 @@ public class Utils {
         SharedPreferences.Editor spe = sp.edit();
         spe.putInt(context.getString(R.string.pref_hawk_status_key), StockTaskService.HAWK_STATUS_UNKNOWN);
         spe.apply();
+    }
+
+    static public String formatGraphDateLabels(String date) {
+        String currentDate = Instant.now().toString();
+        String formattedDate;
+
+        if (currentDate.substring(0, 9).equals(date.substring(0, 9))) {
+            if (Integer.parseInt(currentDate.substring(9, 10)) == Integer.parseInt(date.substring(9, 10))
+                || Integer.parseInt(currentDate.substring(9, 10)) - 1 == Integer.parseInt(date.substring(9, 10)))
+            {
+                formattedDate = date.substring(11, 16);
+            } else {
+                formattedDate = date.substring(5, 10);
+            }
+        } else {
+            formattedDate = date.substring(5, 10);
+        }
+
+        return formattedDate;
     }
 }
