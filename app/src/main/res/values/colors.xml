@@ -13,6 +13,7 @@
     <!-- Stock Tendency Colors -->
     <color name="green_high">#4BC98A</color>
     <color name="red_low">#F06976</color>
+    <color name="blue_flat">#4BA1C9</color>
 
     <!-- Text Colors -->
     <color name="text_light_primary">#FFFFFF</color>

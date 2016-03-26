@@ -18,4 +18,8 @@
     <dimen name="divider_height">1dp</dimen>
     <dimen name="graph_label_padding">10dp</dimen>
     <dimen name="list_item_height">72dp</dimen>
+    <dimen name="list_item_left_padding">56dp</dimen>
+    <dimen name="list_item_vertical_text_spacing">4dp</dimen>
+    <dimen name="list_icon_padding">16dp</dimen>
+
 </resources>

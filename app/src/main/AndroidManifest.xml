@@ -32,7 +32,7 @@
         <activity
             android:name=".ui.LineGraphActivity"
 
-            android:theme="@style/AppTheme"
+            android:theme="@style/GraphActivityTheme"
             android:parentActivityName=".ui.MyStocksActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
