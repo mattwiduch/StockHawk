@@ -213,7 +213,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/underline_height"
+                    android:layout_height="@dimen/divider_height"
                     android:background="@color/divider_light"/>
 
                 <TableRow
@@ -244,7 +244,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/underline_height"
+                    android:layout_height="@dimen/divider_height"
                     android:background="@color/divider_light"/>
 
                 <TableRow
@@ -275,7 +275,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/underline_height"
+                    android:layout_height="@dimen/divider_height"
                     android:background="@color/divider_light"/>
 
                 <TableRow
@@ -306,7 +306,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/underline_height"
+                    android:layout_height="@dimen/divider_height"
                     android:background="@color/divider_light"/>
 
                 <TableRow
@@ -337,7 +337,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/underline_height"
+                    android:layout_height="@dimen/divider_height"
                     android:background="@color/divider_light"/>
 
             </TableLayout>
@@ -381,7 +381,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/underline_height"
+                    android:layout_height="@dimen/divider_height"
                     android:background="@color/divider_light"/>
 
                 <TableRow
@@ -412,7 +412,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/underline_height"
+                    android:layout_height="@dimen/divider_height"
                     android:background="@color/divider_light"/>
 
                 <TableRow
@@ -443,7 +443,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/underline_height"
+                    android:layout_height="@dimen/divider_height"
                     android:background="@color/divider_light"/>
 
                 <TableRow
@@ -474,7 +474,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/underline_height"
+                    android:layout_height="@dimen/divider_height"
                     android:background="@color/divider_light"/>
 
                 <TableRow
@@ -505,7 +505,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/underline_height"
+                    android:layout_height="@dimen/divider_height"
                     android:background="@color/divider_light"/>
 
             </TableLayout>
