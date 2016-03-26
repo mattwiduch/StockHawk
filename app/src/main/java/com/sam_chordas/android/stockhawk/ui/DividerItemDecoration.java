@@ -8,6 +8,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.sam_chordas.android.stockhawk.rest.QuoteCursorAdapter;
+
 /**
  * Created by frano on 25/03/2016.
  */
@@ -36,18 +38,20 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     @Override
     public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
         int childCount = parent.getChildCount();
-        for (int i = 0; i < childCount - 1; i++) {
+        for (int i = 0; i < childCount; i++) {
             View child = parent.getChildAt(i);
-            int left = child.getPaddingLeft();
-            int right = child.getWidth() - child.getPaddingRight();
+            if (parent.getChildViewHolder(child) instanceof QuoteCursorAdapter.ListItemViewHolder) {
+                int left = child.getPaddingLeft();
+                int right = child.getWidth() - child.getPaddingRight();
 
-            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
 
-            int top = child.getBottom() + params.bottomMargin;
-            int bottom = top + mDivider.getIntrinsicHeight();
+                int top = child.getBottom() + params.bottomMargin;
+                int bottom = top + mDivider.getIntrinsicHeight();
 
-            mDivider.setBounds(left, top, right, bottom);
-            mDivider.draw(c);
+                mDivider.setBounds(left, top, right, bottom);
+                mDivider.draw(c);
+            }
         }
     }
 }
