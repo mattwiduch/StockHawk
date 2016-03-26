@@ -280,7 +280,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 
 
     private void networkSnackbar() {
-        mSwipeRefreshLayout.setRefreshing(false);
+        if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(false);
         Snackbar snackbar = Snackbar
                 .make(findViewById(R.id.layout_my_stocks), getString(R.string.error_no_network),
                         Snackbar.LENGTH_INDEFINITE)
@@ -297,6 +297,8 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                     }
                 })
                 .setActionTextColor(ContextCompat.getColor(mContext, R.color.green_action));
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(ContextCompat.getColor(this, R.color.grey_primary));
         snackbar.show();
     }
 
@@ -371,6 +373,8 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     private void showSnackbar(String message) {
         Snackbar snackbar = Snackbar
                 .make(findViewById(R.id.layout_my_stocks), message, Snackbar.LENGTH_LONG);
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(ContextCompat.getColor(this, R.color.grey_primary));
         snackbar.show();
     }
 
