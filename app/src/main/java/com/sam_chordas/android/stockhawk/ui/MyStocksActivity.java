@@ -50,6 +50,14 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     private static final int CURSOR_LOADER_ID = 0;
     private static final String DIALOG_TAG = "track_stock_dialog";
 
+    private static final String SORT_DEFAULT = "null";
+    private static final String SORT_SYMBOL_ASC = QuoteColumns.SYMBOL + " ASC";
+    private static final String SORT_SYMBOL_DSC = QuoteColumns.SYMBOL + " DESC";
+    private static final String SORT_PRICE_ASC = QuoteColumns.BID_PRICE + " ASC";
+    private static final String SORT_PRICE_DSC = QuoteColumns.BID_PRICE + " DESC";
+    private static final String SORT_CHANGE_ASC = QuoteColumns.PERCENT_CHANGE + " ASC";
+    private static final String SORT_CHANGE_DSC = QuoteColumns.PERCENT_CHANGE + " DESC";
+
     private Intent mServiceIntent;
     private ItemTouchHelper mItemTouchHelper;
     private QuoteCursorAdapter mCursorAdapter;
@@ -57,6 +65,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     private Cursor mCursor;
     private TrackStockDialog mDialog;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private String mSortOrder = SORT_DEFAULT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -215,12 +224,42 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
      */
     private void createSortDialog() {
         int defaultChoice = 0;
+        if (mSortOrder.equals(SORT_SYMBOL_ASC)) defaultChoice = 1;
+        if (mSortOrder.equals(SORT_SYMBOL_DSC)) defaultChoice = 2;
+        if (mSortOrder.equals(SORT_PRICE_ASC)) defaultChoice = 3;
+        if (mSortOrder.equals(SORT_PRICE_DSC)) defaultChoice = 4;
+        if (mSortOrder.equals(SORT_CHANGE_ASC)) defaultChoice = 5;
+        if (mSortOrder.equals(SORT_CHANGE_DSC)) defaultChoice = 6;
 
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this, R.style.DialogSortStocks);
         dialogBuilder.setTitle(R.string.sort_dialog_title);
         dialogBuilder.setSingleChoiceItems(R.array.sort_type, defaultChoice, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                //dialog.dismiss();
+                switch (which) {
+                    case 0:
+                        mSortOrder = SORT_DEFAULT;
+                        break;
+                    case 1:
+                        mSortOrder = SORT_SYMBOL_ASC;
+                        break;
+                    case 2:
+                        mSortOrder = SORT_SYMBOL_DSC;
+                        break;
+                    case 3:
+                        mSortOrder = SORT_PRICE_ASC;
+                        break;
+                    case 4:
+                        mSortOrder = SORT_PRICE_DSC;
+                        break;
+                    case 5:
+                        mSortOrder = SORT_CHANGE_ASC;
+                        break;
+                    case 6:
+                        mSortOrder = SORT_CHANGE_DSC;
+                        break;
+                }
+                dialog.dismiss();
+                getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, MyStocksActivity.this);
             }
         });
 
@@ -260,7 +299,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                         QuoteColumns.PERCENT_CHANGE, QuoteColumns.CHANGE, QuoteColumns.IS_UP},
                 QuoteColumns.IS_CURRENT + " = ?",
                 new String[]{"1"},
-                null);
+                mSortOrder);
     }
 
     @Override
