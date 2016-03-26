@@ -92,6 +92,8 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
         viewHolder.name.setText(cursor.getString(cursor.getColumnIndex(QuoteColumns.NAME)));
         viewHolder.bidPrice.setText(cursor.getString(cursor.getColumnIndex(QuoteColumns.BID_PRICE)));
 
+        viewHolder.change.setTextColor(color);
+        //viewHolder.change.setAlpha(0.7f);
         if (Utils.showPercent) {
             viewHolder.change.setText(cursor.getString(cursor.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
         } else {
