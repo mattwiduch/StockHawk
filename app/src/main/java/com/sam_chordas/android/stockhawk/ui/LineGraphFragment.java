@@ -109,8 +109,15 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
 
         // Generic chart customization
         @ColorInt
-        int bgColor = isUp == 1 ? ContextCompat.getColor(getContext(), R.color.green_high)
-                : ContextCompat.getColor(getContext(), R.color.red_low);
+        int bgColor;
+        if (isUp == -1) {
+            bgColor = ContextCompat.getColor(getContext(), R.color.red_low);
+        } else if (isUp == 0) {
+            bgColor = ContextCompat.getColor(getContext(), R.color.blue_flat);
+        } else {
+            bgColor = ContextCompat.getColor(getContext(), R.color.green_high);
+        }
+
         lineChart.setXAxis(false);
         lineChart.setYAxis(false);
         lineChart.setBackgroundColor(bgColor);
