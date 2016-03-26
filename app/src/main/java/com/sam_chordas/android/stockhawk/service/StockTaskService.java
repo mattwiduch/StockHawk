@@ -58,6 +58,7 @@ public class StockTaskService extends GcmTaskService {
     private static final String YFQ_STOCK_BID = "Bid";
     private static final String YFQ_STOCK_CHANGE = "Change";
     private static final String YFQ_STOCK_CHANGE_IN_PERCENT = "ChangeinPercent";
+    private static final String YFQ_STOCK_CHANGE_FLAT = "0.00";
     private static final String YFQ_DATA_NOT_AVAILABLE = "null";
     
     // Define Error States
@@ -246,7 +247,9 @@ public class StockTaskService extends GcmTaskService {
             builder.withValue(QuoteColumns.PERCENT_CHANGE, percentChange);
             builder.withValue(QuoteColumns.CREATED, Instant.now().toString());
             builder.withValue(QuoteColumns.IS_CURRENT, 1);
-            if (change.charAt(0) == '-') {
+            if (percentChange.charAt(0) == '-') {
+                builder.withValue(QuoteColumns.IS_UP, -1);
+            } else if (percentChange.contains(YFQ_STOCK_CHANGE_FLAT)){
                 builder.withValue(QuoteColumns.IS_UP, 0);
             } else {
                 builder.withValue(QuoteColumns.IS_UP, 1);
