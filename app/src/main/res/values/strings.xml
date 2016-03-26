@@ -68,4 +68,7 @@
     <string name="sort_change_asc">Change (Ascending)</string>
     <string name="sort_change_dsc">Change (Descending)</string>
 
+    <!-- String used to display time of last update -->
+    <string name="last_updated">Last updated: %s</string>
+
 </resources>
