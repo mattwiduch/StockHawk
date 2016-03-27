@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/widget_large"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/touch_selector_dark"
+              android:gravity="center_vertical"
+              android:orientation="horizontal"
+              android:padding="@dimen/widget_margin">
+
+    <ImageView
+        android:id="@+id/widget_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/list_icon_padding"
+        tools:src="@drawable/ic_trending_up_white_18dp"/>
+
+    <LinearLayout
+        android:id="@+id/widget_symbol_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/content_padding"
+        android:paddingLeft="@dimen/content_spacing"
+        android:paddingRight="@dimen/content_padding"
+        android:paddingStart="@dimen/content_spacing">
+
+        <TextView
+            android:id="@+id/widget_stock_symbol"
+            style="@style/StockSymbolTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            tools:text="GOOG"/>
+
+        <TextView
+            android:id="@+id/widget_stock_name"
+            style="@style/StockNameTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:ellipsize="marquee"
+            android:fadingEdge="horizontal"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            tools:text="Alphabet Inc."/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/widget_price_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingLeft="0dp"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingStart="0dp">
+
+        <TextView
+            android:id="@+id/widget_bid_price"
+            style="@style/StockSymbolTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:gravity="end"
+            tools:text="1000.00"/>
+
+        <TextView
+            android:id="@+id/widget_change"
+            style="@style/StockNameTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:gravity="end"
+            tools:text="100%"/>
+
+    </LinearLayout>
+</LinearLayout>

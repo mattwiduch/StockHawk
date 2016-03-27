@@ -18,10 +18,12 @@
 
         <uses-permission
             android:name="com.google.android.gcm.demo.permission.C2D_MESSAGE"/>
+
+        <!-- My Stocks Activity -->
         <activity
-            android:launchMode="singleTop"
             android:name="com.sam_chordas.android.stockhawk.ui.MyStocksActivity"
             android:label="@string/app_name"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -29,15 +31,31 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <!-- Line Graph Activity -->
         <activity
             android:name=".ui.LineGraphActivity"
-
-            android:theme="@style/GraphActivityTheme"
-            android:parentActivityName=".ui.MyStocksActivity">
+            android:parentActivityName=".ui.MyStocksActivity"
+            android:theme="@style/GraphActivityTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.sam_chordas.android.stockhawk.ui.MyStocksActivity" />
+                android:value="com.sam_chordas.android.stockhawk.ui.MyStocksActivity"/>
         </activity>
+
+        <!-- Quote Widget Configuration Activity -->
+        <activity
+            android:name=".widget.QuoteWidgetConfigurationActivity"
+            android:theme="@style/Widget.Configure">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
+
+        <!-- Stock data provider -->
+        <provider
+            android:name=".data.generated.QuoteProvider"
+            android:authorities="com.sam_chordas.android.stockhawk.data.QuoteProvider"
+            android:exported="false"/>
 
         <service
             android:name="com.sam_chordas.android.stockhawk.service.StockTaskService"
@@ -49,23 +67,37 @@
         </service>
         <service android:name="com.sam_chordas.android.stockhawk.service.StockIntentService"/>
 
-        <provider
-            android:name="com.sam_chordas.android.stockhawk.data.generated.QuoteProvider"
-            android:authorities="com.sam_chordas.android.stockhawk.data.QuoteProvider"
-            android:exported="false"/>
+        <!-- Stock Quote Widget -->
         <receiver
             android:name=".widget.QuoteWidgetProvider"
-            android:label="@string/widget_title">
+            android:label="@string/widget_quote_title">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="com.sam_chordas.android.stockhawk.ACTION_DATA_UPDATED"/>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget_info"/>
+                android:resource="@xml/widget_info_quote"/>
         </receiver>
+        <service android:name=".widget.QuoteWidgetIntentService"/>
 
+        <!-- Today's Market Widget -->
+        <receiver
+            android:name=".widget.MarketWidgetProvider"
+            android:enabled="true"
+            android:label="@string/widget_market_title">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="com.sam_chordas.android.stockhawk.ACTION_DATA_UPDATED"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_market"/>
+        </receiver>
         <service
-            android:name=".widget.QuoteWidgetRemoteViewsService"
+            android:name=".widget.MarketWidgetRemoteViewsService"
+            android:enabled="true"
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
     </application>
