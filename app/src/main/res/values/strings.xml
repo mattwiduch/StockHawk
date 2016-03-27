@@ -77,11 +77,13 @@
     <string name="widget_quote_title">Stock Hawk Quote</string>
     <string name="widget_market_title">Stock Hawk Market</string>
     <string name="widget_market_heading">Today\'s Market</string>
-    <string name="widget_default_symbol">GOOG</string>
-    <string name="widget_choose_symbol">Choose stock symbol</string>
-    <string name="dialog_button_negative">Cancel</string>
-    <string name="dialog_button_positive">OK</string>
     <string name="widget_quote_empty">%1$s is no longer being tracked</string>
     <string name="widget_quote_empty_label">Error</string>
+
+    <!-- Strings related to quote widget configuration -->
+    <string name="widget_default_symbol">GOOG</string>
+    <string name="widget_config_spinner_item">%1$s - %2$s</string>
+    <string name="dialog_button_negative">Cancel</string>
+    <string name="dialog_button_positive">OK</string>
 
 </resources>

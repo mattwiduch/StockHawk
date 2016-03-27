@@ -5,25 +5,12 @@
               android:gravity="center_horizontal"
               android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:layout_margin="@dimen/title_padding"
-        android:text="@string/widget_choose_symbol"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
-
     <Spinner
         android:id="@+id/symbols_spinner"
         style="@style/Widget.AppCompat.Spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/title_padding"
-        android:layout_marginEnd="@dimen/title_padding"
-        android:layout_marginLeft="@dimen/title_padding"
-        android:layout_marginRight="@dimen/title_padding"
-        android:layout_marginStart="@dimen/title_padding"
-        android:layout_marginTop="0dp"
+        android:layout_margin="@dimen/title_padding"
         android:popupBackground="@color/grey_card"/>
 
     <LinearLayout

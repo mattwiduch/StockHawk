@@ -50,7 +50,9 @@ public class QuoteWidgetConfigurationActivity extends Activity implements Adapte
             if (data != null && data.getCount() != 0) {
                 while (data.moveToNext()) {
                     symbols.add(data.getString(data.getColumnIndex(QuoteColumns.SYMBOL)));
-                    names.add(data.getString(data.getColumnIndex(QuoteColumns.NAME)));
+                    names.add(getString(R.string.widget_config_spinner_item,
+                            data.getString(data.getColumnIndex(QuoteColumns.SYMBOL)),
+                            data.getString(data.getColumnIndex(QuoteColumns.NAME))));
                 }
                 data.close();
             } else {
@@ -61,7 +63,7 @@ public class QuoteWidgetConfigurationActivity extends Activity implements Adapte
 
             Spinner symbolsSpinner = (Spinner) findViewById(R.id.symbols_spinner);
             ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, names);
-            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
             symbolsSpinner.setAdapter(spinnerAdapter);
             symbolsSpinner.setOnItemSelectedListener(this);
 
