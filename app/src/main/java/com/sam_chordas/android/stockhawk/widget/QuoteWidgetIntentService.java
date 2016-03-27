@@ -52,6 +52,10 @@ public class QuoteWidgetIntentService extends IntentService {
                 return;
             }
             if (!data.moveToFirst()) {
+                views.setTextViewText(R.id.widget_stock_symbol, getString(R.string.widget_quote_empty_label));
+                views.setTextViewText(R.id.widget_stock_name, getString(R.string.widget_quote_empty, symbol));
+                launchMainActivity(views);
+                appWidgetManager.updateAppWidget(appWidgetId, views);
                 data.close();
                 return;
             }
@@ -83,9 +87,7 @@ public class QuoteWidgetIntentService extends IntentService {
             views.setContentDescription(R.id.widget_icon, symbol);
 
             // Create an Intent to launch MainActivity
-            Intent launchIntent = new Intent(this, MyStocksActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, launchIntent, 0);
-            views.setOnClickPendingIntent(R.id.widget_large, pendingIntent);
+            launchMainActivity(views);
 
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -93,5 +95,12 @@ public class QuoteWidgetIntentService extends IntentService {
             // Close cursor
             data.close();
         }
+    }
+
+    /** Sets pending intent to launch MyStocksActivity */
+    private void launchMainActivity(RemoteViews views) {
+        Intent launchIntent = new Intent(this, MyStocksActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, launchIntent, 0);
+        views.setOnClickPendingIntent(R.id.widget_large, pendingIntent);
     }
 }

@@ -80,5 +80,7 @@
     <string name="widget_choose_symbol">Choose stock symbol</string>
     <string name="dialog_button_negative">Cancel</string>
     <string name="dialog_button_positive">OK</string>
+    <string name="widget_quote_empty">%1$s is no longer being tracked</string>
+    <string name="widget_quote_empty_label">Error</string>
 
 </resources>
