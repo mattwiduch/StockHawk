@@ -85,17 +85,19 @@
         <!-- Today's Market Widget -->
         <receiver
             android:name=".widget.MarketWidgetProvider"
+            android:enabled="true"
             android:label="@string/widget_market_title">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-                <action android:name="com.example.android.sunshine.app.ACTION_DATA_UPDATED"/>
+                <action android:name="com.sam_chordas.android.stockhawk.ACTION_DATA_UPDATED"/>
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget_info_market"/>
+                android:resource="@xml/widget_market_info"/>
         </receiver>
         <service
-            android:name=".widget.DetailWidgetRemoteViewsService"
+            android:name=".widget.MarketWidgetRemoteViewsService"
+            android:enabled="true"
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
     </application>

@@ -41,8 +41,8 @@
             android:id="@+id/widget_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@null"
-            android:dividerHeight="0dp"
+            android:divider="@color/divider_light"
+            android:dividerHeight="1dp"
             tools:listitem="@layout/widget_market_item"/>
 
         <TextView

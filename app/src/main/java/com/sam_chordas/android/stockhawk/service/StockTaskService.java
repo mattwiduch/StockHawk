@@ -234,9 +234,7 @@ public class StockTaskService extends GcmTaskService {
             if (mTaskType.equals(StockIntentService.TASK_TYPE_INIT)
                     || mTaskType.equals(StockIntentService.TASK_TYPE_PERIODIC)) {
                 setUpdateTime(Instant.now());
-                if (mTaskType.equals(StockIntentService.TASK_TYPE_PERIODIC)) {
-                    updateWidgets();
-                }
+                updateWidgets();
             }
         }
         return batchOperations;

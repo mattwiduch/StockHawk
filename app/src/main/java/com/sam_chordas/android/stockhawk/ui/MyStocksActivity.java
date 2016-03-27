@@ -341,6 +341,8 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+        Intent dataUpdatedIntent = new Intent(StockTaskService.ACTION_DATA_UPDATED).setPackage(getPackageName());
+        sendBroadcast(dataUpdatedIntent);
         mCursorAdapter.swapCursor(null);
     }
 
