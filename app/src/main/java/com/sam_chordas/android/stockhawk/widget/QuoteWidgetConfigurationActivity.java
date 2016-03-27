@@ -47,7 +47,7 @@ public class QuoteWidgetConfigurationActivity extends Activity implements Adapte
 
             final List<String> symbols = new ArrayList<>();
             final List<String> names = new ArrayList<>();
-            if (data != null) {
+            if (data != null && data.getCount() != 0) {
                 while (data.moveToNext()) {
                     symbols.add(data.getString(data.getColumnIndex(QuoteColumns.SYMBOL)));
                     names.add(data.getString(data.getColumnIndex(QuoteColumns.NAME)));
