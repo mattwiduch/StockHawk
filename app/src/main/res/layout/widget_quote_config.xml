@@ -47,6 +47,10 @@
             android:layout_marginTop="@dimen/content_spacing"
             android:background="@android:color/transparent"
             android:gravity="center"
+            android:paddingEnd="@dimen/content_spacing"
+            android:paddingLeft="@dimen/content_spacing"
+            android:paddingRight="@dimen/content_spacing"
+            android:paddingStart="@dimen/content_spacing"
             android:text="@string/dialog_button_positive"
             android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button"
             android:textColor="@color/orange_accent"/>
