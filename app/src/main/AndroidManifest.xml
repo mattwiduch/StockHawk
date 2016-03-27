@@ -77,12 +77,19 @@
         <service android:name=".widget.QuoteWidgetIntentService"/>
 
         <!-- Today's Market Widget -->
-        <provider
-            android:name="com.sam_chordas.android.stockhawk.data.generated.QuoteProvider"
-            android:authorities="com.sam_chordas.android.stockhawk.data.QuoteProvider"
-            android:exported="false"/>
+        <receiver
+            android:name=".widget.MarketWidgetProvider"
+            android:label="@string/widget_market_title">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="com.example.android.sunshine.app.ACTION_DATA_UPDATED"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_market"/>
+        </receiver>
         <service
-            android:name=".widget.QuoteWidgetRemoteViewsService"
+            android:name=".widget.DetailWidgetRemoteViewsService"
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
     </application>
