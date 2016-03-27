@@ -46,7 +46,7 @@ public class MarketWidgetProvider extends AppWidgetProvider {
 
             // Set up the collection
             views.setRemoteAdapter(R.id.widget_list,
-                    new Intent(context, MarketlWidgetRemoteViewsService.class));
+                    new Intent(context, MarketWidgetRemoteViewsService.class));
             boolean useDetailActivity = context.getResources()
                     .getBoolean(R.bool.use_graph_activity);
             Intent clickIntentTemplate = useDetailActivity
