@@ -51,6 +51,12 @@
             </intent-filter>
         </activity>
 
+        <!-- Stock data provider -->
+        <provider
+            android:name=".data.generated.QuoteProvider"
+            android:authorities="com.sam_chordas.android.stockhawk.data.QuoteProvider"
+            android:exported="false"/>
+
         <service
             android:name="com.sam_chordas.android.stockhawk.service.StockTaskService"
             android:exported="true"
