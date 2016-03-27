@@ -64,7 +64,7 @@
         <!-- Stock Quote Widget -->
         <receiver
             android:name=".widget.QuoteWidgetProvider"
-            android:label="@string/widget_title">
+            android:label="@string/widget_quote_title">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
                 <action android:name="com.sam_chordas.android.stockhawk.ACTION_DATA_UPDATED"/>

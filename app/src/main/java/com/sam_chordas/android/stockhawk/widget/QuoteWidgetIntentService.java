@@ -36,7 +36,7 @@ public class QuoteWidgetIntentService extends IntentService {
 
         // Perform this loop procedure for each Today widget
         for (int appWidgetId : appWidgetIds) {
-            int layoutId = R.layout.widget_large;
+            int layoutId = R.layout.widget_quote;
             RemoteViews views = new RemoteViews(getPackageName(), layoutId);
 
             // Load data from the database

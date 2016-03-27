@@ -30,7 +30,7 @@ public class QuoteWidgetConfigurationActivity extends Activity implements Adapte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.widget_large_config);
+        setContentView(R.layout.widget_quote_config);
         setResult(RESULT_CANCELED);
 
         int widgetId = AppWidgetManager.INVALID_APPWIDGET_ID;

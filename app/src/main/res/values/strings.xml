@@ -74,7 +74,8 @@
     <string name="last_updated_minute">less than a minute ago</string>
 
     <!-- Strings related to widgets -->
-    <string name="widget_title">Today\'s Market</string>
+    <string name="widget_quote_title">Stock Quote</string>
+    <string name="widget_market_title">Today\'s Market</string>
     <string name="widget_default_symbol">GOOG</string>
     <string name="widget_choose_symbol">Choose stock symbol</string>
     <string name="dialog_button_negative">Cancel</string>
