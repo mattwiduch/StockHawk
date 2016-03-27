@@ -9,7 +9,22 @@
 
     <!-- Widget Dimensions -->
     <dimen name="widget_default_height">40dp</dimen>
-    <dimen name="widget_default_width">320dp</dimen>
+    <dimen name="widget_default_width">250dp</dimen>
+
+    <!-- Dialog button dimensions -->
+    <dimen name="action_area_height">56dp</dimen>
+    <dimen name="dialog_button_height">36dp</dimen>
+    <dimen name="dialog_button_min_width">64dp</dimen>
+
+    <!-- FAB margins -->
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="fab_bottom_margin">20dp</dimen>
+
+    <!-- List item dimensions -->
+    <dimen name="list_item_height">72dp</dimen>
+    <dimen name="list_item_left_padding">56dp</dimen>
+    <dimen name="list_item_vertical_text_spacing">4dp</dimen>
+    <dimen name="list_icon_padding">16dp</dimen>
 
     <dimen name="appbar_elevation">4dp</dimen>
     <dimen name="cardview_corner_radius">2dp</dimen>
@@ -19,12 +34,6 @@
     <dimen name="underline_padding">4dp</dimen>
     <dimen name="divider_height">1dp</dimen>
     <dimen name="graph_label_padding">10dp</dimen>
-    <dimen name="list_item_height">72dp</dimen>
-    <dimen name="list_item_left_padding">56dp</dimen>
-    <dimen name="list_item_vertical_text_spacing">4dp</dimen>
-    <dimen name="list_icon_padding">16dp</dimen>
     <dimen name="tooltip_height">48dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
-    <dimen name="fab_bottom_margin">20dp</dimen>
 
 </resources>

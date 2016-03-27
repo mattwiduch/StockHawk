@@ -5,7 +5,9 @@ import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.widget.RemoteViews;
 
@@ -29,33 +31,36 @@ public class QuoteWidgetIntentService extends IntentService {
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this,
                 QuoteWidgetProvider.class));
 
-        // Load data from the database
-        String symbol = "AMZN";
-        Cursor data = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
-                new String[]{QuoteColumns._ID, QuoteColumns.SYMBOL, QuoteColumns.NAME, QuoteColumns.BID_PRICE,
-                        QuoteColumns.PERCENT_CHANGE, QuoteColumns.IS_UP, QuoteColumns.IS_CURRENT},
-                QuoteColumns.SYMBOL + " = ? AND " + QuoteColumns.IS_CURRENT + " = ?",
-                new String[]{symbol, "1"},
-                null);
-
-        if (data == null) {
-            return;
-        }
-        if (!data.moveToFirst()) {
-            data.close();
-            return;
-        }
-
-        //String symbol = data.getString(data.getColumnIndex(QuoteColumns.SYMBOL));
-        String name = data.getString(data.getColumnIndex(QuoteColumns.NAME));
-        String price = data.getString(data.getColumnIndex(QuoteColumns.BID_PRICE));
-        String change = data.getString(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE));
-        int isUp = data.getInt(data.getColumnIndex(QuoteColumns.IS_UP));
+        // Get handle to shared prefs so we can retrieve widget's stock symbol
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Perform this loop procedure for each Today widget
         for (int appWidgetId : appWidgetIds) {
             int layoutId = R.layout.widget_large;
             RemoteViews views = new RemoteViews(getPackageName(), layoutId);
+
+            // Load data from the database
+            String symbol = sp.getString(appWidgetId + "", getString(R.string.widget_default_symbol));
+            Cursor data = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
+                    new String[]{QuoteColumns._ID, QuoteColumns.SYMBOL, QuoteColumns.NAME, QuoteColumns.BID_PRICE,
+                            QuoteColumns.PERCENT_CHANGE, QuoteColumns.IS_UP, QuoteColumns.IS_CURRENT},
+                    QuoteColumns.SYMBOL + " = ? AND " + QuoteColumns.IS_CURRENT + " = ?",
+                    new String[]{symbol, "1"},
+                    null);
+
+            if (data == null) {
+                return;
+            }
+            if (!data.moveToFirst()) {
+                data.close();
+                return;
+            }
+
+            //String symbol = data.getString(data.getColumnIndex(QuoteColumns.SYMBOL));
+            String name = data.getString(data.getColumnIndex(QuoteColumns.NAME));
+            String price = data.getString(data.getColumnIndex(QuoteColumns.BID_PRICE));
+            String change = data.getString(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE));
+            int isUp = data.getInt(data.getColumnIndex(QuoteColumns.IS_UP));
 
             // Get correct color & icon
             int color = R.color.blue_flat;
@@ -84,6 +89,9 @@ public class QuoteWidgetIntentService extends IntentService {
 
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
+
+            // Close cursor
+            data.close();
         }
     }
 }
