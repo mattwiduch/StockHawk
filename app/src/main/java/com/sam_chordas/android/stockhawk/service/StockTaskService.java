@@ -3,6 +3,7 @@ package com.sam_chordas.android.stockhawk.service;
 import android.content.ContentProviderOperation;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -42,6 +43,7 @@ import java.util.ArrayList;
  */
 public class StockTaskService extends GcmTaskService {
     private static String LOG_TAG = StockTaskService.class.getSimpleName();
+    public static String ACTION_DATA_UPDATED = "com.sam_chordas.android.stockhawk.ACTION_DATA_UPDATED";
 
     private OkHttpClient client = new OkHttpClient();
     private static Context mContext;
@@ -116,7 +118,11 @@ public class StockTaskService extends GcmTaskService {
             initQueryCursor = mContext.getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
                     new String[]{"DISTINCT " + QuoteColumns.SYMBOL}, null,
                     null, null);
-            if (initQueryCursor.getCount() == 0 || initQueryCursor == null) {
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+            String lastUpdate = sp.getString(mContext.getString(R.string.pref_last_update),
+                    mContext.getString(R.string.last_updated_never));
+            if ((initQueryCursor.getCount() == 0 || initQueryCursor == null)//) {
+                    && lastUpdate.equals(mContext.getString(R.string.last_updated_never))) {
                 // Init task. Populates DB with quotes for the symbols seen below
                 try {
                     urlStringBuilder.append(
@@ -125,7 +131,7 @@ public class StockTaskService extends GcmTaskService {
                     setHawkStatus(HAWK_STATUS_UTF8_NOT_SUPPORTED);
                     e.printStackTrace();
                 }
-            } else if (initQueryCursor != null) {
+            } else if (initQueryCursor != null && initQueryCursor.getCount() != 0) {
                 DatabaseUtils.dumpCursor(initQueryCursor);
                 initQueryCursor.moveToFirst();
                 for (int i = 0; i < initQueryCursor.getCount(); i++) {
@@ -141,6 +147,9 @@ public class StockTaskService extends GcmTaskService {
                     e.printStackTrace();
                 }
                 initQueryCursor.close();
+            } else if (initQueryCursor.getCount() == 0) {
+                setUpdateTime(Instant.now());
+                return GcmNetworkManager.RESULT_SUCCESS;
             }
         } else if (mTaskType.equals(StockIntentService.TASK_TYPE_ADD)) {
             isUpdate = false;
@@ -232,6 +241,7 @@ public class StockTaskService extends GcmTaskService {
             if (mTaskType.equals(StockIntentService.TASK_TYPE_INIT)
                     || mTaskType.equals(StockIntentService.TASK_TYPE_PERIODIC)) {
                 setUpdateTime(Instant.now());
+                updateWidgets();
             }
         }
         return batchOperations;
@@ -294,5 +304,14 @@ public class StockTaskService extends GcmTaskService {
         SharedPreferences.Editor spe = sp.edit();
         spe.putString(mContext.getString(R.string.pref_last_update), updateTime.toString());
         spe.apply();
+    }
+
+    /**
+     * Sends update widgets broadcast
+     */
+    private static void updateWidgets() {
+        // Setting the package ensures that only components in our app will receive the broadcast
+        Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED).setPackage(mContext.getPackageName());
+        mContext.sendBroadcast(dataUpdatedIntent);
     }
 }
