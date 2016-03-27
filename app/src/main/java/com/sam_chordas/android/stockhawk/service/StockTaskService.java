@@ -118,7 +118,11 @@ public class StockTaskService extends GcmTaskService {
             initQueryCursor = mContext.getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
                     new String[]{"DISTINCT " + QuoteColumns.SYMBOL}, null,
                     null, null);
-            if (initQueryCursor.getCount() == 0 || initQueryCursor == null) {
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+            String lastUpdate = sp.getString(mContext.getString(R.string.pref_last_update),
+                    mContext.getString(R.string.last_updated_never));
+            if ((initQueryCursor.getCount() == 0 || initQueryCursor == null)//) {
+                    && lastUpdate.equals(mContext.getString(R.string.last_updated_never))) {
                 // Init task. Populates DB with quotes for the symbols seen below
                 try {
                     urlStringBuilder.append(
@@ -127,7 +131,7 @@ public class StockTaskService extends GcmTaskService {
                     setHawkStatus(HAWK_STATUS_UTF8_NOT_SUPPORTED);
                     e.printStackTrace();
                 }
-            } else if (initQueryCursor != null) {
+            } else if (initQueryCursor != null && initQueryCursor.getCount() != 0) {
                 DatabaseUtils.dumpCursor(initQueryCursor);
                 initQueryCursor.moveToFirst();
                 for (int i = 0; i < initQueryCursor.getCount(); i++) {
@@ -143,6 +147,9 @@ public class StockTaskService extends GcmTaskService {
                     e.printStackTrace();
                 }
                 initQueryCursor.close();
+            } else if (initQueryCursor.getCount() == 0) {
+                setUpdateTime(Instant.now());
+                return GcmNetworkManager.RESULT_SUCCESS;
             }
         } else if (mTaskType.equals(StockIntentService.TASK_TYPE_ADD)) {
             isUpdate = false;
