@@ -19,7 +19,7 @@
                     android:minResizeHeight="@dimen/widget_market_min_resize_height"
                     android:minResizeWidth="@dimen/widget_market_min_resize_width"
                     android:minWidth="@dimen/widget_market_default_width"
-                    android:previewImage="@drawable/widget_preview_quote"
+                    android:previewImage="@drawable/widget_preview_market"
                     android:resizeMode="horizontal|vertical"
                     android:updatePeriodMillis="0"
                     android:widgetCategory="home_screen|keyguard"

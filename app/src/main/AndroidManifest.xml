@@ -78,7 +78,7 @@
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget_quote_info"/>
+                android:resource="@xml/widget_info_quote"/>
         </receiver>
         <service android:name=".widget.QuoteWidgetIntentService"/>
 
@@ -93,7 +93,7 @@
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget_market_info"/>
+                android:resource="@xml/widget_info_market"/>
         </receiver>
         <service
             android:name=".widget.MarketWidgetRemoteViewsService"
