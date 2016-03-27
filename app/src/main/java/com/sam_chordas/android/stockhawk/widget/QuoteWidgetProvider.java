@@ -15,48 +15,34 @@ package com.sam_chordas.android.stockhawk.widget;
  * limitations under the License.
  */
 
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.RemoteViews;
+import android.os.Bundle;
 
-import com.sam_chordas.android.stockhawk.R;
-import com.sam_chordas.android.stockhawk.ui.MyStocksActivity;
+import com.sam_chordas.android.stockhawk.service.StockTaskService;
 
 /**
  * Provider for a widget showing stock quote.
  */
 public class QuoteWidgetProvider extends AppWidgetProvider {
 
+    @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        int trendingIcon = R.drawable.ic_trending_up_white_18dp;
-        String symbol = "GOOG";
-        String name = "Alphabet Inc.";
-        String price = "100.00";
-        String change = "+0.00%";
+        context.startService(new Intent(context, QuoteWidgetIntentService.class));
+    }
 
-        // Perform this loop procedure for each Today widget
-        for (int appWidgetId : appWidgetIds) {
-            int layoutId = R.layout.widget_large;
-            RemoteViews views = new RemoteViews(context.getPackageName(), layoutId);
+    @Override
+    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
+        context.startService(new Intent(context, QuoteWidgetIntentService.class));
+    }
 
-            // Add the data to the RemoteViews
-            views.setImageViewResource(R.id.widget_icon, trendingIcon);
-            views.setTextViewText(R.id.widget_stock_symbol, symbol);
-            views.setTextViewText(R.id.widget_stock_name, name);
-            views.setTextViewText(R.id.widget_bid_price, price);
-            views.setTextViewText(R.id.widget_change, change);
-            views.setContentDescription(R.id.widget_icon, symbol);
-
-            // Create an Intent to launch MainActivity
-            Intent launchIntent = new Intent(context, MyStocksActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, launchIntent, 0);
-            views.setOnClickPendingIntent(R.id.widget_large, pendingIntent);
-
-            // Tell the AppWidgetManager to perform an update on the current app widget
-            appWidgetManager.updateAppWidget(appWidgetId, views);
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+        if (StockTaskService.ACTION_DATA_UPDATED.equals(intent.getAction())) {
+            context.startService(new Intent(context, QuoteWidgetIntentService.class));
         }
     }
 }
