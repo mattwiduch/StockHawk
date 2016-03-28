@@ -19,11 +19,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ListPreference
-        android:title="@string/pref_update_frequency_label"
-        android:key="@string/pref_update_frequency_key"
-        android:defaultValue="@string/pref_update_frequency_1h"
-        android:entryValues="@array/pref_update_frequency_values"
-        android:entries="@array/pref_update_frequency_options" />
+    <PreferenceCategory
+        android:title="@string/pref_category_widgets">
+
+        <ListPreference
+            android:defaultValue="@string/pref_update_frequency_1h"
+            android:entries="@array/pref_update_frequency_options"
+            android:entryValues="@array/pref_update_frequency_values"
+            android:key="@string/pref_update_frequency_key"
+            android:title="@string/pref_update_frequency_label"/>
+
+    </PreferenceCategory>
 
 </PreferenceScreen>
