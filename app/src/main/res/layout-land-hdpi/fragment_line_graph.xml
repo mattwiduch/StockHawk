@@ -32,7 +32,7 @@
         <android.support.v7.widget.CardView
             android:id="@+id/details_card"
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:layout_width="240dp"
+            android:layout_width="180dp"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/content_spacing"
             android:layout_weight="0"
@@ -49,12 +49,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:paddingStart="@dimen/content_padding"
-                    android:paddingLeft="@dimen/content_padding"
-                    android:paddingTop="@dimen/content_padding"
+                    android:paddingBottom="@dimen/title_padding"
                     android:paddingEnd="@dimen/content_padding"
+                    android:paddingLeft="@dimen/content_padding"
                     android:paddingRight="@dimen/content_padding"
-                    android:paddingBottom="@dimen/title_padding">
+                    android:paddingStart="@dimen/content_padding"
+                    android:paddingTop="@dimen/content_padding">
 
                     <TableRow
                         android:layout_width="match_parent"
@@ -66,8 +66,9 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="start"
+                            android:maxLines="1"
                             android:text="@string/stock_prev_close_label"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:textColor="@color/text_light_secondary"/>
 
                         <TextView
@@ -76,7 +77,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="end"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:textColor="@color/text_light_primary"/>
 
                     </TableRow>
@@ -89,16 +90,17 @@
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:paddingTop="@dimen/content_spacing"
-                        android:paddingBottom="@dimen/underline_padding">
+                        android:paddingBottom="@dimen/underline_padding"
+                        android:paddingTop="@dimen/content_spacing">
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="start"
+                            android:maxLines="1"
                             android:text="@string/stock_open_label"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:textColor="@color/text_light_secondary"/>
 
                         <TextView
@@ -107,7 +109,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="end"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:textColor="@color/text_light_primary"/>
 
                     </TableRow>
@@ -120,16 +122,17 @@
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:paddingTop="@dimen/content_spacing"
-                        android:paddingBottom="@dimen/underline_padding">
+                        android:paddingBottom="@dimen/underline_padding"
+                        android:paddingTop="@dimen/content_spacing">
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="start"
+                            android:maxLines="1"
                             android:text="@string/stock_low_label"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:textColor="@color/text_light_secondary"/>
 
                         <TextView
@@ -138,7 +141,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="end"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:textColor="@color/text_light_primary"/>
 
                     </TableRow>
@@ -151,16 +154,17 @@
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:paddingTop="@dimen/content_spacing"
-                        android:paddingBottom="@dimen/underline_padding">
+                        android:paddingBottom="@dimen/underline_padding"
+                        android:paddingTop="@dimen/content_spacing">
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="start"
+                            android:maxLines="1"
                             android:text="@string/stock_high_label"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:textColor="@color/text_light_secondary"/>
 
                         <TextView
@@ -169,7 +173,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="end"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:maxLines="1"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:textColor="@color/text_light_primary"/>
 
                     </TableRow>
@@ -182,16 +187,17 @@
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:paddingTop="@dimen/content_spacing"
-                        android:paddingBottom="@dimen/underline_padding">
+                        android:paddingBottom="@dimen/underline_padding"
+                        android:paddingTop="@dimen/content_spacing">
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="start"
+                            android:maxLines="1"
                             android:text="@string/stock_52wk_low_label"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:textColor="@color/text_light_secondary"/>
 
                         <TextView
@@ -200,7 +206,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="end"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:textColor="@color/text_light_primary"/>
 
                     </TableRow>
@@ -213,16 +219,17 @@
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:paddingTop="@dimen/content_spacing"
-                        android:paddingBottom="@dimen/underline_padding">
+                        android:paddingBottom="@dimen/underline_padding"
+                        android:paddingTop="@dimen/content_spacing">
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="start"
+                            android:maxLines="1"
                             android:text="@string/stock_52wk_high_label"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:textColor="@color/text_light_secondary"/>
 
                         <TextView
@@ -231,7 +238,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="end"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:textColor="@color/text_light_primary"/>
 
                     </TableRow>
@@ -244,16 +251,17 @@
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:paddingTop="@dimen/content_spacing"
-                        android:paddingBottom="@dimen/underline_padding">
+                        android:paddingBottom="@dimen/underline_padding"
+                        android:paddingTop="@dimen/content_spacing">
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="start"
+                            android:maxLines="1"
                             android:text="@string/stock_mkt_capital_label"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:textColor="@color/text_light_secondary"/>
 
                         <TextView
@@ -262,7 +270,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="end"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:textColor="@color/text_light_primary"/>
 
                     </TableRow>
@@ -275,16 +283,17 @@
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:paddingTop="@dimen/content_spacing"
-                        android:paddingBottom="@dimen/underline_padding">
+                        android:paddingBottom="@dimen/underline_padding"
+                        android:paddingTop="@dimen/content_spacing">
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="start"
+                            android:maxLines="1"
                             android:text="@string/stock_1y_target_label"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:textColor="@color/text_light_secondary"/>
 
                         <TextView
@@ -293,7 +302,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="end"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:textColor="@color/text_light_primary"/>
 
                     </TableRow>
@@ -306,16 +315,17 @@
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:paddingTop="@dimen/content_spacing"
-                        android:paddingBottom="@dimen/underline_padding">
+                        android:paddingBottom="@dimen/underline_padding"
+                        android:paddingTop="@dimen/content_spacing">
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="start"
+                            android:maxLines="1"
                             android:text="@string/stock_volume_label"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:textColor="@color/text_light_secondary"/>
 
                         <TextView
@@ -324,7 +334,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="end"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:textColor="@color/text_light_primary"/>
 
                     </TableRow>
@@ -337,16 +347,17 @@
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:paddingTop="@dimen/content_spacing"
-                        android:paddingBottom="@dimen/underline_padding">
+                        android:paddingBottom="@dimen/underline_padding"
+                        android:paddingTop="@dimen/content_spacing">
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="start"
+                            android:maxLines="1"
                             android:text="@string/stock_avg_volume_label"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:textColor="@color/text_light_secondary"/>
 
                         <TextView
@@ -355,7 +366,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="end"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:textColor="@color/text_light_primary"/>
 
                     </TableRow>
@@ -403,8 +414,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="0"
-                    android:paddingBottom="@dimen/title_padding"
-                    android:paddingTop="@dimen/title_padding"
+                    android:padding="@dimen/content_padding"
                     grid:alignmentMode="alignBounds"
                     grid:columnCount="3"
                     grid:orientation="horizontal"
@@ -415,8 +425,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                         android:textColor="@color/text_light_primary"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                         grid:layout_column="0"
                         grid:layout_columnWeight="1"
                         grid:layout_gravity="fill_horizontal"
@@ -426,10 +436,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:paddingTop="@dimen/content_spacing"
+                        android:paddingTop="@dimen/underline_padding"
                         android:text="@string/stock_symbol_label"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                         android:textColor="@color/text_light_secondary"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                         grid:layout_column="0"
                         grid:layout_columnWeight="1"
                         grid:layout_gravity="fill_horizontal"
@@ -440,8 +450,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                         android:textColor="@color/text_light_primary"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                         grid:layout_column="1"
                         grid:layout_columnWeight="1"
                         grid:layout_gravity="fill_horizontal"
@@ -451,10 +461,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:paddingTop="@dimen/content_spacing"
+                        android:paddingTop="@dimen/underline_padding"
                         android:text="@string/stock_price_label"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                         android:textColor="@color/text_light_secondary"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                         grid:layout_column="1"
                         grid:layout_columnWeight="1"
                         grid:layout_gravity="fill_horizontal"
@@ -465,8 +475,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                         android:textColor="@color/text_light_primary"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                         grid:layout_column="2"
                         grid:layout_columnWeight="1"
                         grid:layout_gravity="fill_horizontal"
@@ -476,10 +486,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:paddingTop="@dimen/content_spacing"
+                        android:paddingTop="@dimen/underline_padding"
                         android:text="@string/stock_change_label"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                         android:textColor="@color/text_light_secondary"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                         grid:layout_column="2"
                         grid:layout_columnWeight="1"
                         grid:layout_gravity="fill_horizontal"
