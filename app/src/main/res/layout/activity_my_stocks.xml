@@ -62,33 +62,40 @@
         app:layout_anchor="@+id/recycler_view"
         app:layout_anchorGravity="fill"/>
 
-    <TextView
-        android:id="@+id/last_update_textview"
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/tooltip_height"
-        android:gravity="start|center_vertical"
-        android:paddingEnd="@dimen/content_padding"
-        android:paddingLeft="@dimen/content_padding"
-        android:paddingRight="@dimen/content_padding"
-        android:paddingStart="@dimen/content_padding"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="@color/text_light_secondary"
         android:background="@color/grey_primary"
-        app:layout_anchorGravity="bottom|start"
         app:layout_anchor="@+id/swipeRefreshLayout"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_anchorGravity="bottom|start"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <TextView
+            android:id="@+id/last_update_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:paddingEnd="@dimen/content_padding"
+            android:paddingLeft="@dimen/content_padding"
+            android:paddingRight="@dimen/content_padding"
+            android:paddingStart="@dimen/content_padding"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/text_light_secondary"/>
+
+    </FrameLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginLeft="@dimen/fab_margin"
-        android:layout_marginStart="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin"
-        android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginTop="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_bottom_margin"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginLeft="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/fab_margin"
         android:src="@drawable/ic_add_white_24dp"
         app:fabSize="normal"/>
 
