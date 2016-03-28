@@ -52,7 +52,7 @@
             android:fadingEdge="horizontal"
             android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
-            android:singleLine="true"
+            android:maxLines="1"
             tools:text="Alphabet Inc."/>
 
     </LinearLayout>
