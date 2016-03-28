@@ -128,7 +128,7 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
         lineChart.setYAxis(false);
         lineChart.setBackgroundColor(bgColor);
         int padding = getResources().getDimensionPixelSize(R.dimen.content_padding);
-        lineChart.setPadding(padding, padding * 3, padding, padding);
+        lineChart.setPadding(padding, padding * 2 + padding / 2, padding, padding);
 
         // Paint object used to draw Grid
         Paint gridPaint = new Paint();
