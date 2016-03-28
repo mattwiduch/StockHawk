@@ -85,5 +85,31 @@
     <string name="widget_config_spinner_item">%1$s - %2$s</string>
     <string name="dialog_button_negative">Cancel</string>
     <string name="dialog_button_positive">Add</string>
+    <string name="pref_update_frequency_label">Update frequency</string>
+    <string name="pref_update_frequency_key">update_frequency</string>
+
+    <!-- Update frequency options labels -->
+    <string name="pref_update_frequency_label_1m">1 Minute</string>
+    <string name="pref_update_frequency_label_5m">5 Minutes</string>
+    <string name="pref_update_frequency_label_10m">10 Minutes</string>
+    <string name="pref_update_frequency_label_15m">15 Minutes</string>
+    <string name="pref_update_frequency_label_30m">30 Minutes</string>
+    <string name="pref_update_frequency_label_1h">1 Hour</string>
+    <string name="pref_update_frequency_label_3h">3 Hours</string>
+    <string name="pref_update_frequency_label_6h">6 Hours</string>
+    <string name="pref_update_frequency_label_12h">12 Hours</string>
+    <string name="pref_update_frequency_label_24h">24 Hours</string>
+
+    <!-- Update frequency options values -->
+    <string name="pref_update_frequency_1m">60</string>
+    <string name="pref_update_frequency_5m">300</string>
+    <string name="pref_update_frequency_10m">600</string>
+    <string name="pref_update_frequency_15m">900</string>
+    <string name="pref_update_frequency_30m">1800</string>
+    <string name="pref_update_frequency_1h">3600</string>
+    <string name="pref_update_frequency_3h">10800</string>
+    <string name="pref_update_frequency_6h">21600</string>
+    <string name="pref_update_frequency_12h">43200</string>
+    <string name="pref_update_frequency_24h">86400</string>
 
 </resources>
