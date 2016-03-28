@@ -46,7 +46,6 @@
                 android:layout_marginStart="@dimen/content_spacing"
                 android:layout_marginTop="@dimen/content_spacing"
                 android:layout_weight="1"
-                android:minHeight="320dp"
                 card_view:cardBackgroundColor="@color/grey_card"
                 card_view:cardCornerRadius="@dimen/cardview_corner_radius"
                 card_view:cardElevation="@dimen/cardview_default_elevation"
@@ -60,7 +59,7 @@
                     <com.db.chart.view.LineChartView
                         android:id="@+id/line_chart"
                         android:layout_width="match_parent"
-                        android:layout_height="320dp"/>
+                        android:layout_height="240dp"/>
 
                     <android.support.v7.widget.GridLayout
                         xmlns:grid="http://schemas.android.com/apk/res-auto"
