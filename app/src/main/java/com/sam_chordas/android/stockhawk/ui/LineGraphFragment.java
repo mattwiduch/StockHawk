@@ -231,15 +231,38 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
             Integer[] dateStamps = new Integer[]{0, 1, 2, 3, 4};
             int offset = 0;
 
+            // Get stock values
+            for (int position = 0; position < data.getCount(); position++) {
+                data.moveToPosition(position);
+                String bid = data.getString(data.getColumnIndex(QuoteColumns.BID_PRICE));
+
+                if (!bid.equals(getString(R.string.data_not_available))) {
+                    float bidValue = Float.parseFloat(bid);
+                    minBid = Math.min(minBid, bidValue);
+                    maxBid = Math.max(maxBid, bidValue);
+
+                    if (position == 0 || position == (data.getCount() - 1)) {
+                        stockValues.add(bidValue);
+                        stockLabels.add(Utils.formatGraphDateLabels(
+                                data.getString(data.getColumnIndex(QuoteColumns.CREATED))));
+                    } else if (bidValue != stockValues.get(stockValues.size() - 1)) {
+                        stockValues.add(bidValue);
+                        stockLabels.add(Utils.formatGraphDateLabels(
+                                data.getString(data.getColumnIndex(QuoteColumns.CREATED))));
+                    }
+                }
+            }
+
             // Calculate positions of labels to be displayed on x axis
-            if (data.getCount() % 4 == 1) {
-                dateStamps[1] = (data.getCount() - 1) / 4;
-                dateStamps[2] = (data.getCount() - 1) / 2;
-                dateStamps[3] = (data.getCount() - 1) / 4 + (data.getCount() - 1) / 2;
-                dateStamps[4] = data.getCount() - 1;
-            } else if (data.getCount() > 4) {
-                offset = (data.getCount() % 4) == 0 ? 1 : 5 - data.getCount() % 4;
-                int count = data.getCount() + offset;
+            int valuesCount = stockValues.size();
+            if (valuesCount % 4 == 1) {
+                dateStamps[1] = (valuesCount - 1) / 4;
+                dateStamps[2] = (valuesCount - 1) / 2;
+                dateStamps[3] = (valuesCount - 1) / 4 + (valuesCount - 1) / 2;
+                dateStamps[4] = valuesCount - 1;
+            } else if (valuesCount > 4) {
+                offset = (valuesCount % 4) == 0 ? 1 : 5 - valuesCount % 4;
+                int count = valuesCount + offset;
                 if (offset == 1) {
                     dateStamps[1] = ((count - 1) / 4) - 1;
                     dateStamps[2] = ((count - 1) / 2) - 1;
@@ -255,28 +278,24 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
                     dateStamps[2] = ((count - 1) / 2) - 2;
                     dateStamps[3] = ((count - 1) / 4 + (count - 1) / 2) - 3;
                 }
-                dateStamps[4] = data.getCount() - 1;
+                dateStamps[4] = valuesCount - 1;
             }
 
-            // Get stock values
-            for (int position = 0; position < data.getCount(); position++) {
-                data.moveToPosition(position);
-                String bid = data.getString(data.getColumnIndex(QuoteColumns.BID_PRICE));
-                float bidValue = bid.equals(getString(R.string.data_not_available))
-                        ? 0f : Float.parseFloat(bid);
-                minBid = Math.min(minBid, bidValue);
-                maxBid = Math.max(maxBid, bidValue);
-                stockValues.add(bidValue);
-                if (Arrays.asList(dateStamps).contains(position)) {
-                    stockLabels.add(Utils.formatGraphDateLabels(
-                            data.getString(data.getColumnIndex(QuoteColumns.CREATED))));
-                } else {
-                    stockLabels.add("");
+            // Clear unnecessary labels
+            for (int position = 0; position < valuesCount; position++) {
+                if (!Arrays.asList(dateStamps).contains(position)) {
+                    stockLabels.set(position, "");
                 }
             }
 
-            // Duplicate data point if there is only one so line always shows on the graph
-            if (stockValues.size() == 1) {
+            // Add dummy values if there is no data for this symbol
+            if (stockValues.size() == 0) {
+                minBid = 0;
+                maxBid = 0;
+                stockValues.add(0f);
+                stockLabels.add("");
+            } else if (stockValues.size() == 1) {
+                // Duplicate data point if there is only one so line always shows on the graph
                 stockValues.add(stockValues.get(0));
                 stockLabels.add(Utils.formatGraphDateLabels(
                         data.getString(data.getColumnIndex(QuoteColumns.CREATED))));
