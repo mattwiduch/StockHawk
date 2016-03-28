@@ -97,6 +97,7 @@
         android:layout_marginStart="@dimen/fab_margin"
         android:layout_marginTop="@dimen/fab_margin"
         android:src="@drawable/ic_add_white_24dp"
+        android:contentDescription="@string/a11y_fab"
         app:fabSize="normal"/>
 
 </android.support.design.widget.CoordinatorLayout>

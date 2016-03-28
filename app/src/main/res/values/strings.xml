@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="http://schemas.android.com/tools">
     <!-- Application Name -->
     <string name="app_name">Stock Hawk</string>
 
@@ -44,7 +44,7 @@
 
     <!-- Strings related to Line Graph Fragment -->
     <string name="graph_label">PRICE HISTORY</string>
-    <string name="stock_price_label">Current Price</string>
+    <string name="stock_price_label">Bid Price</string>
     <string name="stock_change_label">Change</string>
     <string name="stock_prev_close_label">Prev Close</string>
     <string name="stock_open_label">Open</string>
@@ -85,5 +85,20 @@
     <string name="widget_config_spinner_item">%1$s - %2$s</string>
     <string name="dialog_button_negative">Cancel</string>
     <string name="dialog_button_positive">Add</string>
+
+    <!-- Accessibility -->
+    <string name="a11y_trending_icon">Trending Icon</string>
+    <string name="a11y_trending_down">Trending down.</string>
+    <string name="a11y_trending_flat">No change.</string>
+    <string name="a11y_trending_up">Trending up.</string>
+    <string name="a11y_description"><xliff:g id="name">%1$s</xliff:g>. <xliff:g id="trend">%2$s</xliff:g>. Bid price: <xliff:g id="price">%3$s</xliff:g>. Change: <xliff:g id="change">%4$s</xliff:g>.</string>
+    <string name="a11y_symbol">Symbol: <xliff:g id="symbol">%1$s</xliff:g></string>
+    <string name="a11y_price">Bid price: <xliff:g id="price">%1$s</xliff:g>.</string>
+    <string name="a11y_change">Change: <xliff:g id="change">%1$s</xliff:g>.</string>
+    <string name="a11y_fab">Add Symbol</string>
+    <string name="a11y_no_description">\u00A0</string>
+    <string name="a11y_percent">percent</string>
+    <string name="a11y_currency">currency</string>
+    <string name="a11y_change_units">Change units to <xliff:g id="units">%1$s</xliff:g>.</string>
 
 </resources>

@@ -14,7 +14,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/list_icon_padding"
-        tools:src="@drawable/ic_trending_up_white_18dp"/>
+        tools:src="@drawable/ic_trending_up_white_18dp"
+        android:contentDescription="@string/a11y_no_description"/>
 
     <LinearLayout
         android:id="@+id/widget_symbol_layout"

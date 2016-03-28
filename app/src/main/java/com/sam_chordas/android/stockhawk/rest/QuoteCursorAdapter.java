@@ -75,30 +75,40 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
         int color;
         @DrawableRes
         Drawable icon;
+        String trending;
         if (cursor.getInt(cursor.getColumnIndex(QuoteColumns.IS_UP)) == -1) {
             icon = ContextCompat.getDrawable(mContext, R.drawable.ic_trending_down_white_18dp);
             color = ContextCompat.getColor(mContext, R.color.red_low);
+            trending = mContext.getString(R.string.a11y_trending_down);
         } else if (cursor.getInt(cursor.getColumnIndex(QuoteColumns.IS_UP)) == 0) {
             icon = ContextCompat.getDrawable(mContext, R.drawable.ic_trending_flat_white_18dp);
             color = ContextCompat.getColor(mContext, R.color.blue_flat);
+            trending = mContext.getString(R.string.a11y_trending_flat);
         } else {
             icon = ContextCompat.getDrawable(mContext, R.drawable.ic_trending_up_white_18dp);
             color = ContextCompat.getColor(mContext, R.color.green_high);
+            trending = mContext.getString(R.string.a11y_trending_up);
         }
 
         viewHolder.icon.setImageDrawable(icon);
         viewHolder.icon.setColorFilter(color);
         viewHolder.symbol.setText(cursor.getString(cursor.getColumnIndex(QuoteColumns.SYMBOL)));
-        viewHolder.name.setText(cursor.getString(cursor.getColumnIndex(QuoteColumns.NAME)));
-        viewHolder.bidPrice.setText(cursor.getString(cursor.getColumnIndex(QuoteColumns.BID_PRICE)));
+        String name = cursor.getString(cursor.getColumnIndex(QuoteColumns.NAME));
+        viewHolder.name.setText(name);
+        viewHolder.symbol.setContentDescription(name);
+        viewHolder.name.setContentDescription(trending);
+        String bidPrice = cursor.getString(cursor.getColumnIndex(QuoteColumns.BID_PRICE));
+        viewHolder.bidPrice.setText(bidPrice);
+        viewHolder.bidPrice.setContentDescription(mContext.getString(R.string.a11y_price, bidPrice));
 
         viewHolder.change.setTextColor(color);
-        //viewHolder.change.setAlpha(0.7f);
         if (Utils.showPercent) {
             viewHolder.change.setText(cursor.getString(cursor.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
         } else {
             viewHolder.change.setText(cursor.getString(cursor.getColumnIndex(QuoteColumns.CHANGE)));
         }
+        viewHolder.change.setContentDescription(mContext.getString(R.string.a11y_change,
+                viewHolder.change.getText()));
     }
 
     @Override

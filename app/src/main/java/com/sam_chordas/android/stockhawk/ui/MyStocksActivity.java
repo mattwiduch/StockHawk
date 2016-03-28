@@ -208,6 +208,9 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.my_stocks, menu);
+        menu.getItem(0).setTitle(Utils.showPercent ?
+                getString(R.string.a11y_change_units, getString(R.string.a11y_currency))
+                : getString(R.string.a11y_change_units, getString(R.string.a11y_percent)));
         return true;
     }
 
@@ -227,8 +230,10 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
             // this is for changing stock changes from percent value to dollar value
             if (Utils.showPercent) {
                 item.setIcon(R.drawable.ic_action_percent_white);
+                item.setTitle(getString(R.string.a11y_change_units, getString(R.string.a11y_percent)));
             } else {
                 item.setIcon(R.drawable.ic_attach_money_white_24dp);
+                item.setTitle(getString(R.string.a11y_change_units, getString(R.string.a11y_currency)));
             }
             Utils.showPercent = !Utils.showPercent;
             this.getContentResolver().notifyChange(QuoteProvider.Quotes.CONTENT_URI, null);
