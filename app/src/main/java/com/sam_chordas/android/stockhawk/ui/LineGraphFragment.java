@@ -168,8 +168,10 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
 
         lineChart.setLabelsFormat(new DecimalFormat("#"));
         lineChart.setLabelsColor(ContextCompat.getColor(getContext(), R.color.text_light_secondary));
-        lineChart.setFontSize(42);
-        lineChart.setAxisLabelsSpacing(48f);
+        // Get display density to calculate correct font and spacing sizes for graph labels
+        float density = getResources().getDisplayMetrics().density;
+        lineChart.setFontSize((int) (16 * density));
+        lineChart.setAxisLabelsSpacing(18.25f * density);
 
         // Animation customization
         int[] order = new int[values.length];
