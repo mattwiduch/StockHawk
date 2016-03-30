@@ -157,6 +157,17 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
             }
         });
 
+        // Shows loading indicator when app launches
+        mSwipeRefreshLayout.setEnabled(true);
+        mSwipeRefreshLayout.measure(View.MEASURED_SIZE_MASK,View.MEASURED_HEIGHT_STATE_SHIFT);
+        mSwipeRefreshLayout.setRefreshing(true);
+//        mSwipeRefreshLayout.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                mSwipeRefreshLayout.setRefreshing(true);
+//            }
+//        });
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
