@@ -6,12 +6,15 @@ import android.database.Cursor;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.SystemClock;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -185,6 +188,10 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
         public FooterViewHolder(View itemView) {
             super(itemView);
         }
+
+        @Override
+        public void onItemSelected() {
+        }
     }
 
     // List Item
@@ -192,6 +199,38 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
         public ListItemViewHolder(View itemView) {
             super(itemView);
             symbol.setTypeface(robotoLight);
+            // Emulates item touch when touch pad center button is pressed
+            itemView.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+                        RecyclerView rv = (RecyclerView) v.getParent();
+                        int[] touchCoordinates = new int[2];
+                        // Get view's coordinates
+                        v.getLocationInWindow(touchCoordinates);
+                        // Translate to get coordinates within the view
+                        touchCoordinates[0] = touchCoordinates[0] + 21;
+                        touchCoordinates[1] = touchCoordinates[1] - 165;
+
+                        // Fire touch down event
+                        MotionEvent e = MotionEvent.obtain(SystemClock.uptimeMillis(),
+                                SystemClock.uptimeMillis(),
+                                MotionEvent.ACTION_DOWN,
+                                touchCoordinates[0], touchCoordinates[1], 0);
+                        rv.dispatchTouchEvent(e);
+                        // Fire touch up event
+                        e = MotionEvent.obtain(SystemClock.uptimeMillis(),
+                                SystemClock.uptimeMillis(),
+                                MotionEvent.ACTION_UP,
+                                touchCoordinates[0], touchCoordinates[1], 0);
+                        rv = (RecyclerView) v.getParent();
+                        rv.dispatchTouchEvent(e);
+
+                        return true;
+                    }
+                    return false;
+                }
+            });
         }
     }
 }
