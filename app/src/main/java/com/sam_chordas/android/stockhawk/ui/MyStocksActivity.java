@@ -295,7 +295,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                 getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, MyStocksActivity.this);
             }
         });
-
         // Creates dialog
         AlertDialog sortDialog = dialogBuilder.create();
         // Shows dialog
