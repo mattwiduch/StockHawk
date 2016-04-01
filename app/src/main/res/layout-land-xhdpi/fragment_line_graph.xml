@@ -404,6 +404,7 @@
                         grid:layout_row="0"/>
 
                     <TextView
+                        android:id="@+id/stock_symbol_textview_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -429,6 +430,7 @@
                         grid:layout_row="0"/>
 
                     <TextView
+                        android:id="@+id/stock_price_textview_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -454,6 +456,7 @@
                         grid:layout_row="0"/>
 
                     <TextView
+                        android:id="@+id/stock_change_textview_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
