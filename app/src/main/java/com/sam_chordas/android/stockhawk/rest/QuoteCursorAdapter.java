@@ -39,10 +39,12 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
     private static Typeface robotoLight;
     //private final OnStartDragListener mDragListener;
     private boolean isPercent;
+    private int mFocusedItem;
 
     public QuoteCursorAdapter(Context context, Cursor cursor, View emptyView) {
         super(context, cursor, emptyView);
         //mDragListener = dragListener;
+        mFocusedItem = -1;
         mContext = context;
     }
 
@@ -60,8 +62,7 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
         }
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_quote, parent, false);
-        ListItemViewHolder vh = new ListItemViewHolder(itemView);
-        return vh;
+        return new ListItemViewHolder(itemView);
     }
 
     @Override
@@ -112,6 +113,18 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
         }
         viewHolder.change.setContentDescription(mContext.getString(R.string.a11y_change,
                 viewHolder.change.getText()));
+
+        // Request focus
+        if (mFocusedItem == cursor.getPosition()) {
+            viewHolder.itemView.requestFocus();
+        }
+    }
+
+    /**
+     * Sets position of currently focused item
+     */
+    public void setFocusedItem(int position) {
+        mFocusedItem = position;
     }
 
     @Override

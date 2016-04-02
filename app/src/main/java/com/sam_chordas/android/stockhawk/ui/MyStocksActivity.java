@@ -51,8 +51,9 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
      */
 
     private static final int CURSOR_LOADER_ID = 0;
-    private static final String DIALOG_TAG = "track_stock_dialog";
-    private final String RECYCLER_VIEW_STATE_KEY = "recycler_view_state";
+    private static final String DIALOG_TAG = "Dialog.trackSymbol";
+    private static final String RECYCLER_VIEW_FOCUSED_ITEM_KEY = "RecyclerView.focusedItem";
+    private static final String RECYCLER_VIEW_STATE_KEY = "RecyclerView.state";
 
     private static final String SORT_DEFAULT = "null";
     private static final String SORT_SYMBOL_ASC = QuoteColumns.SYMBOL + " ASC";
@@ -66,6 +67,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     private ItemTouchHelper mItemTouchHelper;
     private RecyclerView mRecyclerView;
     private static Bundle mRecyclerViewStateBundle;
+    private int mFocusedItemPosition;
     private QuoteCursorAdapter mCursorAdapter;
     private Context mContext;
     private Cursor mCursor;
@@ -204,6 +206,9 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         mRecyclerViewStateBundle = new Bundle();
         Parcelable listState = mRecyclerView.getLayoutManager().onSaveInstanceState();
         mRecyclerViewStateBundle.putParcelable(RECYCLER_VIEW_STATE_KEY, listState);
+        // Save position of currently focused item
+        mFocusedItemPosition = mRecyclerView.getChildAdapterPosition(mRecyclerView.getFocusedChild());
+        mRecyclerViewStateBundle.putInt(RECYCLER_VIEW_FOCUSED_ITEM_KEY, mFocusedItemPosition);
     }
 
     @Override
@@ -216,9 +221,11 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         if (mRecyclerViewStateBundle != null) {
             Parcelable listState = mRecyclerViewStateBundle.getParcelable(RECYCLER_VIEW_STATE_KEY);
             mRecyclerView.getLayoutManager().onRestoreInstanceState(listState);
+            // Restore position of previously focused item
+            mFocusedItemPosition = mRecyclerViewStateBundle.getInt(RECYCLER_VIEW_FOCUSED_ITEM_KEY);
+            mCursorAdapter.setFocusedItem(mFocusedItemPosition);
+            mRecyclerView.scrollToPosition(mFocusedItemPosition);
         }
-        // Restart loader
-        getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
     }
 
     @Override
