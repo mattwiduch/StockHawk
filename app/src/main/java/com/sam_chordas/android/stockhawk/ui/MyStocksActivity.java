@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -50,7 +51,9 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
      */
 
     private static final int CURSOR_LOADER_ID = 0;
-    private static final String DIALOG_TAG = "track_stock_dialog";
+    private static final String DIALOG_TAG = "Dialog.trackSymbol";
+    private static final String RECYCLER_VIEW_FOCUSED_ITEM_KEY = "RecyclerView.focusedItem";
+    private static final String RECYCLER_VIEW_STATE_KEY = "RecyclerView.state";
 
     private static final String SORT_DEFAULT = "null";
     private static final String SORT_SYMBOL_ASC = QuoteColumns.SYMBOL + " ASC";
@@ -62,6 +65,9 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 
     private Intent mServiceIntent;
     private ItemTouchHelper mItemTouchHelper;
+    private RecyclerView mRecyclerView;
+    private static Bundle mRecyclerViewStateBundle;
+    private int mFocusedItemPosition;
     private QuoteCursorAdapter mCursorAdapter;
     private Context mContext;
     private Cursor mCursor;
@@ -116,14 +122,14 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 
         // Prepare RecyclerView
         getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, R.drawable.divider));
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, R.drawable.divider));
 
         View emptyView = findViewById(R.id.recycler_view_empty);
         mCursorAdapter = new QuoteCursorAdapter(this, null, emptyView);
 
-        recyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(this,
+        mRecyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(this,
                 new RecyclerViewItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View v, int position) {
@@ -138,11 +144,11 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                         }
                     }
                 }));
-        recyclerView.setAdapter(mCursorAdapter);
+        mRecyclerView.setAdapter(mCursorAdapter);
 
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mCursorAdapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
-        mItemTouchHelper.attachToRecyclerView(recyclerView);
+        mItemTouchHelper.attachToRecyclerView(mRecyclerView);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -203,22 +209,44 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 
     @Override
     protected void onPause() {
+        super.onPause();
+        // Unregister Preference Change Listener
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         sp.unregisterOnSharedPreferenceChangeListener(this);
-        super.onPause();
+        // Save RecyclerView state
+        mRecyclerViewStateBundle = new Bundle();
+        Parcelable listState = mRecyclerView.getLayoutManager().onSaveInstanceState();
+        mRecyclerViewStateBundle.putParcelable(RECYCLER_VIEW_STATE_KEY, listState);
+        // Save position of currently focused item
+        mFocusedItemPosition = mRecyclerView.getChildAdapterPosition(mRecyclerView.getFocusedChild());
+        mRecyclerViewStateBundle.putInt(RECYCLER_VIEW_FOCUSED_ITEM_KEY, mFocusedItemPosition);
     }
 
     @Override
     public void onResume() {
+        super.onResume();
+        // Register Shared Preference Change Listener
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         sp.registerOnSharedPreferenceChangeListener(this);
-        super.onResume();
-        getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
+        // Restore RecyclerView state
+        if (mRecyclerViewStateBundle != null) {
+            Parcelable listState = mRecyclerViewStateBundle.getParcelable(RECYCLER_VIEW_STATE_KEY);
+            mRecyclerView.getLayoutManager().onRestoreInstanceState(listState);
+            // TODO: Clears previously selected view
+            mCursorAdapter.notifyItemChanged(mCursorAdapter.getSelectedItem());
+            // Restore position of previously focused item
+            mFocusedItemPosition = mRecyclerViewStateBundle.getInt(RECYCLER_VIEW_FOCUSED_ITEM_KEY);
+            mCursorAdapter.setFocusedItem(mFocusedItemPosition);
+            mRecyclerView.scrollToPosition(mFocusedItemPosition);
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.my_stocks, menu);
+        menu.getItem(0).setTitle(Utils.showPercent ?
+                getString(R.string.a11y_change_units, getString(R.string.a11y_currency))
+                : getString(R.string.a11y_change_units, getString(R.string.a11y_percent)));
         return true;
     }
 
@@ -238,8 +266,10 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
             // this is for changing stock changes from percent value to dollar value
             if (Utils.showPercent) {
                 item.setIcon(R.drawable.ic_action_percent_white);
+                item.setTitle(getString(R.string.a11y_change_units, getString(R.string.a11y_percent)));
             } else {
                 item.setIcon(R.drawable.ic_attach_money_white_24dp);
+                item.setTitle(getString(R.string.a11y_change_units, getString(R.string.a11y_currency)));
             }
             Utils.showPercent = !Utils.showPercent;
             this.getContentResolver().notifyChange(QuoteProvider.Quotes.CONTENT_URI, null);
@@ -301,7 +331,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                 getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, MyStocksActivity.this);
             }
         });
-
         // Creates dialog
         AlertDialog sortDialog = dialogBuilder.create();
         // Shows dialog

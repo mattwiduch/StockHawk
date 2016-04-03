@@ -41,8 +41,8 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         for (int i = 0; i < childCount; i++) {
             View child = parent.getChildAt(i);
             if (parent.getChildViewHolder(child) instanceof QuoteCursorAdapter.ListItemViewHolder) {
-                int left = child.getPaddingLeft();
-                int right = child.getWidth() - child.getPaddingRight();
+                int left = child.getLeft();
+                int right = child.getWidth() + child.getLeft();
 
                 RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
 

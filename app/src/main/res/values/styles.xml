@@ -16,15 +16,15 @@
 
     <!-- Track Stock dialog theme -->
     <style name="DialogTrackStock" parent="Theme.AppCompat.Dialog.Alert">
-        <item name="android:background">@color/grey_card</item>
+        <item name="android:windowBackground">@color/grey_card</item>
         <item name="colorAccent">@color/orange_accent</item>
         <item name="android:textColor">@color/text_light_primary</item>
         <item name="android:textColorPrimary">@color/text_light_secondary</item>
     </style>
 
     <!-- Sort stocks dialog theme -->
-    <style name="DialogSortStocks" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="android:background">@color/grey_card</item>
+    <style name="DialogSortStocks" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:windowBackground">@color/grey_card</item>
         <item name="colorAccent">@color/orange_accent</item>
         <item name="colorControlNormal">@color/control_highlight</item>
         <item name="android:textColor">@color/text_light_primary</item>

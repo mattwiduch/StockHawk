@@ -97,22 +97,28 @@ public class MarketWidgetRemoteViewsService extends RemoteViewsService {
                 // Get correct color & icon
                 int color = R.color.blue_flat;
                 int icon = R.drawable.ic_trending_flat_18dp;
+                String trending = getString(R.string.a11y_trending_flat);
                 if (isUp == -1) {
                     icon = R.drawable.ic_trending_down_18dp;
                     color = R.color.red_low;
+                    trending = getString(R.string.a11y_trending_down);
                 } else if (isUp == 1){
                     icon = R.drawable.ic_trending_up_18dp;
                     color = R.color.green_high;
+                    trending = getString(R.string.a11y_trending_up);
                 }
 
                 // Add the data to the RemoteViews
                 views.setImageViewResource(R.id.widget_icon, icon);
                 views.setTextViewText(R.id.widget_stock_symbol, symbol);
+                views.setContentDescription(R.id.widget_stock_symbol, name);
                 views.setTextViewText(R.id.widget_stock_name, name);
+                views.setContentDescription(R.id.widget_stock_name, trending);
                 views.setTextViewText(R.id.widget_bid_price, price);
+                views.setContentDescription(R.id.widget_bid_price, getString(R.string.a11y_price, price));
                 views.setTextViewText(R.id.widget_change, change);
                 views.setTextColor(R.id.widget_change, ContextCompat.getColor(getApplication(), color));
-                views.setContentDescription(R.id.widget_icon, symbol);
+                views.setContentDescription(R.id.widget_change, getString(R.string.a11y_change, change));
 
                 // Add fill intent to item view
                 final Intent fillInIntent = new Intent();
