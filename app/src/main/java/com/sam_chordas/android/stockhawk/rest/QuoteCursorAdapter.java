@@ -69,10 +69,16 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         if (viewHolder instanceof ListItemViewHolder) {
             super.onBindViewHolder(viewHolder, position);
+            // Request focus
+            if (mFocusedItem == position) {
+                viewHolder.itemView.requestFocus();
+            }
         }
-        // Request focus
         if (viewHolder instanceof FooterViewHolder) {
-            viewHolder.itemView.requestFocus();
+            // Request focus
+            if (mFocusedItem == position) {
+                viewHolder.itemView.requestFocus();
+            }
         }
     }
 
@@ -117,11 +123,6 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
         }
         viewHolder.change.setContentDescription(mContext.getString(R.string.a11y_change,
                 viewHolder.change.getText()));
-
-        // Request focus
-        if (mFocusedItem == cursor.getPosition() || viewHolder instanceof FooterViewHolder) {
-            viewHolder.itemView.requestFocus();
-        }
     }
 
     /**
