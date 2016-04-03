@@ -70,6 +70,10 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
         if (viewHolder instanceof ListItemViewHolder) {
             super.onBindViewHolder(viewHolder, position);
         }
+        // Request focus
+        if (viewHolder instanceof FooterViewHolder) {
+            viewHolder.itemView.requestFocus();
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -115,7 +119,7 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
                 viewHolder.change.getText()));
 
         // Request focus
-        if (mFocusedItem == cursor.getPosition()) {
+        if (mFocusedItem == cursor.getPosition() || viewHolder instanceof FooterViewHolder) {
             viewHolder.itemView.requestFocus();
         }
     }
