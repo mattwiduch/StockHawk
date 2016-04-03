@@ -221,6 +221,8 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         if (mRecyclerViewStateBundle != null) {
             Parcelable listState = mRecyclerViewStateBundle.getParcelable(RECYCLER_VIEW_STATE_KEY);
             mRecyclerView.getLayoutManager().onRestoreInstanceState(listState);
+            // TODO: Clears previously selected view
+            mCursorAdapter.notifyItemChanged(mCursorAdapter.getSelectedItem());
             // Restore position of previously focused item
             mFocusedItemPosition = mRecyclerViewStateBundle.getInt(RECYCLER_VIEW_FOCUSED_ITEM_KEY);
             mCursorAdapter.setFocusedItem(mFocusedItemPosition);

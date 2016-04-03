@@ -40,6 +40,7 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
     //private final OnStartDragListener mDragListener;
     private boolean isPercent;
     private int mFocusedItem;
+    private static int mSelectedItem;
 
     public QuoteCursorAdapter(Context context, Cursor cursor, View emptyView) {
         super(context, cursor, emptyView);
@@ -132,6 +133,8 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
         mFocusedItem = position;
     }
 
+    public int getSelectedItem() { return mSelectedItem; }
+
     @Override
     public void onItemDismiss(int position) {
         Cursor c = getCursor();
@@ -182,6 +185,7 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
         @Override
         public void onItemSelected() {
             itemView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.control_highlight));
+            mSelectedItem = this.getAdapterPosition();
         }
 
         @Override
