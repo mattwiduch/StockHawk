@@ -402,7 +402,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                     break;
                 case StockTaskService.HAWK_STATUS_SYMBOL_INVALID:
                     if (mDialog != null)
-                        mDialog.setErrorMessage(getString(R.string.error_symbol_invalid));
+                        mDialog.setErrorMessage(getString(R.string.dialog_track_error_symbol_invalid));
                     break;
                 case StockTaskService.HAWK_STATUS_DATA_CORRUPTED:
                     showSnackbar(getString(R.string.error_corrupted_data));

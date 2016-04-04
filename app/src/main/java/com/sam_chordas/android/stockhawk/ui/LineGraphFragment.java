@@ -135,7 +135,7 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
         }
 
         // Set user friendly content description the the graph
-        lineChart.setContentDescription(getString(R.string.a11y_description, toolbar.getTitle(),
+        lineChart.setContentDescription(getString(R.string.a11y_list_item_description, toolbar.getTitle(),
                 trending, stockPriceTextview.getText(), stockChangeTextview.getText()));
 
         lineChart.setXAxis(false);
