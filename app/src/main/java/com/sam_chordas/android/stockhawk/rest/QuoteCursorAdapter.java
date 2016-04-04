@@ -6,12 +6,15 @@ import android.database.Cursor;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.SystemClock;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -36,10 +39,13 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
     private static Typeface robotoLight;
     //private final OnStartDragListener mDragListener;
     private boolean isPercent;
+    private int mFocusedItem;
+    private static int mSelectedItem;
 
     public QuoteCursorAdapter(Context context, Cursor cursor, View emptyView) {
         super(context, cursor, emptyView);
         //mDragListener = dragListener;
+        mFocusedItem = -1;
         mContext = context;
     }
 
@@ -57,49 +63,81 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
         }
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_quote, parent, false);
-        ListItemViewHolder vh = new ListItemViewHolder(itemView);
-        return vh;
+        return new ListItemViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         if (viewHolder instanceof ListItemViewHolder) {
             super.onBindViewHolder(viewHolder, position);
+            // Request focus
+            if (mFocusedItem == position) {
+                viewHolder.itemView.requestFocus();
+            }
+        }
+        if (viewHolder instanceof FooterViewHolder) {
+            // Request focus
+            if (mFocusedItem == position) {
+                viewHolder.itemView.requestFocus();
+            }
         }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final Cursor cursor) {
+        // TODO: Move to utils
         @ColorInt
         int color;
         @DrawableRes
         Drawable icon;
+        String trending;
         if (cursor.getInt(cursor.getColumnIndex(QuoteColumns.IS_UP)) == -1) {
             icon = ContextCompat.getDrawable(mContext, R.drawable.ic_trending_down_white_18dp);
             color = ContextCompat.getColor(mContext, R.color.red_low);
+            trending = mContext.getString(R.string.a11y_trending_down);
         } else if (cursor.getInt(cursor.getColumnIndex(QuoteColumns.IS_UP)) == 0) {
             icon = ContextCompat.getDrawable(mContext, R.drawable.ic_trending_flat_white_18dp);
             color = ContextCompat.getColor(mContext, R.color.blue_flat);
+            trending = mContext.getString(R.string.a11y_trending_flat);
         } else {
             icon = ContextCompat.getDrawable(mContext, R.drawable.ic_trending_up_white_18dp);
             color = ContextCompat.getColor(mContext, R.color.green_high);
+            trending = mContext.getString(R.string.a11y_trending_up);
         }
 
         viewHolder.icon.setImageDrawable(icon);
         viewHolder.icon.setColorFilter(color);
         viewHolder.symbol.setText(cursor.getString(cursor.getColumnIndex(QuoteColumns.SYMBOL)));
-        viewHolder.name.setText(cursor.getString(cursor.getColumnIndex(QuoteColumns.NAME)));
-        viewHolder.bidPrice.setText(cursor.getString(cursor.getColumnIndex(QuoteColumns.BID_PRICE)));
+        String name = cursor.getString(cursor.getColumnIndex(QuoteColumns.NAME));
+        viewHolder.name.setText(name);
+        viewHolder.symbol.setContentDescription(name);
+        viewHolder.name.setContentDescription(trending);
+        String bidPrice = Utils.formatBidPrice(mContext, cursor.getString(cursor.getColumnIndex(QuoteColumns.BID_PRICE)));
+        viewHolder.bidPrice.setText(bidPrice);
+        viewHolder.bidPrice.setContentDescription(mContext.getString(R.string.a11y_price, bidPrice));
 
         viewHolder.change.setTextColor(color);
-        //viewHolder.change.setAlpha(0.7f);
+        String change;
         if (Utils.showPercent) {
-            viewHolder.change.setText(cursor.getString(cursor.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
+            change = Utils.formatChangeInPercent(mContext, cursor.getString(cursor.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
+            viewHolder.change.setText(change);
         } else {
-            viewHolder.change.setText(cursor.getString(cursor.getColumnIndex(QuoteColumns.CHANGE)));
+            change = Utils.formatChange(mContext, cursor.getString(cursor.getColumnIndex(QuoteColumns.CHANGE)));
+            viewHolder.change.setText(change);
         }
+        viewHolder.change.setContentDescription(mContext.getString(R.string.a11y_change,
+                change));
     }
+
+    /**
+     * Sets position of currently focused item
+     */
+    public void setFocusedItem(int position) {
+        mFocusedItem = position;
+    }
+
+    public int getSelectedItem() { return mSelectedItem; }
 
     @Override
     public void onItemDismiss(int position) {
@@ -151,6 +189,7 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
         @Override
         public void onItemSelected() {
             itemView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.control_highlight));
+            mSelectedItem = this.getAdapterPosition();
         }
 
         @Override
@@ -175,6 +214,10 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
         public FooterViewHolder(View itemView) {
             super(itemView);
         }
+
+        @Override
+        public void onItemSelected() {
+        }
     }
 
     // List Item
@@ -182,6 +225,38 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
         public ListItemViewHolder(View itemView) {
             super(itemView);
             symbol.setTypeface(robotoLight);
+            // Emulates item touch when touch pad center button is pressed
+            itemView.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+                        RecyclerView rv = (RecyclerView) v.getParent();
+                        int[] touchCoordinates = new int[2];
+                        // Get view's coordinates
+                        v.getLocationInWindow(touchCoordinates);
+                        // Translate to get coordinates within the view
+                        touchCoordinates[0] = touchCoordinates[0] + 21;
+                        touchCoordinates[1] = touchCoordinates[1] - 165;
+
+                        // Fire touch down event
+                        MotionEvent e = MotionEvent.obtain(SystemClock.uptimeMillis(),
+                                SystemClock.uptimeMillis(),
+                                MotionEvent.ACTION_DOWN,
+                                touchCoordinates[0], touchCoordinates[1], 0);
+                        rv.dispatchTouchEvent(e);
+                        // Fire touch up event
+                        e = MotionEvent.obtain(SystemClock.uptimeMillis(),
+                                SystemClock.uptimeMillis(),
+                                MotionEvent.ACTION_UP,
+                                touchCoordinates[0], touchCoordinates[1], 0);
+                        rv = (RecyclerView) v.getParent();
+                        rv.dispatchTouchEvent(e);
+
+                        return true;
+                    }
+                    return false;
+                }
+            });
         }
     }
 }

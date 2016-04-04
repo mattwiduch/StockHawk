@@ -37,6 +37,8 @@
         android:layout_alignEnd="@id/dialog_track_stock_input_layout"
         android:layout_alignRight="@id/dialog_track_stock_input_layout"
         android:layout_alignTop="@id/dialog_track_stock_input_layout"
+        android:paddingStart="0dp"
+        android:paddingLeft="0dp"
         android:paddingEnd="4dp"
         android:paddingRight="4dp"
         android:paddingTop="16dp"

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2016 Mateusz Widuch
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+ -->
+<resources xmlns:xliff="http://schemas.android.com/tools">
+    <string name="app_name">Stock Hawk</string>
+    <string name="a11y_change_units">Zmień jednostki na <xliff:g id="units">%1$s</xliff:g>.</string>
+    <string name="a11y_currency">walutę</string>
+    <string name="a11y_fab">Dodaj spółkę</string>
+    <string name="a11y_list_item_description">
+        <xliff:g id="name">%1$s</xliff:g>.
+        <xliff:g id="trend">%2$s</xliff:g>.
+        Kurs: <xliff:g id="price">%3$s</xliff:g>.
+        Zmiana: <xliff:g id="change">%4$s</xliff:g>.
+    </string>
+    <string name="a11y_percent">procenty</string>
+    <string name="a11y_price">Kurs: <xliff:g id="price">%1$s</xliff:g>.</string>
+    <string name="a11y_symbol">Skrót: <xliff:g id="symbol">%1$s</xliff:g></string>
+    <string name="a11y_trending_down">Spadek</string>
+    <string name="a11y_trending_flat">Bez zmian</string>
+    <string name="a11y_trending_up">Wzrost</string>
+    <string name="action_change_units">Jednostka</string>
+    <string name="action_settings">Ustawienia</string>
+    <string name="action_sort">Sortuj</string>
+    <string name="data_not_available_label">B/D</string>
+    <string name="dialog_button_negative">Anuluj</string>
+    <string name="dialog_button_positive">Dodaj</string>
+    <string name="dialog_track_button_positive">Obserwuj</string>
+    <string name="dialog_track_error_symbol_invalid">Nie znaleziono</string>
+    <string name="a11y_change">Zmiana: <xliff:g id="change">%1$s</xliff:g>.</string>
+    <string name="dialog_track_error_symbol_saved">Już obserwujesz tą spółkę</string>
+    <string name="dialog_track_title">Wprowadź skrót</string>
+    <string name="empty_stocks_list">O nie! Nie obserwujesz  żadnych spółek.</string>
+    <string name="error_corrupted_data">Coś poszło nie tak podczas zapisywania danych. Spróbuj jeszcze raz.</string>
+    <string name="error_no_network">Nie jesteś podłączony do internetu</string>
+    <string name="error_server_down">Serwer nie odpowiada na zapytania. Spróbuj później.</string>
+    <string name="error_server_invalid">Serwer dostarczył nieprawidłowe dane. Spróbuj jeszcze raz.</string>
+    <string name="error_utf8_not_supported">Twoje urządzenie nie obsługuje kodowania UTF-8</string>
+    <string name="graph_label">HISTORIA NOTOWAŃ</string>
+    <string name="last_updated">Zaktualizowano <xliff:g id="time_passed">%1$s</xliff:g></string>
+    <string name="last_updated_minute">mniej niż minutę temu</string>
+    <string name="line_graph_activity_title">Wykres</string>
+    <string name="network_snackbar_button_retry">PONÓW</string>
+    <string name="sort_bid_asc">Kurs (Rosnąco)</string>
+    <string name="sort_bid_dsc">Kurs (Malejąco)</string>
+    <string name="sort_change_asc">Zmiana (Rosnąco)</string>
+    <string name="sort_default">Domyślne</string>
+    <string name="sort_dialog_title">Posortuj według:</string>
+    <string name="sort_symbol_asc">Skrót (Rosnąco)</string>
+    <string name="sort_change_dsc">Zmiana (Malejąco)</string>
+    <string name="sort_symbol_dsc">Skrót (Malejąco)</string>
+    <string name="widget_quote_empty_label">Problem</string>
+    <string name="widget_quote_title">Stock Hawk - Spółka</string>
+    <string name="widget_quote_empty"><xliff:g id="symbol">%1$s</xliff:g> nie jest już obserwowany</string>
+    <string name="widget_market_title">Stock Hawk - Giełda</string>
+    <string name="widget_market_heading">Dzisiejsze notowania</string>
+    <string name="widget_config_spinner_item"><xliff:g id="symbol">%1$s</xliff:g> - <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="stock_symbol_label">Skrót</string>
+    <string name="stock_price_label">Oferta Kupna</string>
+    <string name="stock_change_label">Zmiana</string>
+    <string name="stock_high_label">Max.</string>
+    <string name="stock_low_label">Min.</string>
+    <string name="stock_open_label">Otwarcie</string>
+    <string name="stock_prev_close_label">Zamknięcie</string>
+    <string name="stock_volume_label">Wol.</string>
+    <string name="stock_52wk_high_label">Max. (52 tyg.)</string>
+    <string name="stock_52wk_low_label">Min. (52 tyg.)</string>
+    <string name="stock_avg_volume_label">Śr. wol. (3 m.)</string>
+    <string name="stock_mkt_capital_label">Wart. obrotu</string>
+    <string name="stock_1y_target_label">Cel (1 r.)</string>
+</resources>

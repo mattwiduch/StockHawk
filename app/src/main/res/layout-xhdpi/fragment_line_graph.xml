@@ -84,6 +84,7 @@
                     android:text="@string/stock_symbol_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                     android:textColor="@color/text_light_secondary"
+                    android:contentDescription="@string/a11y_no_description"
                     grid:layout_column="0"
                     grid:layout_columnWeight="1"
                     grid:layout_gravity="fill_horizontal"
@@ -110,6 +111,7 @@
                     android:text="@string/stock_price_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                     android:textColor="@color/text_light_secondary"
+                    android:contentDescription="@string/a11y_no_description"
                     grid:layout_column="1"
                     grid:layout_columnWeight="1"
                     grid:layout_gravity="fill_horizontal"
@@ -355,6 +357,7 @@
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:gravity="center_vertical"
                     android:paddingBottom="@dimen/underline_padding">
 
                     <TextView

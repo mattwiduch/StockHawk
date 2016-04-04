@@ -12,6 +12,12 @@ import com.sam_chordas.android.stockhawk.service.StockTaskService;
 
 import org.threeten.bp.Instant;
 
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * Created by sam_chordas on 10/8/15.
  */
@@ -19,7 +25,7 @@ public class Utils {
     public static boolean showPercent = true;
 
     public static String truncateBidPrice(String bidPrice) {
-        bidPrice = String.format("%.2f", Float.parseFloat(bidPrice));
+        bidPrice = String.format(Locale.ENGLISH, "%.2f", Float.parseFloat(bidPrice));
         return bidPrice;
     }
 
@@ -32,7 +38,7 @@ public class Utils {
         }
         change = change.substring(1, change.length());
         double round = (double) Math.round(Double.parseDouble(change) * 100) / 100;
-        change = String.format("%.2f", round);
+        change = String.format(Locale.ENGLISH, "%.2f", round);
         StringBuffer changeBuffer = new StringBuffer(change);
         changeBuffer.insert(0, weight);
         changeBuffer.append(ampersand);
@@ -82,18 +88,24 @@ public class Utils {
 
     static public String formatGraphDateLabels(String date) {
         String currentDate = Instant.now().toString();
+        SimpleDateFormat df = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT);
+        // Removes year from formatted date
+        String pattern = df.toLocalizedPattern().replaceAll(".?[Yy].?", "");
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.getDefault());
         String formattedDate;
 
         if (currentDate.substring(0, 9).equals(date.substring(0, 9))) {
             if (Integer.parseInt(currentDate.substring(9, 10)) == Integer.parseInt(date.substring(9, 10))
                 || Integer.parseInt(currentDate.substring(9, 10)) - 1 == Integer.parseInt(date.substring(9, 10)))
             {
-                formattedDate = date.substring(11, 16);
+                df = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                formattedDate = df.format(new Date(Instant.parse(date).toEpochMilli()));
             } else {
-                formattedDate = date.substring(5, 10);
+
+                formattedDate = sdf.format(new Date(Instant.parse(date).toEpochMilli()));
             }
         } else {
-            formattedDate = date.substring(5, 10);
+            formattedDate = sdf.format(new Date(Instant.parse(date).toEpochMilli()));
         }
 
         return formattedDate;
@@ -105,5 +117,40 @@ public class Utils {
                 Instant.now().toEpochMilli(), DateUtils.MINUTE_IN_MILLIS).toString();
         return formattedUpdateTime.charAt(0) == '0' ? context.getString(R.string.last_updated_minute)
                 : formattedUpdateTime;
+    }
+
+    /** Formats stock bid price for device's locale */
+    static public String formatBidPrice(Context context, String bidPrice) {
+        if (!bidPrice.equals(context.getResources().getString(R.string.data_not_available))) {
+            DecimalFormat decimalFormat = new DecimalFormat("'$'#.00");
+            bidPrice = decimalFormat.format(Double.parseDouble(bidPrice));
+        } else {
+            bidPrice = context.getString(R.string.data_not_available_label);
+        }
+        return bidPrice;
+    }
+
+    /** Formats stock change for device's locale */
+    static public String formatChange(Context context, String change) {
+        if (!change.equals(context.getResources().getString(R.string.data_not_available))) {
+            DecimalFormat decimalFormat = new DecimalFormat("+#0.00;-#");
+            change = decimalFormat.format(Double.parseDouble(change));
+        } else {
+            context.getString(R.string.data_not_available_label);
+        }
+        return change;
+    }
+
+    /** Formats stock change in percent for device's locale */
+    static public String formatChangeInPercent(Context context, String changeInPercent) {
+        if (!changeInPercent.equals(context.getResources().getString(R.string.data_not_available))) {
+            DecimalFormat decimalFormat = new DecimalFormat("+#0.00%;-#%");
+            decimalFormat.setMultiplier(1);
+            changeInPercent = decimalFormat.format(Double.parseDouble(
+                    changeInPercent.substring(0, changeInPercent.length() - 1)));
+        } else {
+            context.getString(R.string.data_not_available_label);
+        }
+        return changeInPercent;
     }
 }
