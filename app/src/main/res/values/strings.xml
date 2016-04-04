@@ -100,5 +100,6 @@
     <string name="a11y_percent">percent</string>
     <string name="a11y_currency">currency</string>
     <string name="a11y_change_units">Change units to <xliff:g id="units">%1$s</xliff:g>.</string>
+    <string name="network_snackbar_button_retry">RETRY</string>
 
 </resources>
