@@ -12,7 +12,10 @@ import com.sam_chordas.android.stockhawk.service.StockTaskService;
 
 import org.threeten.bp.Instant;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -85,18 +88,24 @@ public class Utils {
 
     static public String formatGraphDateLabels(String date) {
         String currentDate = Instant.now().toString();
+        SimpleDateFormat df = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT);
+        // Removes year from formatted date
+        String pattern = df.toLocalizedPattern().replaceAll(".?[Yy].?", "");
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.getDefault());
         String formattedDate;
 
         if (currentDate.substring(0, 9).equals(date.substring(0, 9))) {
             if (Integer.parseInt(currentDate.substring(9, 10)) == Integer.parseInt(date.substring(9, 10))
                 || Integer.parseInt(currentDate.substring(9, 10)) - 1 == Integer.parseInt(date.substring(9, 10)))
             {
-                formattedDate = date.substring(11, 16);
+                df = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                formattedDate = df.format(new Date(Instant.parse(date).toEpochMilli()));
             } else {
-                formattedDate = date.substring(5, 10);
+
+                formattedDate = sdf.format(new Date(Instant.parse(date).toEpochMilli()));
             }
         } else {
-            formattedDate = date.substring(5, 10);
+            formattedDate = sdf.format(new Date(Instant.parse(date).toEpochMilli()));
         }
 
         return formattedDate;
