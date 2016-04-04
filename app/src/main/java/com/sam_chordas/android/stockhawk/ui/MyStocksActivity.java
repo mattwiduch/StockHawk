@@ -136,7 +136,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                         if (position < mCursor.getCount()) {
                             mCursor = mCursorAdapter.getCursor();
                             mCursor.moveToPosition(position);
-                            String symbol = mCursor.getString(mCursor.getColumnIndex("symbol"));
+                            String symbol = mCursor.getString(mCursor.getColumnIndex(QuoteColumns.SYMBOL));
                             Intent intent = new Intent(MyStocksActivity.this, LineGraphActivity.class)
                                     .putExtra(getString(R.string.line_graph_extra), symbol);
 
@@ -343,7 +343,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         Snackbar snackbar = Snackbar
                 .make(findViewById(R.id.layout_my_stocks), getString(R.string.error_no_network),
                         Snackbar.LENGTH_INDEFINITE)
-                .setAction("RETRY", new View.OnClickListener() {
+                .setAction(R.string.network_snackbar_button_retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         mServiceIntent.putExtra(StockIntentService.TASK_TAG,
@@ -402,7 +402,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                     break;
                 case StockTaskService.HAWK_STATUS_SYMBOL_INVALID:
                     if (mDialog != null)
-                        mDialog.setErrorMessage(getString(R.string.error_symbol_invalid));
+                        mDialog.setErrorMessage(getString(R.string.dialog_track_error_symbol_invalid));
                     break;
                 case StockTaskService.HAWK_STATUS_DATA_CORRUPTED:
                     showSnackbar(getString(R.string.error_corrupted_data));

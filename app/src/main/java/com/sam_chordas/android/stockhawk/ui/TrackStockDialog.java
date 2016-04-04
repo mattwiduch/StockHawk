@@ -61,7 +61,7 @@ public class TrackStockDialog extends DialogFragment {
                                 new String[]{QuoteColumns.SYMBOL}, QuoteColumns.SYMBOL + "= ?",
                                 new String[]{input}, null);
                         if (c.getCount() != 0) {
-                            setErrorMessage(getActivity().getString(R.string.error_symbol_saved));
+                            setErrorMessage(getActivity().getString(R.string.dialog_track_error_symbol_saved));
                             return;
                         } else {
                             // Create intent

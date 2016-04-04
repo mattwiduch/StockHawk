@@ -28,6 +28,7 @@ import android.widget.RemoteViewsService;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
+import com.sam_chordas.android.stockhawk.rest.Utils;
 
 /**
  * RemoteViewsService controlling the data being shown in the scrollable today's market widget
@@ -90,8 +91,10 @@ public class MarketWidgetRemoteViewsService extends RemoteViewsService {
 
                 String symbol = data.getString(data.getColumnIndex(QuoteColumns.SYMBOL));
                 String name = data.getString(data.getColumnIndex(QuoteColumns.NAME));
-                String price = data.getString(data.getColumnIndex(QuoteColumns.BID_PRICE));
-                String change = data.getString(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE));
+                String price = Utils.formatBidPrice(getApplication(),
+                        data.getString(data.getColumnIndex(QuoteColumns.BID_PRICE)));
+                String change = Utils.formatChangeInPercent(getApplication(),
+                        data.getString(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
                 int isUp = data.getInt(data.getColumnIndex(QuoteColumns.IS_UP));
 
                 // Get correct color & icon
@@ -102,7 +105,7 @@ public class MarketWidgetRemoteViewsService extends RemoteViewsService {
                     icon = R.drawable.ic_trending_down_18dp;
                     color = R.color.red_low;
                     trending = getString(R.string.a11y_trending_down);
-                } else if (isUp == 1){
+                } else if (isUp == 1) {
                     icon = R.drawable.ic_trending_up_18dp;
                     color = R.color.green_high;
                     trending = getString(R.string.a11y_trending_up);

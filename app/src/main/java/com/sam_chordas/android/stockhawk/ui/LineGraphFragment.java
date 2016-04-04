@@ -135,7 +135,7 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
         }
 
         // Set user friendly content description the the graph
-        lineChart.setContentDescription(getString(R.string.a11y_description, toolbar.getTitle(),
+        lineChart.setContentDescription(getString(R.string.a11y_list_item_description, toolbar.getTitle(),
                 trending, stockPriceTextview.getText(), stockChangeTextview.getText()));
 
         lineChart.setXAxis(false);
@@ -226,11 +226,13 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
             stockSymbolTextview.setText(mStockSymbol);
             stockSymbolTextview.setContentDescription(getString(R.string.a11y_symbol, mStockSymbol));
             stockSymbolLabel.setContentDescription(getString(R.string.a11y_symbol, mStockSymbol));
-            String price = data.getString(data.getColumnIndex(QuoteColumns.BID_PRICE));
+            String price = Utils.formatBidPrice(getContext(),
+                    data.getString(data.getColumnIndex(QuoteColumns.BID_PRICE)));
             stockPriceTextview.setText(price);
             stockPriceTextview.setContentDescription(getString(R.string.a11y_price, price));
             stockPriceLabel.setContentDescription(getString(R.string.a11y_price, price));
-            String change = data.getString(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE));
+            String change = Utils.formatChangeInPercent(getContext(),
+                    data.getString(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
             stockChangeTextview.setText(change);
             stockChangeTextview.setContentDescription(getString(R.string.a11y_change, change));
             stockChangeLabel.setContentDescription(getString(R.string.a11y_change, change));

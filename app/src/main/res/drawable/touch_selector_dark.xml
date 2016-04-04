@@ -20,7 +20,7 @@
           android:drawable="@color/control_highlight"/>
 
     <item android:state_window_focused="false"
-          android:drawable="@color/grey_primary" />
+          android:drawable="@color/grey_card" />
 
     <!-- Even though these two point to the same resource, have two states so the drawable will invalidate itself when coming out of pressed state. -->
     <item android:state_focused="true"  android:state_enabled="false" android:state_pressed="true" android:drawable="@drawable/abc_list_selector_holo_light" />
@@ -30,5 +30,5 @@
     <item android:state_focused="true"                                                             android:drawable="@drawable/abc_list_selector_holo_light" />
 
     <!-- Default, "just hangin' out" state.  This is part of ActionBarCompat -->
-    <item android:drawable="@color/grey_primary" />
+    <item android:drawable="@color/grey_card" />
 </selector>

@@ -14,6 +14,7 @@ import android.widget.RemoteViews;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
+import com.sam_chordas.android.stockhawk.rest.Utils;
 import com.sam_chordas.android.stockhawk.ui.MyStocksActivity;
 
 /**
@@ -62,8 +63,8 @@ public class QuoteWidgetIntentService extends IntentService {
 
             //String symbol = data.getString(data.getColumnIndex(QuoteColumns.SYMBOL));
             String name = data.getString(data.getColumnIndex(QuoteColumns.NAME));
-            String price = data.getString(data.getColumnIndex(QuoteColumns.BID_PRICE));
-            String change = data.getString(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE));
+            String price = Utils.formatBidPrice(this, data.getString(data.getColumnIndex(QuoteColumns.BID_PRICE)));
+            String change = Utils.formatChangeInPercent(this, data.getString(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
             int isUp = data.getInt(data.getColumnIndex(QuoteColumns.IS_UP));
 
             // Get correct color & icon

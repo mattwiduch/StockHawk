@@ -86,6 +86,7 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final Cursor cursor) {
+        // TODO: Move to utils
         @ColorInt
         int color;
         @DrawableRes
@@ -112,18 +113,21 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
         viewHolder.name.setText(name);
         viewHolder.symbol.setContentDescription(name);
         viewHolder.name.setContentDescription(trending);
-        String bidPrice = cursor.getString(cursor.getColumnIndex(QuoteColumns.BID_PRICE));
+        String bidPrice = Utils.formatBidPrice(mContext, cursor.getString(cursor.getColumnIndex(QuoteColumns.BID_PRICE)));
         viewHolder.bidPrice.setText(bidPrice);
         viewHolder.bidPrice.setContentDescription(mContext.getString(R.string.a11y_price, bidPrice));
 
         viewHolder.change.setTextColor(color);
+        String change;
         if (Utils.showPercent) {
-            viewHolder.change.setText(cursor.getString(cursor.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
+            change = Utils.formatChangeInPercent(mContext, cursor.getString(cursor.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
+            viewHolder.change.setText(change);
         } else {
-            viewHolder.change.setText(cursor.getString(cursor.getColumnIndex(QuoteColumns.CHANGE)));
+            change = Utils.formatChange(mContext, cursor.getString(cursor.getColumnIndex(QuoteColumns.CHANGE)));
+            viewHolder.change.setText(change);
         }
         viewHolder.change.setContentDescription(mContext.getString(R.string.a11y_change,
-                viewHolder.change.getText()));
+                change));
     }
 
     /**
