@@ -34,7 +34,7 @@
     <string name="action_sort">Sort stocks</string>
 
     <!-- String used to display time of last update -->
-    <string name="last_updated">Updated <xliff:g id="time_passed">%1$s</xliff:g>.</string>
+    <string name="last_updated">Updated <xliff:g id="time_passed">%1$s</xliff:g></string>
     <string name="last_updated_never" translatable="false">1970–01–01T00:00:00Z</string>
     <string name="last_updated_minute">less than a minute ago</string>
 
@@ -51,7 +51,7 @@
 
     <!-- Strings related to Track Stock Dialog -->
     <string name="dialog_track_title">Enter stock symbol</string>
-    <string name="dialog_track_input_hint">FB</string>
+    <string name="dialog_track_input_hint" translatable="false">GOOG</string>
     <string name="dialog_track_button_positive">Track</string>
     <string name="dialog_track_error_symbol_saved">You are already tracking this symbol</string>
     <string name="dialog_track_error_symbol_invalid">Symbol not found</string>
@@ -87,7 +87,8 @@
     <string name="stock_symbol_label">Symbol</string>
 
     <!-- Label for null values in database -->
-    <string name="data_not_available">N/A</string>
+    <string name="data_not_available" translatable="false">N/A</string>
+    <string name="data_not_available_label">N/A</string>
 
     <!-- Strings related to widgets -->
     <string name="widget_quote_title">Stock Hawk - Quote</string>
@@ -97,7 +98,7 @@
     <string name="widget_quote_empty_label">Error</string>
 
     <!-- Strings related to quote widget configuration -->
-    <string name="widget_default_symbol">GOOG</string>
+    <string name="widget_default_symbol" translatable="false">GOOG</string>
     <string name="widget_config_spinner_item"><xliff:g id="symbol">%1$s</xliff:g> - <xliff:g id="name">%2$s</xliff:g></string>
     <string name="dialog_button_negative">Cancel</string>
     <string name="dialog_button_positive">Add</string>

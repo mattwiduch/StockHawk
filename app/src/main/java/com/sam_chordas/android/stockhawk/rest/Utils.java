@@ -12,6 +12,8 @@ import com.sam_chordas.android.stockhawk.service.StockTaskService;
 
 import org.threeten.bp.Instant;
 
+import java.util.Locale;
+
 /**
  * Created by sam_chordas on 10/8/15.
  */
@@ -19,7 +21,7 @@ public class Utils {
     public static boolean showPercent = true;
 
     public static String truncateBidPrice(String bidPrice) {
-        bidPrice = String.format("%.2f", Float.parseFloat(bidPrice));
+        bidPrice = String.format(Locale.ENGLISH, "%.2f", Float.parseFloat(bidPrice));
         return bidPrice;
     }
 
@@ -32,7 +34,7 @@ public class Utils {
         }
         change = change.substring(1, change.length());
         double round = (double) Math.round(Double.parseDouble(change) * 100) / 100;
-        change = String.format("%.2f", round);
+        change = String.format(Locale.ENGLISH, "%.2f", round);
         StringBuffer changeBuffer = new StringBuffer(change);
         changeBuffer.insert(0, weight);
         changeBuffer.append(ampersand);
