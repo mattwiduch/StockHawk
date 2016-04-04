@@ -12,6 +12,7 @@ import com.sam_chordas.android.stockhawk.service.StockTaskService;
 
 import org.threeten.bp.Instant;
 
+import java.text.DecimalFormat;
 import java.util.Locale;
 
 /**
@@ -107,5 +108,40 @@ public class Utils {
                 Instant.now().toEpochMilli(), DateUtils.MINUTE_IN_MILLIS).toString();
         return formattedUpdateTime.charAt(0) == '0' ? context.getString(R.string.last_updated_minute)
                 : formattedUpdateTime;
+    }
+
+    /** Formats stock bid price for device's locale */
+    static public String formatBidPrice(Context context, String bidPrice) {
+        if (!bidPrice.equals(context.getResources().getString(R.string.data_not_available))) {
+            DecimalFormat decimalFormat = new DecimalFormat("'$'#.00");
+            bidPrice = decimalFormat.format(Double.parseDouble(bidPrice));
+        } else {
+            bidPrice = context.getString(R.string.data_not_available_label);
+        }
+        return bidPrice;
+    }
+
+    /** Formats stock change for device's locale */
+    static public String formatChange(Context context, String change) {
+        if (!change.equals(context.getResources().getString(R.string.data_not_available))) {
+            DecimalFormat decimalFormat = new DecimalFormat("+#0.00;-#");
+            change = decimalFormat.format(Double.parseDouble(change));
+        } else {
+            context.getString(R.string.data_not_available_label);
+        }
+        return change;
+    }
+
+    /** Formats stock change in percent for device's locale */
+    static public String formatChangeInPercent(Context context, String changeInPercent) {
+        if (!changeInPercent.equals(context.getResources().getString(R.string.data_not_available))) {
+            DecimalFormat decimalFormat = new DecimalFormat("+#0.00%;-#%");
+            decimalFormat.setMultiplier(1);
+            changeInPercent = decimalFormat.format(Double.parseDouble(
+                    changeInPercent.substring(0, changeInPercent.length() - 1)));
+        } else {
+            context.getString(R.string.data_not_available_label);
+        }
+        return changeInPercent;
     }
 }
