@@ -68,6 +68,7 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
     private int mFocusedItemPosition;
     private QuoteCursorAdapter mCursorAdapter;
     private AppCompatActivity mActivity;
+    private View mRootView;
     private Cursor mCursor;
     private TrackStockDialog mDialog;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -86,8 +87,8 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_my_stocks, container, false);
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        mRootView = inflater.inflate(R.layout.fragment_my_stocks, container, false);
+        Toolbar toolbar = (Toolbar) mRootView.findViewById(R.id.toolbar);
         mActivity.setSupportActionBar(toolbar);
 
         // Initialise loader manager
@@ -112,11 +113,11 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
         }
 
         // Prepare RecyclerView
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(mActivity, R.drawable.divider));
 
-        View emptyView = rootView.findViewById(R.id.recycler_view_empty);
+        View emptyView = mRootView.findViewById(R.id.recycler_view_empty);
         mCursorAdapter = new QuoteCursorAdapter(mActivity, null, emptyView);
 
         mRecyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(mActivity,
@@ -140,7 +141,7 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(mRecyclerView);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -164,7 +165,7 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
 //            }
 //        });
 
-        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) mRootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -178,23 +179,19 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
         });
 
         // Update last updated text view periodically
-        final TextView lastUpdatedTextView = (TextView) rootView.findViewById(R.id.last_update_textview);
+        final TextView lastUpdatedTextView = (TextView) mRootView.findViewById(R.id.last_update_textview);
         final Handler handler = new Handler();
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
                 if (lastUpdatedTextView != null) {
-                    lastUpdatedTextView.setText(getString(R.string.last_updated,
-                            Utils.formatLastUpdateTime(mActivity,
-                                    sp.getString(getString(R.string.pref_last_update),
-                                            getString(R.string.last_updated_never)))));
                 }
                 handler.postDelayed(this, 30000);
             }
         };
         handler.postDelayed(updateTask, 1000);
 
-        return rootView;
+        return mRootView;
     }
 
     @Override
@@ -409,7 +406,7 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
     */
     private void showSnackbar(String message) {
         Snackbar snackbar = Snackbar
-                .make(mActivity.findViewById(R.id.my_stocks_container), message, Snackbar.LENGTH_LONG);
+                .make(mRootView.findViewById(R.id.my_stocks_container), message, Snackbar.LENGTH_LONG);
         View snackBarView = snackbar.getView();
         snackBarView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.grey_primary));
         snackbar.show();
@@ -418,7 +415,7 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
     private void networkSnackbar() {
         if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(false);
         Snackbar snackbar = Snackbar
-                .make(mActivity.findViewById(R.id.my_stocks_container), getString(R.string.error_no_network),
+                .make(mRootView.findViewById(R.id.fragment_my_stocks), getString(R.string.error_no_network),
                         Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.network_snackbar_button_retry, new View.OnClickListener() {
                     @Override
