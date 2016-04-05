@@ -342,7 +342,7 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
             if (textView != null) {
                 textView.setText(getString(R.string.last_updated, Utils.formatLastUpdateTime(
                         mActivity, sharedPreferences.getString(getString(R.string.pref_last_update),
-                                getString(R.string.last_updated_never)))));
+                                getString(R.string.last_updated_never_key)))));
             }
         }
     }

@@ -113,8 +113,11 @@ public class Utils {
 
     /** Returns relative time since update time */
     static public String formatLastUpdateTime(Context context, String updateTime) {
-        String formattedUpdateTime = DateUtils.getRelativeTimeSpanString(Instant.parse(updateTime).toEpochMilli(),
-                Instant.now().toEpochMilli(), DateUtils.MINUTE_IN_MILLIS).toString();
+        String formattedUpdateTime = context.getString(R.string.last_updated_never);
+        if (updateTime.equals(context.getString(R.string.last_updated_never_key))) {
+            formattedUpdateTime = DateUtils.getRelativeTimeSpanString(Instant.parse(updateTime).toEpochMilli(),
+                    Instant.now().toEpochMilli(), DateUtils.MINUTE_IN_MILLIS).toString();
+        }
         return formattedUpdateTime.charAt(0) == '0' ? context.getString(R.string.last_updated_minute)
                 : formattedUpdateTime;
     }

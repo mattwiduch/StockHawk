@@ -120,9 +120,9 @@ public class StockTaskService extends GcmTaskService {
                     null, null);
             SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
             String lastUpdate = sp.getString(mContext.getString(R.string.pref_last_update),
-                    mContext.getString(R.string.last_updated_never));
+                    mContext.getString(R.string.last_updated_never_key));
             if ((initQueryCursor.getCount() == 0 || initQueryCursor == null)//) {
-                    && lastUpdate.equals(mContext.getString(R.string.last_updated_never))) {
+                    && lastUpdate.equals(mContext.getString(R.string.last_updated_never_key))) {
                 // Init task. Populates DB with quotes for the symbols seen below
                 try {
                     urlStringBuilder.append(
