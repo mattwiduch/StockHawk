@@ -18,7 +18,7 @@ public class LineGraphActivity extends AppCompatActivity {
             LineGraphFragment fragment = new LineGraphFragment();
 
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.weather_detail_container, fragment)
+                    .add(R.id.stock_detail_container, fragment)
                     .commit();
         }
     }
