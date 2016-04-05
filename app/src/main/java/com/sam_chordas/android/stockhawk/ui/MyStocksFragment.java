@@ -212,7 +212,6 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onResume() {
         super.onResume();
-        mDialog = (TrackStockDialog) mActivity.getSupportFragmentManager().findFragmentByTag(DIALOG_TAG);
         // Register Shared Preference Change Listener
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mActivity);
         sp.registerOnSharedPreferenceChangeListener(this);
@@ -227,6 +226,8 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
             mCursorAdapter.setFocusedItem(mFocusedItemPosition);
             mRecyclerView.scrollToPosition(mFocusedItemPosition);
         }
+        mDialog = (TrackStockDialog) mActivity.getSupportFragmentManager().findFragmentByTag(DIALOG_TAG);
+        updateLastUpdateTime(sp);
     }
 
     @Override
@@ -338,12 +339,7 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
         }
         // Last Update Time
         if (key.equals(getString(R.string.pref_last_update))) {
-            TextView textView = (TextView) mActivity.findViewById(R.id.last_update_textview);
-            if (textView != null) {
-                textView.setText(getString(R.string.last_updated, Utils.formatLastUpdateTime(
-                        mActivity, sharedPreferences.getString(getString(R.string.pref_last_update),
-                                getString(R.string.last_updated_never_key)))));
-            }
+            updateLastUpdateTime(sharedPreferences);
         }
     }
 
@@ -402,8 +398,8 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     /**
-    * Shows snackbar with provided message.
-    */
+     * Shows snackbar with provided message.
+     */
     private void showSnackbar(String message) {
         Snackbar snackbar = Snackbar
                 .make(mRootView.findViewById(R.id.my_stocks_container), message, Snackbar.LENGTH_LONG);
@@ -433,5 +429,23 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
         View snackBarView = snackbar.getView();
         snackBarView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.grey_primary));
         snackbar.show();
+    }
+
+    /**
+     * Updates text view that shows last update time
+     */
+    private void updateLastUpdateTime(SharedPreferences sharedPreferences) {
+        TextView textView = (TextView) mRootView.findViewById(R.id.last_update_textview);
+        if (textView != null) {
+            String updateTime = sharedPreferences.getString(getString(R.string.pref_last_update),
+                    getString(R.string.last_updated_never_key));
+
+            if (updateTime.equals(getString(R.string.last_updated_never_key))) {
+                textView.setText(getString(R.string.last_updated_never));
+            } else {
+                textView.setText(getString(R.string.last_updated, Utils.formatLastUpdateTime(
+                        mActivity, updateTime)));
+            }
+        }
     }
 }
