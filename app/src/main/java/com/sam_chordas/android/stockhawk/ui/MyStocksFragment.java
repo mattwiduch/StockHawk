@@ -15,7 +15,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -128,10 +127,11 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
                             mCursor = mCursorAdapter.getCursor();
                             mCursor.moveToPosition(position);
                             String symbol = mCursor.getString(mCursor.getColumnIndex(QuoteColumns.SYMBOL));
-                            Intent intent = new Intent(mActivity, LineGraphActivity.class)
-                                    .putExtra(getString(R.string.line_graph_extra), symbol);
-
-                            ActivityCompat.startActivity(mActivity, intent, null);
+//                            Intent intent = new Intent(mActivity, LineGraphActivity.class)
+//                                    .putExtra(getString(R.string.line_graph_extra), symbol);
+//
+//                            ActivityCompat.startActivity(mActivity, intent, null);
+                            ((Callback) getActivity()).onItemSelected(symbol);
                         }
                     }
                 }));
@@ -447,5 +447,17 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
                         mActivity, updateTime)));
             }
         }
+    }
+
+    /**
+     * A callback interface that all activities containing this fragment must
+     * implement. This mechanism allows activities to be notified of item
+     * selections.
+     */
+    public interface Callback {
+        /**
+         * DetailFragmentCallback for when an item has been selected.
+         */
+        public void onItemSelected(String symbol);
     }
 }

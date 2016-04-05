@@ -1,6 +1,8 @@
 package com.sam_chordas.android.stockhawk.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
@@ -12,7 +14,7 @@ import com.sam_chordas.android.stockhawk.rest.Utils;
 import com.sam_chordas.android.stockhawk.service.StockIntentService;
 import com.sam_chordas.android.stockhawk.service.StockTaskService;
 
-public class MyStocksActivity extends AppCompatActivity {
+public class MyStocksActivity extends AppCompatActivity implements MyStocksFragment.Callback {
 
     private static final String GRAPH_FRAGMENT_TAG = "GF_TAG";
 
@@ -58,6 +60,29 @@ public class MyStocksActivity extends AppCompatActivity {
             // Schedule task with tag "periodic." This ensure that only the stocks present in the DB
             // are updated.
             GcmNetworkManager.getInstance(this).schedule(periodicTask);
+        }
+    }
+
+    @Override
+    public void onItemSelected(String symbol) {
+        if (mTwoPane) {
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+            Bundle args = new Bundle();
+            args.putString(getString(R.string.line_graph_extra), symbol);
+
+            LineGraphFragment fragment = new LineGraphFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.stock_detail_container, fragment, GRAPH_FRAGMENT_TAG)
+                    .commit();
+        } else {
+            Intent intent = new Intent(this, LineGraphActivity.class)
+                    .putExtra(getString(R.string.line_graph_extra), symbol);
+
+            ActivityCompat.startActivity(this, intent, null);
         }
     }
 }

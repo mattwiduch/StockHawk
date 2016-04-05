@@ -86,9 +86,14 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mStockSymbol = getActivity().getIntent().getStringExtra(getString(R.string.line_graph_extra));
-        // TODO: Remove
-        if (mStockSymbol == null) mStockSymbol = "GOOG";
+//        mStockSymbol = getActivity().getIntent().getStringExtra(getString(R.string.line_graph_extra));
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            mStockSymbol = arguments.getString(getString(R.string.line_graph_extra));
+        } else {
+            // TODO: Remove
+            mStockSymbol = "GOOG";
+        }
         getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
     }
 
