@@ -14,12 +14,32 @@ import com.sam_chordas.android.stockhawk.service.StockTaskService;
 
 public class MyStocksActivity extends AppCompatActivity {
 
+    private static final String GRAPH_FRAGMENT_TAG = "GF_TAG";
+
+    private boolean mTwoPane;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Stetho.initializeWithDefaults(this);
         AndroidThreeTen.init(getApplication());
         setContentView(R.layout.activity_my_stocks);
+        if (findViewById(R.id.stock_detail_container) != null) {
+            // The detail container view will be present only in the large-screen layouts
+            // (res/layout-sw600dp). If this view is present, then the activity should be
+            // in two-pane mode.
+            mTwoPane = true;
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.stock_detail_container, new LineGraphFragment(), GRAPH_FRAGMENT_TAG)
+                        .commit();
+            }
+        } else {
+            mTwoPane = false;
+        }
 
         if (Utils.isNetworkAvailable(this)) {
             long period = 3600L;
