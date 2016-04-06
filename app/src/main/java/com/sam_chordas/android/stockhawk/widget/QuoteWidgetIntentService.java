@@ -55,6 +55,9 @@ public class QuoteWidgetIntentService extends IntentService {
             if (!data.moveToFirst()) {
                 views.setTextViewText(R.id.widget_stock_symbol, getString(R.string.widget_quote_empty_label));
                 views.setTextViewText(R.id.widget_stock_name, getString(R.string.widget_quote_empty, symbol));
+                views.setImageViewResource(R.id.widget_icon, -1);
+                views.setTextViewText(R.id.widget_change, "");
+                views.setTextViewText(R.id.widget_bid_price, "");
                 launchMainActivity(views);
                 appWidgetManager.updateAppWidget(appWidgetId, views);
                 data.close();
