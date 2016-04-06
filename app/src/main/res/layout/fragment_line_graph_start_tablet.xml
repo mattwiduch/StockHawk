@@ -361,97 +361,92 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"/>
 
-            <android.support.v7.widget.GridLayout
-                xmlns:grid="http://schemas.android.com/apk/res-auto"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
                 android:paddingBottom="@dimen/title_padding"
-                android:paddingTop="@dimen/title_padding"
-                grid:alignmentMode="alignBounds"
-                grid:columnCount="3"
-                grid:orientation="horizontal"
-                grid:rowCount="2">
+                android:paddingTop="@dimen/title_padding">
 
-                <TextView
-                    android:id="@+id/stock_symbol_textview"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                    android:textColor="@color/text_light_primary"
-                    grid:layout_column="0"
-                    grid:layout_columnWeight="1"
-                    grid:layout_gravity="fill_horizontal"
-                    grid:layout_row="0"/>
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/stock_symbol_textview_label"
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/stock_symbol_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                        android:textColor="@color/text_light_primary"/>
+
+                    <TextView
+                        android:id="@+id/stock_symbol_textview_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/content_spacing"
+                        android:text="@string/stock_symbol_label"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                        android:textColor="@color/text_light_secondary"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:gravity="center"
-                    android:paddingTop="@dimen/content_spacing"
-                    android:text="@string/stock_symbol_label"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                    android:textColor="@color/text_light_secondary"
-                    grid:layout_column="0"
-                    grid:layout_columnWeight="1"
-                    grid:layout_gravity="fill_horizontal"
-                    grid:layout_row="1"/>
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/stock_price_textview"
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/stock_price_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                        android:textColor="@color/text_light_primary"/>
+
+                    <TextView
+                        android:id="@+id/stock_price_textview_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/content_spacing"
+                        android:text="@string/stock_price_label"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                        android:textColor="@color/text_light_secondary"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                    android:textColor="@color/text_light_primary"
-                    grid:layout_column="1"
-                    grid:layout_columnWeight="1"
-                    grid:layout_gravity="fill_horizontal"
-                    grid:layout_row="0"/>
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/stock_price_textview_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingTop="@dimen/content_spacing"
-                    android:text="@string/stock_price_label"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                    android:textColor="@color/text_light_secondary"
-                    grid:layout_column="1"
-                    grid:layout_columnWeight="1"
-                    grid:layout_gravity="fill_horizontal"
-                    grid:layout_row="1"/>
+                    <TextView
+                        android:id="@+id/stock_change_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                        android:textColor="@color/text_light_primary"/>
 
-                <TextView
-                    android:id="@+id/stock_change_textview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                    android:textColor="@color/text_light_primary"
-                    grid:layout_column="2"
-                    grid:layout_columnWeight="1"
-                    grid:layout_gravity="fill_horizontal"
-                    grid:layout_row="0"/>
+                    <TextView
+                        android:id="@+id/stock_change_textview_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/content_spacing"
+                        android:text="@string/stock_change_label"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                        android:textColor="@color/text_light_secondary"/>
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/stock_change_textview_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingTop="@dimen/content_spacing"
-                    android:text="@string/stock_change_label"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                    android:textColor="@color/text_light_secondary"
-                    grid:layout_column="2"
-                    grid:layout_columnWeight="1"
-                    grid:layout_gravity="fill_horizontal"
-                    grid:layout_row="1"/>
-
-            </android.support.v7.widget.GridLayout>
+            </LinearLayout>
         </LinearLayout>
 
         <TextView
