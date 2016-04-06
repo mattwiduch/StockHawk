@@ -1,11 +1,7 @@
 package com.sam_chordas.android.stockhawk.ui;
 
-import android.app.Fragment;
-import android.app.LoaderManager;
-import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -15,7 +11,9 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -44,8 +42,8 @@ import com.sam_chordas.android.stockhawk.touch_helper.SimpleItemTouchHelperCallb
 /**
  * Created by frano on 05/04/2016.
  */
-public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
-        SharedPreferences.OnSharedPreferenceChangeListener {
+public class MyStocksFragment extends Fragment implements android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor>,
+        SharedPreferences.OnSharedPreferenceChangeListener{
 
     private static final int CURSOR_LOADER_ID = 0;
     private static final String DIALOG_TAG = "Dialog.trackSymbol";
@@ -101,16 +99,6 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
         // GCMTaskService can only schedule tasks, they cannot execute immediately
         mServiceIntent = new Intent(mActivity, StockIntentService.class);
 
-        if (savedInstanceState == null) {
-            // Run the initialize task service so that some stocks appear upon an empty database
-            mServiceIntent.putExtra(StockIntentService.TASK_TAG, StockIntentService.TASK_TYPE_INIT);
-            if (Utils.isNetworkAvailable(mActivity)) {
-                mActivity.startService(mServiceIntent);
-            } else {
-                networkSnackbar();
-            }
-        }
-
         // Prepare RecyclerView
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
@@ -161,19 +149,6 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
 //            }
 //        });
 
-        FloatingActionButton fab = (FloatingActionButton) mRootView.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Utils.isNetworkAvailable(mActivity)) {
-                    mDialog = new TrackStockDialog();
-                    mDialog.show(mActivity.getSupportFragmentManager(), DIALOG_TAG);
-                } else {
-                    networkSnackbar();
-                }
-            }
-        });
-
         // Update last updated text view periodically
         final TextView lastUpdatedTextView = (TextView) mRootView.findViewById(R.id.last_update_textview);
         final Handler handler = new Handler();
@@ -188,6 +163,40 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
         handler.postDelayed(updateTask, 1000);
 
         return mRootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState == null) {
+            // Run the initialize task service so that some stocks appear upon an empty database
+            mServiceIntent.putExtra(StockIntentService.TASK_TAG, StockIntentService.TASK_TYPE_INIT);
+            if (Utils.isNetworkAvailable(mActivity)) {
+                mActivity.startService(mServiceIntent);
+            } else {
+                networkSnackbar();
+            }
+        }
+
+        // Set up FAB's on click listener
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Utils.isNetworkAvailable(mActivity)) {
+                    mDialog = new TrackStockDialog();
+                    mDialog.show(mActivity.getSupportFragmentManager(), DIALOG_TAG);
+                } else {
+                    networkSnackbar();
+                }
+            }
+        });
     }
 
     @Override
@@ -264,9 +273,10 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
         // This narrows the return to only the stocks that are most current.
-        return new CursorLoader(mActivity, QuoteProvider.Quotes.CONTENT_URI,
+        return new CursorLoader(mActivity,
+                QuoteProvider.Quotes.CONTENT_URI,
                 new String[]{QuoteColumns._ID, QuoteColumns.SYMBOL, QuoteColumns.NAME, QuoteColumns.BID_PRICE,
                         QuoteColumns.PERCENT_CHANGE, QuoteColumns.CHANGE, QuoteColumns.IS_UP},
                 QuoteColumns.IS_CURRENT + " = ?",
@@ -275,14 +285,14 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
         mCursorAdapter.swapCursor(data);
         mCursor = data;
         mSwipeRefreshLayout.setEnabled(mCursorAdapter.getItemCount() > 1);
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
         Intent dataUpdatedIntent = new Intent(StockTaskService.ACTION_DATA_UPDATED).setPackage(mActivity.getPackageName());
         mActivity.sendBroadcast(dataUpdatedIntent);
         mCursorAdapter.swapCursor(null);
@@ -315,7 +325,7 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
                 case StockTaskService.HAWK_STATUS_OK:
                     // Refresh details fragment data if app is in two pane mode
                     LineGraphFragment lgf = (LineGraphFragment) mActivity.getSupportFragmentManager().findFragmentByTag(MyStocksActivity.GRAPH_FRAGMENT_TAG);
-                    if ( null != lgf ) {
+                    if (null != lgf) {
                         lgf.onDatabaseUpdate();
                     }
                     break;
@@ -398,7 +408,7 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
      */
     private void showSnackbar(String message) {
         Snackbar snackbar = Snackbar
-                .make(mRootView.findViewById(R.id.my_stocks_container), message, Snackbar.LENGTH_LONG);
+                .make(getActivity().findViewById(R.id.activity_my_stocks), message, Snackbar.LENGTH_LONG);
         View snackBarView = snackbar.getView();
         snackBarView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.grey_primary));
         snackbar.show();
@@ -407,7 +417,7 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
     private void networkSnackbar() {
         if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(false);
         Snackbar snackbar = Snackbar
-                .make(mRootView.findViewById(R.id.fragment_my_stocks), getString(R.string.error_no_network),
+                .make(getActivity().findViewById(R.id.activity_my_stocks), getString(R.string.error_no_network),
                         Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.network_snackbar_button_retry, new View.OnClickListener() {
                     @Override

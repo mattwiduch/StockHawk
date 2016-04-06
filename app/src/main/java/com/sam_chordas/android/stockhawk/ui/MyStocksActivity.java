@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.PeriodicTask;
@@ -86,7 +85,6 @@ public class MyStocksActivity extends AppCompatActivity implements MyStocksFragm
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Toast.makeText(MyStocksActivity.this, "SETTINGS", Toast.LENGTH_SHORT).show();
             return true;
         }
 
