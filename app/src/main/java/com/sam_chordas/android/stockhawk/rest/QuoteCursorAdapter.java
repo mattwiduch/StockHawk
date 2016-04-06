@@ -155,7 +155,7 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
         }
         if (mCursor.getCount() == 0) {
             // Nothing to show
-            return 1;
+            return 0;
         }
         // Add extra view to show the footer view
         return mCursor.getCount() + 1;
