@@ -70,6 +70,7 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
     private TrackStockDialog mDialog;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private String mSortOrder;
+    private boolean mIsPercent;
 
     public MyStocksFragment() {
     }
@@ -94,6 +95,7 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
         // Retrieve user's preferred sort order
         final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mActivity);
         mSortOrder = sp.getString(getString(R.string.pref_sort_order), SORT_DEFAULT);
+        mIsPercent = sp.getBoolean(getString(R.string.pref_units_key), true);
 
         // The intent service is for executing immediate pulls from the Yahoo API
         // GCMTaskService can only schedule tasks, they cannot execute immediately
@@ -238,7 +240,7 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.my_stocks_fragment, menu);
-        menu.getItem(0).setTitle(Utils.showPercent ?
+        menu.getItem(0).setTitle(mIsPercent ?
                 getString(R.string.a11y_change_units, getString(R.string.a11y_currency))
                 : getString(R.string.a11y_change_units, getString(R.string.a11y_percent)));
         super.onCreateOptionsMenu(menu, inflater);
@@ -253,14 +255,16 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
 
         if (id == R.id.action_change_units) {
             // this is for changing stock changes from percent value to dollar value
-            if (Utils.showPercent) {
+            if (mIsPercent) {
                 item.setIcon(R.drawable.ic_action_percent_white);
                 item.setTitle(getString(R.string.a11y_change_units, getString(R.string.a11y_percent)));
             } else {
                 item.setIcon(R.drawable.ic_attach_money_white_24dp);
                 item.setTitle(getString(R.string.a11y_change_units, getString(R.string.a11y_currency)));
             }
-            Utils.showPercent = !Utils.showPercent;
+            SharedPreferences.Editor spe = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
+            spe.putBoolean(getString(R.string.pref_units_key), !mIsPercent);
+            spe.apply();
             mActivity.getContentResolver().notifyChange(QuoteProvider.Quotes.CONTENT_URI, null);
         }
 
@@ -346,6 +350,10 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
         // Last Update Time
         if (key.equals(getString(R.string.pref_last_update))) {
             updateLastUpdateTime(sharedPreferences);
+        }
+        // Preferred units
+        if (key.equals(getString(R.string.pref_units_key))) {
+            mIsPercent = sharedPreferences.getBoolean(getString(R.string.pref_units_key), true);
         }
     }
 

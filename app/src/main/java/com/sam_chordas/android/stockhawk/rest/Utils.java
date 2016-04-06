@@ -22,8 +22,6 @@ import java.util.Locale;
  * Created by sam_chordas on 10/8/15.
  */
 public class Utils {
-    public static boolean showPercent = true;
-
     public static String truncateBidPrice(String bidPrice) {
         bidPrice = String.format(Locale.ENGLISH, "%.2f", Float.parseFloat(bidPrice));
         return bidPrice;

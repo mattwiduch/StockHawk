@@ -2,11 +2,13 @@ package com.sam_chordas.android.stockhawk.rest;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
@@ -119,7 +121,8 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
 
         viewHolder.change.setTextColor(color);
         String change;
-        if (Utils.showPercent) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+        if (sp.getBoolean(mContext.getString(R.string.pref_units_key), true)) {
             change = Utils.formatChangeInPercent(mContext, cursor.getString(cursor.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
             viewHolder.change.setText(change);
         } else {
