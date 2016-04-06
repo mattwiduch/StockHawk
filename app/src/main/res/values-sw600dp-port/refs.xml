@@ -15,5 +15,5 @@
      limitations under the License.
  -->
 <resources>
-    <item type="layout" name="fragment_line_graph">@layout/fragment_line_graph_wide_tablet</item>
+    <item type="layout" name="fragment_line_graph">@layout/fragment_line_graph_start_tablet</item>
 </resources>
