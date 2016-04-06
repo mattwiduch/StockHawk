@@ -87,7 +87,7 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_my_stocks, container, false);
-        Toolbar toolbar = (Toolbar) mRootView.findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         mActivity.setSupportActionBar(toolbar);
 
         // Initialise loader manager
@@ -228,7 +228,7 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.my_stocks, menu);
+        inflater.inflate(R.menu.my_stocks_fragment, menu);
         menu.getItem(0).setTitle(Utils.showPercent ?
                 getString(R.string.a11y_change_units, getString(R.string.a11y_currency))
                 : getString(R.string.a11y_change_units, getString(R.string.a11y_percent)));
@@ -241,11 +241,6 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         if (id == R.id.action_change_units) {
             // this is for changing stock changes from percent value to dollar value
