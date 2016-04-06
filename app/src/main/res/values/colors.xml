@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App Theme Colors -->
-    <color name="grey_background">#242424</color>
-    <color name="grey_dark">#181818</color>
-    <color name="grey_primary">#242424</color>
-    <color name="grey_card">#303030</color>
+    <color name="grey_background">#2B3138</color>
+    <color name="grey_dark">#1B2126</color>
+    <color name="grey_primary">#1E252B</color>
+    <color name="grey_card">#242C33</color>
     <color name="orange_accent">#FF9100</color>
     <color name="green_action">#00E676</color>
     <color name="divider_light">#1FFFFFFF</color>
