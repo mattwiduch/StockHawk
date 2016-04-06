@@ -1,11 +1,9 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#383838"
-                android:baselineAligned="false"
-                tools:context="com.sam_chordas.android.stockhawk.ui.MyStocksActivity">
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/activity_my_stocks"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -31,6 +29,24 @@
         android:name="com.sam_chordas.android.stockhawk.ui.MyStocksFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/appbar"/>
+        app:layout_anchor="@+id/appbar"
+        app:layout_anchorGravity="top|start"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-</RelativeLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="@dimen/fab_bottom_margin"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginLeft="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/fab_margin"
+        android:contentDescription="@string/a11y_fab"
+        android:focusable="true"
+        android:src="@drawable/ic_add_white_24dp"
+        app:fabSize="normal"/>
+
+</android.support.design.widget.CoordinatorLayout>
