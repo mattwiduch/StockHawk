@@ -16,7 +16,7 @@ import com.sam_chordas.android.stockhawk.service.StockTaskService;
 
 public class MyStocksActivity extends AppCompatActivity implements MyStocksFragment.Callback {
 
-    private static final String GRAPH_FRAGMENT_TAG = "GF_TAG";
+    public static final String GRAPH_FRAGMENT_TAG = "GF_TAG";
 
     private boolean mTwoPane;
 

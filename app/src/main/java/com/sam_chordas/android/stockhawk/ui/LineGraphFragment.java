@@ -202,7 +202,8 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
         Animation anim = new Animation(750);
         anim.setEasing(new LinearEase());
         anim.setOverlap(0.5f, order);
-        lineChart.show(anim);
+        //lineChart.show(anim);
+        lineChart.show();
     }
 
     @Override
@@ -359,5 +360,12 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
 
     @Override
     public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
+    }
+
+    /** */
+    public void onDatabaseUpdate() {
+        lineChart.clearAnimation();
+        lineChart.reset();
+        getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
     }
 }

@@ -322,6 +322,11 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
                     showSnackbar(getString(R.string.error_utf8_not_supported));
                     break;
                 case StockTaskService.HAWK_STATUS_OK:
+                    // Refresh details fragment data if app is in two pane mode
+                    LineGraphFragment lgf = (LineGraphFragment) mActivity.getSupportFragmentManager().findFragmentByTag(MyStocksActivity.GRAPH_FRAGMENT_TAG);
+                    if ( null != lgf ) {
+                        lgf.onDatabaseUpdate();
+                    }
                     break;
                 default:
                     break;
