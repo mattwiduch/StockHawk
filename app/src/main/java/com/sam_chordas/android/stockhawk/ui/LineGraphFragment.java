@@ -1,9 +1,11 @@
 package com.sam_chordas.android.stockhawk.ui;
 
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -91,8 +93,7 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
         if (arguments != null) {
             mStockSymbol = arguments.getString(LGF_SYMBOL);
         } else {
-            // TODO: Remove
-            mStockSymbol = "GOOG";
+            mStockSymbol = getString(R.string.widget_default_symbol);
         }
         getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
     }
@@ -140,7 +141,7 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
             bgColor = ContextCompat.getColor(getContext(), R.color.green_high);
             trending = getString(R.string.a11y_trending_up);
         }
-        // TODO: Fix title
+
         // Set user friendly content description the the graph
         lineChart.setContentDescription(getString(R.string.a11y_list_item_description, mStockName,
                 trending, stockPriceTextview.getText(), stockChangeTextview.getText()));
@@ -202,7 +203,8 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
         Animation anim = new Animation(750);
         anim.setEasing(new LinearEase());
         anim.setOverlap(0.5f, order);
-        lineChart.show(anim);
+        //lineChart.show(anim);
+        lineChart.show();
     }
 
     @Override
@@ -239,8 +241,15 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
             stockPriceTextview.setText(price);
             stockPriceTextview.setContentDescription(getString(R.string.a11y_price, price));
             stockPriceLabel.setContentDescription(getString(R.string.a11y_price, price));
-            String change = Utils.formatChangeInPercent(getContext(),
-                    data.getString(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
+
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String change;
+            if (sp.getBoolean(getString(R.string.pref_units_key), true)) {
+                change = Utils.formatChangeInPercent(getContext(),
+                        data.getString(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
+            } else {
+                change = data.getString(data.getColumnIndex(QuoteColumns.CHANGE));
+            }
             stockChangeTextview.setText(change);
             stockChangeTextview.setContentDescription(getString(R.string.a11y_change, change));
             stockChangeLabel.setContentDescription(getString(R.string.a11y_change, change));
@@ -362,7 +371,7 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
     public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
     }
 
-    /** */
+    /** Restarts loader so new data can be displayed */
     public void onDatabaseUpdate() {
         lineChart.clearAnimation();
         lineChart.reset();
