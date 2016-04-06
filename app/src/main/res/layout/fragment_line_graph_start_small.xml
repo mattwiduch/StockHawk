@@ -78,7 +78,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                                 android:textColor="@color/text_light_primary"/>
 
                             <TextView
@@ -88,7 +88,7 @@
                                 android:gravity="center"
                                 android:paddingTop="@dimen/content_spacing"
                                 android:text="@string/stock_symbol_label"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                                 android:textColor="@color/text_light_secondary"/>
 
                         </LinearLayout>
@@ -105,7 +105,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                                 android:textColor="@color/text_light_primary"/>
 
                             <TextView
@@ -115,7 +115,7 @@
                                 android:gravity="center"
                                 android:paddingTop="@dimen/content_spacing"
                                 android:text="@string/stock_price_label"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                                 android:textColor="@color/text_light_secondary"/>
                         </LinearLayout>
 
@@ -131,7 +131,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                                 android:textColor="@color/text_light_primary"/>
 
                             <TextView
@@ -141,7 +141,7 @@
                                 android:gravity="center"
                                 android:paddingTop="@dimen/content_spacing"
                                 android:text="@string/stock_change_label"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                                 android:textColor="@color/text_light_secondary"/>
                         </LinearLayout>
 
