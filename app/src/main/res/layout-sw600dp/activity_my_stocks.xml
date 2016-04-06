@@ -52,23 +52,24 @@
                 android:layout_weight="2"
                 tools:layout="@android:layout/list_content"/>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="3"
-                android:orientation="vertical">
+                android:layout_weight="3">
 
                 <FrameLayout
                     android:id="@+id/stock_detail_container"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"/>
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/tooltip_bar"/>
 
                 <FrameLayout
+                    android:id="@+id/tooltip_bar"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/tooltip_height"
-                    android:background="@color/grey_primary"/>
-            </LinearLayout>
+                    android:background="@color/grey_primary"
+                    android:layout_alignParentBottom="true"/>
+            </RelativeLayout>
 
         </LinearLayout>
 
