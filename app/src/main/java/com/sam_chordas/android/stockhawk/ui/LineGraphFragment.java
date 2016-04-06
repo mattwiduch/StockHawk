@@ -40,10 +40,11 @@ import butterknife.ButterKnife;
 
 public class LineGraphFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int CURSOR_LOADER_ID = 1;
+    public static final String LGF_SYMBOL = "STOCK_SYMBOL";
+    private Toolbar mToolbar;
     private String mStockSymbol;
+    private String mStockName;
 
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
     @Bind(R.id.line_chart)
     LineChartView lineChart;
     @Bind(R.id.stock_symbol_textview)
@@ -86,10 +87,9 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        mStockSymbol = getActivity().getIntent().getStringExtra(getString(R.string.line_graph_extra));
         Bundle arguments = getArguments();
         if (arguments != null) {
-            mStockSymbol = arguments.getString(getString(R.string.line_graph_extra));
+            mStockSymbol = arguments.getString(LGF_SYMBOL);
         } else {
             // TODO: Remove
             mStockSymbol = "GOOG";
@@ -114,7 +114,7 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_line_graph, container, false);
         ButterKnife.bind(this, rootView);
-        toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        mToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         lineChart = (LineChartView) rootView.findViewById(R.id.line_chart);
         return rootView;
     }
@@ -140,9 +140,9 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
             bgColor = ContextCompat.getColor(getContext(), R.color.green_high);
             trending = getString(R.string.a11y_trending_up);
         }
-
+        // TODO: Fix title
         // Set user friendly content description the the graph
-        lineChart.setContentDescription(getString(R.string.a11y_list_item_description, toolbar.getTitle(),
+        lineChart.setContentDescription(getString(R.string.a11y_list_item_description, mStockName,
                 trending, stockPriceTextview.getText(), stockChangeTextview.getText()));
 
         lineChart.setXAxis(false);
@@ -219,13 +219,14 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
         if (data.moveToLast()) {
+            mStockName = data.getString(data.getColumnIndex(QuoteColumns.NAME));
             AppCompatActivity activity = (AppCompatActivity) getActivity();
-            if (toolbar != null) {
-                activity.setSupportActionBar(toolbar);
+            if (mToolbar != null) {
+                activity.setSupportActionBar(mToolbar);
                 ActionBar actionBar = activity.getSupportActionBar();
                 if (actionBar != null) {
                     actionBar.setDisplayHomeAsUpEnabled(true);
-                    actionBar.setTitle(data.getString(data.getColumnIndex(QuoteColumns.NAME)));
+                    actionBar.setTitle(mStockName);
                 }
             }
 

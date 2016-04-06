@@ -127,10 +127,6 @@ public class MyStocksFragment extends Fragment implements LoaderManager.LoaderCa
                             mCursor = mCursorAdapter.getCursor();
                             mCursor.moveToPosition(position);
                             String symbol = mCursor.getString(mCursor.getColumnIndex(QuoteColumns.SYMBOL));
-//                            Intent intent = new Intent(mActivity, LineGraphActivity.class)
-//                                    .putExtra(getString(R.string.line_graph_extra), symbol);
-//
-//                            ActivityCompat.startActivity(mActivity, intent, null);
                             ((Callback) getActivity()).onItemSelected(symbol);
                         }
                     }

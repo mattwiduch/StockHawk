@@ -70,7 +70,7 @@ public class MyStocksActivity extends AppCompatActivity implements MyStocksFragm
             // adding or replacing the detail fragment using a
             // fragment transaction.
             Bundle args = new Bundle();
-            args.putString(getString(R.string.line_graph_extra), symbol);
+            args.putString(LineGraphFragment.LGF_SYMBOL, symbol);
 
             LineGraphFragment fragment = new LineGraphFragment();
             fragment.setArguments(args);
@@ -80,7 +80,7 @@ public class MyStocksActivity extends AppCompatActivity implements MyStocksFragm
                     .commit();
         } else {
             Intent intent = new Intent(this, LineGraphActivity.class)
-                    .putExtra(getString(R.string.line_graph_extra), symbol);
+                    .putExtra(LineGraphFragment.LGF_SYMBOL, symbol);
 
             ActivityCompat.startActivity(this, intent, null);
         }

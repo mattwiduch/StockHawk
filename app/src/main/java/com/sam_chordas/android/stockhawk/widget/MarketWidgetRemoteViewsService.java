@@ -29,6 +29,7 @@ import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 import com.sam_chordas.android.stockhawk.rest.Utils;
+import com.sam_chordas.android.stockhawk.ui.LineGraphFragment;
 
 /**
  * RemoteViewsService controlling the data being shown in the scrollable today's market widget
@@ -125,7 +126,7 @@ public class MarketWidgetRemoteViewsService extends RemoteViewsService {
 
                 // Add fill intent to item view
                 final Intent fillInIntent = new Intent();
-                fillInIntent.putExtra(getString(R.string.line_graph_extra), symbol);
+                fillInIntent.putExtra(LineGraphFragment.LGF_SYMBOL, symbol);
                 views.setOnClickFillInIntent(R.id.widget_list_item, fillInIntent);
 
                 return views;

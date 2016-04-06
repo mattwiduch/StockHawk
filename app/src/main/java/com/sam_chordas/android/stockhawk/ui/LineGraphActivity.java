@@ -16,8 +16,8 @@ public class LineGraphActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             Bundle arguments = new Bundle();
-            arguments.putString(getString(R.string.line_graph_extra),
-                    getIntent().getStringExtra(getString(R.string.line_graph_extra)));
+            arguments.putString(LineGraphFragment.LGF_SYMBOL,
+                    getIntent().getStringExtra(LineGraphFragment.LGF_SYMBOL));
 
             LineGraphFragment fragment = new LineGraphFragment();
             fragment.setArguments(arguments);

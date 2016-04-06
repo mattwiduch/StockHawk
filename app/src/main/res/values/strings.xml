@@ -69,7 +69,6 @@
 
     <!-- Strings related to Line Graph Fragment -->
     <string name="line_graph_activity_title">Stock Value Graph</string>
-    <string name="line_graph_extra" translatable="false">stock_symbol</string>
 
     <!-- Labels for data displayed in Line Graph Fragment -->
     <string name="graph_label">PRICE HISTORY</string>
