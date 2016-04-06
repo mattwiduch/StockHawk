@@ -15,7 +15,12 @@ public class LineGraphActivity extends AppCompatActivity {
         setContentView(R.layout.activity_line_graph);
 
         if (savedInstanceState == null) {
+            Bundle arguments = new Bundle();
+            arguments.putString(getString(R.string.line_graph_extra),
+                    getIntent().getStringExtra(getString(R.string.line_graph_extra)));
+
             LineGraphFragment fragment = new LineGraphFragment();
+            fragment.setArguments(arguments);
 
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.stock_detail_container, fragment)
