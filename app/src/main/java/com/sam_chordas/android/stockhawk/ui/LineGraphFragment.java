@@ -202,8 +202,7 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
         Animation anim = new Animation(750);
         anim.setEasing(new LinearEase());
         anim.setOverlap(0.5f, order);
-        //lineChart.show(anim);
-        lineChart.show();
+        lineChart.show(anim);
     }
 
     @Override
