@@ -71,6 +71,23 @@ public class MyStocksActivity extends AppCompatActivity implements MyStocksFragm
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        String symbol = intent.getStringExtra(LineGraphFragment.LGF_SYMBOL);
+        if (symbol != null) {
+            Bundle args = new Bundle();
+            args.putString(LineGraphFragment.LGF_SYMBOL, symbol);
+
+            LineGraphFragment fragment = new LineGraphFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.stock_detail_container, fragment, GRAPH_FRAGMENT_TAG)
+                    .commit();
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.my_stocks_activity, menu);
         return super.onCreateOptionsMenu(menu);
