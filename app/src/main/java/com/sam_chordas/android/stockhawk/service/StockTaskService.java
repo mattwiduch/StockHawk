@@ -261,18 +261,26 @@ public class StockTaskService extends GcmTaskService {
                     ? mContext.getString(R.string.data_not_available)
                     : Utils.truncateChange(jsonObject.getString(YFQ_STOCK_CHANGE), false);
             builder.withValue(QuoteColumns.CHANGE, change);
-            String percentChange = jsonObject.getString(YFQ_STOCK_CHANGE_IN_PERCENT).equals(YFQ_DATA_NOT_AVAILABLE)
-                    ? mContext.getString(R.string.data_not_available)
-                    : Utils.truncateChange(jsonObject.getString(YFQ_STOCK_CHANGE_IN_PERCENT), true);
-            builder.withValue(QuoteColumns.PERCENT_CHANGE, percentChange);
+
+            String percentChange = jsonObject.getString(YFQ_STOCK_CHANGE_IN_PERCENT);
+            double pc = Double.MIN_VALUE;
+            if (!percentChange.equals(YFQ_DATA_NOT_AVAILABLE)) {
+                // Trim changeInPercent string to signed number
+                String numberOnly = percentChange.replaceAll("[^-0-9\\.]+$", "");
+                pc = Double.parseDouble(numberOnly);
+                builder.withValue(QuoteColumns.PERCENT_CHANGE, pc);
+            } else {
+                builder.withValue(QuoteColumns.PERCENT_CHANGE, pc);
+            }
+
             builder.withValue(QuoteColumns.CREATED, Instant.now().toString());
             builder.withValue(QuoteColumns.IS_CURRENT, 1);
-            if (percentChange.charAt(0) == '-') {
-                builder.withValue(QuoteColumns.IS_UP, -1);
-            } else if (percentChange.contains(YFQ_STOCK_CHANGE_FLAT)) {
+            if (pc == 0 || pc == Double.MIN_VALUE) {
                 builder.withValue(QuoteColumns.IS_UP, 0);
-            } else {
+            } else if (pc > 0) {
                 builder.withValue(QuoteColumns.IS_UP, 1);
+            } else {
+                builder.withValue(QuoteColumns.IS_UP, -1);
             }
 
         } catch (JSONException e) {

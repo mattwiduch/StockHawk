@@ -123,7 +123,7 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
         String change;
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
         if (sp.getBoolean(mContext.getString(R.string.pref_units_key), true)) {
-            change = Utils.formatChangeInPercent(mContext, cursor.getString(cursor.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
+            change = Utils.formatChangeInPercent(mContext, cursor.getDouble(cursor.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
             viewHolder.change.setText(change);
         } else {
             change = Utils.formatChange(mContext, cursor.getString(cursor.getColumnIndex(QuoteColumns.CHANGE)));

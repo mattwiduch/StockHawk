@@ -246,7 +246,7 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
             String change;
             if (sp.getBoolean(getString(R.string.pref_units_key), true)) {
                 change = Utils.formatChangeInPercent(getContext(),
-                        data.getString(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
+                        data.getDouble(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
             } else {
                 change = data.getString(data.getColumnIndex(QuoteColumns.CHANGE));
             }

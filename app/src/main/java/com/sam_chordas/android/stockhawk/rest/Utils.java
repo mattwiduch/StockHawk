@@ -148,15 +148,13 @@ public class Utils {
     /**
      * Formats stock change in percent for device's locale
      */
-    static public String formatChangeInPercent(Context context, String changeInPercent) {
-        if (!changeInPercent.equals(context.getResources().getString(R.string.data_not_available))) {
+    static public String formatChangeInPercent(Context context, Double changeInPercent) {
+        if (changeInPercent != Double.MIN_VALUE) {
             DecimalFormat decimalFormat = new DecimalFormat("+#0.00%;-#%");
             decimalFormat.setMultiplier(1);
-            changeInPercent = decimalFormat.format(Double.parseDouble(
-                    changeInPercent.substring(0, changeInPercent.length() - 1)));
+            return decimalFormat.format(changeInPercent);
         } else {
-            context.getString(R.string.data_not_available_label);
+            return context.getString(R.string.data_not_available_label);
         }
-        return changeInPercent;
     }
 }
