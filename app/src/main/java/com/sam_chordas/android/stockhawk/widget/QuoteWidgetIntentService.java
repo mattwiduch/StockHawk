@@ -55,6 +55,9 @@ public class QuoteWidgetIntentService extends IntentService {
             if (!data.moveToFirst()) {
                 views.setTextViewText(R.id.widget_stock_symbol, getString(R.string.widget_quote_empty_label));
                 views.setTextViewText(R.id.widget_stock_name, getString(R.string.widget_quote_empty, symbol));
+                views.setImageViewResource(R.id.widget_icon, -1);
+                views.setTextViewText(R.id.widget_change, "");
+                views.setTextViewText(R.id.widget_bid_price, "");
                 launchMainActivity(views);
                 appWidgetManager.updateAppWidget(appWidgetId, views);
                 data.close();
@@ -63,8 +66,8 @@ public class QuoteWidgetIntentService extends IntentService {
 
             //String symbol = data.getString(data.getColumnIndex(QuoteColumns.SYMBOL));
             String name = data.getString(data.getColumnIndex(QuoteColumns.NAME));
-            String price = Utils.formatBidPrice(this, data.getString(data.getColumnIndex(QuoteColumns.BID_PRICE)));
-            String change = Utils.formatChangeInPercent(this, data.getString(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
+            String price = Utils.formatBidPrice(this, data.getDouble(data.getColumnIndex(QuoteColumns.BID_PRICE)));
+            String change = Utils.formatChangeInPercent(this, data.getDouble(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
             int isUp = data.getInt(data.getColumnIndex(QuoteColumns.IS_UP));
 
             // Get correct color & icon
