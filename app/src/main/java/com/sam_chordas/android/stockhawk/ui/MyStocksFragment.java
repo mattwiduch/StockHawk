@@ -420,7 +420,7 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
         Snackbar snackbar = Snackbar
                 .make(getActivity().findViewById(R.id.activity_my_stocks), message, Snackbar.LENGTH_LONG);
         View snackBarView = snackbar.getView();
-        snackBarView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.grey_primary));
+        snackBarView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.grey_card));
         snackbar.show();
     }
 
@@ -443,7 +443,7 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
                 })
                 .setActionTextColor(ContextCompat.getColor(mActivity, R.color.green_action));
         View snackBarView = snackbar.getView();
-        snackBarView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.grey_primary));
+        snackBarView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.grey_card));
         snackbar.show();
     }
 
