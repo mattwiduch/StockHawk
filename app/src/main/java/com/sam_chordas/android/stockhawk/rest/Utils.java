@@ -122,14 +122,13 @@ public class Utils {
     /**
      * Formats stock bid price for device's locale
      */
-    static public String formatBidPrice(Context context, String bidPrice) {
-        if (!bidPrice.equals(context.getResources().getString(R.string.data_not_available))) {
+    static public String formatBidPrice(Context context, Double bidPrice) {
+        if (bidPrice != Double.MIN_VALUE) {
             DecimalFormat decimalFormat = new DecimalFormat("'$'#.00");
-            bidPrice = decimalFormat.format(Double.parseDouble(bidPrice));
+            return decimalFormat.format(bidPrice);
         } else {
-            bidPrice = context.getString(R.string.data_not_available_label);
+            return context.getString(R.string.data_not_available_label);
         }
-        return bidPrice;
     }
 
     /**

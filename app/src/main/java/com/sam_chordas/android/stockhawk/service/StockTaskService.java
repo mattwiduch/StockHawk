@@ -251,33 +251,53 @@ public class StockTaskService extends GcmTaskService {
         ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(
                 QuoteProvider.Quotes.CONTENT_URI);
         try {
+            // Symbol
             builder.withValue(QuoteColumns.SYMBOL, jsonObject.getString(YFQ_STOCK_SYMBOL));
+            // Name
             builder.withValue(QuoteColumns.NAME, jsonObject.getString(YFQ_STOCK_NAME));
-            String bidPrice = jsonObject.getString(YFQ_STOCK_BID).equals(YFQ_DATA_NOT_AVAILABLE)
-                    ? mContext.getString(R.string.data_not_available)
-                    : Utils.truncateBidPrice(jsonObject.getString(YFQ_STOCK_BID));
-            builder.withValue(QuoteColumns.BID_PRICE, bidPrice);
+            // BidPrice
+//            String bidPrice = jsonObject.getString(YFQ_STOCK_BID).equals(YFQ_DATA_NOT_AVAILABLE)
+//                    ? mContext.getString(R.string.data_not_available)
+//                    : Utils.truncateBidPrice(jsonObject.getString(YFQ_STOCK_BID));
+            String bidPriceString = jsonObject.getString(YFQ_STOCK_BID);
+            double bidPrice = Double.MIN_VALUE;
+            if (!bidPriceString.equals(YFQ_DATA_NOT_AVAILABLE)) {
+                // Trim changeInPercent string to signed number
+                String numberOnly = bidPriceString.replaceAll("[^0-9\\.]+$", "");
+                bidPrice = Double.parseDouble(numberOnly);
+                builder.withValue(QuoteColumns.BID_PRICE, bidPrice);
+            } else {
+                builder.withValue(QuoteColumns.BID_PRICE, bidPrice);
+            }
+
+
+            // Change
             String change = jsonObject.getString(YFQ_STOCK_CHANGE).equals(YFQ_DATA_NOT_AVAILABLE)
                     ? mContext.getString(R.string.data_not_available)
                     : Utils.truncateChange(jsonObject.getString(YFQ_STOCK_CHANGE), false);
             builder.withValue(QuoteColumns.CHANGE, change);
-
-            String percentChange = jsonObject.getString(YFQ_STOCK_CHANGE_IN_PERCENT);
-            double pc = Double.MIN_VALUE;
-            if (!percentChange.equals(YFQ_DATA_NOT_AVAILABLE)) {
+            // ChangeInPercent
+            String changeInPercentString = jsonObject.getString(YFQ_STOCK_CHANGE_IN_PERCENT);
+            double changeInPercent = Double.MIN_VALUE;
+            if (!changeInPercentString.equals(YFQ_DATA_NOT_AVAILABLE)) {
                 // Trim changeInPercent string to signed number
-                String numberOnly = percentChange.replaceAll("[^-0-9\\.]+$", "");
-                pc = Double.parseDouble(numberOnly);
-                builder.withValue(QuoteColumns.PERCENT_CHANGE, pc);
+                String numberOnly = changeInPercentString.replaceAll("[^-0-9\\.]+$", "");
+                changeInPercent = Double.parseDouble(numberOnly);
+                builder.withValue(QuoteColumns.PERCENT_CHANGE, changeInPercent);
             } else {
-                builder.withValue(QuoteColumns.PERCENT_CHANGE, pc);
+                builder.withValue(QuoteColumns.PERCENT_CHANGE, changeInPercent);
             }
 
+            // Time entry was created
             builder.withValue(QuoteColumns.CREATED, Instant.now().toString());
+
+            // Mark new entry as current
             builder.withValue(QuoteColumns.IS_CURRENT, 1);
-            if (pc == 0 || pc == Double.MIN_VALUE) {
+
+            // Determine if stock is flat, up or down
+            if (changeInPercent == 0 || changeInPercent == Double.MIN_VALUE) {
                 builder.withValue(QuoteColumns.IS_UP, 0);
-            } else if (pc > 0) {
+            } else if (changeInPercent > 0) {
                 builder.withValue(QuoteColumns.IS_UP, 1);
             } else {
                 builder.withValue(QuoteColumns.IS_UP, -1);

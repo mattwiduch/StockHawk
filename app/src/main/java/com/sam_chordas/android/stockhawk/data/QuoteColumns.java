@@ -30,7 +30,7 @@ public class QuoteColumns {
     @NotNull
     public static final String CHANGE = "change";
 
-    @DataType(DataType.Type.TEXT)
+    @DataType(DataType.Type.REAL)
     @NotNull
     public static final String BID_PRICE = "bid_price";
 

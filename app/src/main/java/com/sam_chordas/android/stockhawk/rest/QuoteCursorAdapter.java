@@ -115,7 +115,7 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
         viewHolder.name.setText(name);
         viewHolder.symbol.setContentDescription(name);
         viewHolder.name.setContentDescription(trending);
-        String bidPrice = Utils.formatBidPrice(mContext, cursor.getString(cursor.getColumnIndex(QuoteColumns.BID_PRICE)));
+        String bidPrice = Utils.formatBidPrice(mContext, cursor.getDouble(cursor.getColumnIndex(QuoteColumns.BID_PRICE)));
         viewHolder.bidPrice.setText(bidPrice);
         viewHolder.bidPrice.setContentDescription(mContext.getString(R.string.a11y_price, bidPrice));
 

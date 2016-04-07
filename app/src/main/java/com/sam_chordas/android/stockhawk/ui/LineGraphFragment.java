@@ -120,7 +120,7 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
         return rootView;
     }
 
-    private void buildLineGraph(float[] values, String[] labels, float minBid, float maxBid, int isUp) {
+    private void buildLineGraph(float[] values, String[] labels, double minBid, double maxBid, int isUp) {
         // Line chart customization
         LineSet dataSet = new LineSet(labels, values);
         dataSet.setThickness(Tools.fromDpToPx(2.5f));
@@ -237,7 +237,7 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
             stockSymbolTextview.setContentDescription(getString(R.string.a11y_symbol, mStockSymbol));
             stockSymbolLabel.setContentDescription(getString(R.string.a11y_symbol, mStockSymbol));
             String price = Utils.formatBidPrice(getContext(),
-                    data.getString(data.getColumnIndex(QuoteColumns.BID_PRICE)));
+                    data.getDouble(data.getColumnIndex(QuoteColumns.BID_PRICE)));
             stockPriceTextview.setText(price);
             stockPriceTextview.setContentDescription(getString(R.string.a11y_price, price));
             stockPriceLabel.setContentDescription(getString(R.string.a11y_price, price));
@@ -265,20 +265,19 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
             stockAvgVolumeTextview.setText(getResources().getString(R.string.data_not_available));
 
             // Prepare data to be displayed on the graph
-            List<Float> stockValues = new ArrayList<>();
+            List<Double> stockValues = new ArrayList<>();
             List<String> stockLabels = new ArrayList<>();
-            float minBid = Float.MAX_VALUE;
-            float maxBid = Float.MIN_VALUE;
+            double minBid = Double.MAX_VALUE;
+            double maxBid = Double.MIN_VALUE;
             Integer[] dateStamps = new Integer[]{0, 1, 2, 3, 4};
             int offset = 0;
 
             // Get stock values
             for (int position = 0; position < data.getCount(); position++) {
                 data.moveToPosition(position);
-                String bid = data.getString(data.getColumnIndex(QuoteColumns.BID_PRICE));
+                double bidValue = data.getDouble(data.getColumnIndex(QuoteColumns.BID_PRICE));
 
-                if (!bid.equals(getString(R.string.data_not_available))) {
-                    float bidValue = Float.parseFloat(bid);
+                if (bidValue != Double.MIN_VALUE) {
                     minBid = Math.min(minBid, bidValue);
                     maxBid = Math.max(maxBid, bidValue);
 
@@ -286,7 +285,7 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
                         stockValues.add(bidValue);
                         stockLabels.add(Utils.formatGraphDateLabels(
                                 data.getString(data.getColumnIndex(QuoteColumns.CREATED))));
-                    } else if (bidValue != stockValues.get(stockValues.size() - 1)) {
+                    } else if (stockValues.size() > 0 && bidValue != stockValues.get(stockValues.size() - 1)) {
                         stockValues.add(bidValue);
                         stockLabels.add(Utils.formatGraphDateLabels(
                                 data.getString(data.getColumnIndex(QuoteColumns.CREATED))));
@@ -333,7 +332,7 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
             if (stockValues.size() == 0) {
                 minBid = 0;
                 maxBid = 0;
-                stockValues.add(0f);
+                stockValues.add(0d);
                 stockLabels.add("");
             } else if (stockValues.size() == 1) {
                 // Duplicate data point if there is only one so line always shows on the graph
@@ -361,7 +360,7 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
             float[] valuesArray = new float[stockValues.size()];
             String[] labelsArray = stockLabels.toArray(new String[stockLabels.size()]);
             for (int i = 0; i < valuesArray.length; i++) {
-                valuesArray[i] = stockValues.get(i);
+                valuesArray[i] = stockValues.get(i).floatValue();
             }
             buildLineGraph(valuesArray, labelsArray, minBid, maxBid, isUp);
         }

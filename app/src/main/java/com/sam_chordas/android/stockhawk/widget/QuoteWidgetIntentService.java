@@ -66,7 +66,7 @@ public class QuoteWidgetIntentService extends IntentService {
 
             //String symbol = data.getString(data.getColumnIndex(QuoteColumns.SYMBOL));
             String name = data.getString(data.getColumnIndex(QuoteColumns.NAME));
-            String price = Utils.formatBidPrice(this, data.getString(data.getColumnIndex(QuoteColumns.BID_PRICE)));
+            String price = Utils.formatBidPrice(this, data.getDouble(data.getColumnIndex(QuoteColumns.BID_PRICE)));
             String change = Utils.formatChangeInPercent(this, data.getDouble(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
             int isUp = data.getInt(data.getColumnIndex(QuoteColumns.IS_UP));
 
