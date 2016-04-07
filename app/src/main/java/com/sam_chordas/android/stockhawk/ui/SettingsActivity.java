@@ -16,48 +16,20 @@ package com.sam_chordas.android.stockhawk.ui;
  */
 
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import com.sam_chordas.android.stockhawk.R;
 
 /**
- * PreferenceActivity that presents a set of application settings.
+ * Activity that presents a set of application settings.
  */
-public class SettingsActivity extends PreferenceActivity {
-
+public class SettingsActivity extends AppCompatActivity {
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new PrefFragment()).commit();
-    }
-
-    /**
-     * Verifies if PreferenceFragment class is valid.
-     */
-    @Override
-    protected boolean isValidFragment(String fragmentName)
-    {
-        return PrefFragment.class.getName().equals(fragmentName);
-    }
-
-    /**
-     * This fragment shows the preferences for the first header.
-     */
-    public static class PrefFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-
-
-            PreferenceManager.setDefaultValues(getActivity(),
-                    R.xml.pref_general, false);
-
-            // Load the preferences from an XML resource
-            addPreferencesFromResource(R.xml.pref_general);
-        }
+        setContentView(R.layout.activity_settings);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 }
