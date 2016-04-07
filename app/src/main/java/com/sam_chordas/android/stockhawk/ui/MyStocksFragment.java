@@ -80,6 +80,8 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         mActivity = (AppCompatActivity) getActivity();
+        // Initialise loader manager
+        getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
     }
 
     @Nullable
@@ -88,9 +90,6 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
         mRootView = inflater.inflate(R.layout.fragment_my_stocks, container, false);
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         mActivity.setSupportActionBar(toolbar);
-
-        // Initialise loader manager
-        getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
 
         // Retrieve user's preferred sort order
         final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mActivity);
@@ -214,11 +213,16 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
         // Save position of currently focused item
         mFocusedItemPosition = mRecyclerView.getChildAdapterPosition(mRecyclerView.getFocusedChild());
         mRecyclerViewStateBundle.putInt(RECYCLER_VIEW_FOCUSED_ITEM_KEY, mFocusedItemPosition);
+        // Send broadcast to widgets to update
+        Intent dataUpdatedIntent = new Intent(StockTaskService.ACTION_DATA_UPDATED).setPackage(mActivity.getPackageName());
+        mActivity.sendBroadcast(dataUpdatedIntent);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        // Restart loader to show latest data
+        getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, MyStocksFragment.this);
         // Register Shared Preference Change Listener
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mActivity);
         sp.registerOnSharedPreferenceChangeListener(this);
@@ -297,8 +301,6 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
 
     @Override
     public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
-        Intent dataUpdatedIntent = new Intent(StockTaskService.ACTION_DATA_UPDATED).setPackage(mActivity.getPackageName());
-        mActivity.sendBroadcast(dataUpdatedIntent);
         mCursorAdapter.swapCursor(null);
     }
 

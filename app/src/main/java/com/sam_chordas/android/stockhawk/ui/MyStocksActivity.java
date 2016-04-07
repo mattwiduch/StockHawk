@@ -1,7 +1,9 @@
 package com.sam_chordas.android.stockhawk.ui;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +15,8 @@ import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.sam_chordas.android.stockhawk.R;
+import com.sam_chordas.android.stockhawk.data.QuoteColumns;
+import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 import com.sam_chordas.android.stockhawk.rest.Utils;
 import com.sam_chordas.android.stockhawk.service.StockIntentService;
 import com.sam_chordas.android.stockhawk.service.StockTaskService;
@@ -42,8 +46,25 @@ public class MyStocksActivity extends AppCompatActivity implements MyStocksFragm
             // adding or replacing the detail fragment using a
             // fragment transaction.
             if (savedInstanceState == null) {
+                Cursor data = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
+                        new String[]{QuoteColumns.SYMBOL},
+                        QuoteColumns.IS_CURRENT + " = ?",
+                        new String[]{"1"},
+                        PreferenceManager.getDefaultSharedPreferences(this).
+                                getString(getString(R.string.pref_sort_order), "null"));
+
+                LineGraphFragment fragment = new LineGraphFragment();
+
+                if (data != null && data.moveToFirst()) {
+                    Bundle args = new Bundle();
+                    args.putString(LineGraphFragment.LGF_SYMBOL, data.getString(
+                            data.getColumnIndex(QuoteColumns.SYMBOL)));
+                    fragment.setArguments(args);
+                    data.close();
+                }
+
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.stock_detail_container, new LineGraphFragment(), GRAPH_FRAGMENT_TAG)
+                        .replace(R.id.stock_detail_container, fragment, GRAPH_FRAGMENT_TAG)
                         .commit();
             }
         } else {
