@@ -91,6 +91,7 @@ public class MyStocksActivity extends AppCompatActivity implements MyStocksFragm
                     .setTag(StockIntentService.TASK_TYPE_PERIODIC)
                     .setRequiredNetwork(Task.NETWORK_STATE_CONNECTED)
                     .setRequiresCharging(false)
+                    .setUpdateCurrent(true)
                     .build();
             // Schedule task with tag "periodic." This ensure that only the stocks present in the DB
             // are updated.
