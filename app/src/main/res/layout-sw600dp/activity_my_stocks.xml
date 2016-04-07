@@ -1,0 +1,93 @@
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/activity_my_stocks"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:baselineAligned="false"
+                    tools:context="com.sam_chordas.android.stockhawk.ui.MyStocksActivity">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:elevation="@dimen/appbar_elevation">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:elevation="0dp"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
+                app:titleTextAppearance="@style/ToolbarTitle">
+            </android.support.v7.widget.Toolbar>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/appbar"
+            android:divider="?android:attr/dividerHorizontal"
+            android:orientation="horizontal">
+
+            <!--
+            This layout is a two-pane layout for the Items master/detail flow.
+            -->
+
+            <fragment
+                android:id="@+id/my_stocks_container"
+                android:name="com.sam_chordas.android.stockhawk.ui.MyStocksFragment"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                tools:layout="@android:layout/list_content"/>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3">
+
+                <FrameLayout
+                    android:id="@+id/stock_detail_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/tooltip_bar"/>
+
+                <FrameLayout
+                    android:id="@+id/tooltip_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/tooltip_height"
+                    android:background="@color/grey_primary"
+                    android:layout_alignParentBottom="true"/>
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="@dimen/fab_bottom_margin"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginLeft="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/fab_margin"
+        android:contentDescription="@string/a11y_fab"
+        android:focusable="true"
+        android:src="@drawable/ic_add_white_24dp"
+        app:fabSize="normal"/>
+
+</android.support.design.widget.CoordinatorLayout>
