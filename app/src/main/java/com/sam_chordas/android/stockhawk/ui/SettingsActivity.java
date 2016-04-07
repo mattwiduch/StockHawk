@@ -16,13 +16,14 @@ package com.sam_chordas.android.stockhawk.ui;
  */
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.sam_chordas.android.stockhawk.R;
 
 /**
- * Activity that presents a set of application settings.
+ * Activity that handles PreferenceFragment.
  */
 public class SettingsActivity extends AppCompatActivity {
     @Override
@@ -30,6 +31,9 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 }
