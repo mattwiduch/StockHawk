@@ -80,8 +80,6 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         mActivity = (AppCompatActivity) getActivity();
-        // Initialise loader manager
-        getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
     }
 
     @Nullable
@@ -174,7 +172,6 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
         if (savedInstanceState == null) {
             // Run the initialize task service so that some stocks appear upon an empty database
             mServiceIntent.putExtra(StockIntentService.TASK_TAG, StockIntentService.TASK_TYPE_INIT);
@@ -198,6 +195,9 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
                 }
             }
         });
+        // Initialise loader manager
+        getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -222,7 +222,7 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
     public void onResume() {
         super.onResume();
         // Restart loader to show latest data
-        getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, MyStocksFragment.this);
+        //getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, MyStocksFragment.this);
         // Register Shared Preference Change Listener
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mActivity);
         sp.registerOnSharedPreferenceChangeListener(this);
