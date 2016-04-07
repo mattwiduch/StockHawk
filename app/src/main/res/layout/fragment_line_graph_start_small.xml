@@ -63,13 +63,22 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="@dimen/title_padding"
-                        android:paddingTop="@dimen/title_padding">
+                        android:layout_marginBottom="@dimen/title_padding"
+                        android:layout_marginTop="@dimen/title_padding"
+                        android:layout_marginStart="@dimen/content_padding"
+                        android:layout_marginLeft="@dimen/content_padding"
+                        android:layout_marginEnd="@dimen/content_padding"
+                        android:layout_marginRight="@dimen/content_padding"
+                        android:baselineAligned="false">
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:layout_marginStart="0dp"
+                            android:layout_marginLeft="0dp"
+                            android:layout_marginEnd="@dimen/content_spacing"
+                            android:layout_marginRight="@dimen/content_spacing"
                             android:gravity="center"
                             android:orientation="vertical">
 
@@ -79,7 +88,12 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                                android:textColor="@color/text_light_primary"/>
+                                android:textColor="@color/text_light_primary"
+                                android:maxLines="1"
+                                android:ellipsize="marquee"
+                                android:fadingEdge="horizontal"
+                                android:marqueeRepeatLimit="marquee_forever"
+                                android:scrollHorizontally="true"/>
 
                             <TextView
                                 android:id="@+id/stock_symbol_textview_label"
@@ -97,6 +111,10 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:layout_marginStart="0dp"
+                            android:layout_marginLeft="0dp"
+                            android:layout_marginEnd="@dimen/content_spacing"
+                            android:layout_marginRight="@dimen/content_spacing"
                             android:gravity="center"
                             android:orientation="vertical">
 
@@ -106,7 +124,12 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                                android:textColor="@color/text_light_primary"/>
+                                android:textColor="@color/text_light_primary"
+                                android:maxLines="1"
+                                android:ellipsize="marquee"
+                                android:fadingEdge="horizontal"
+                                android:marqueeRepeatLimit="marquee_forever"
+                                android:scrollHorizontally="true"/>
 
                             <TextView
                                 android:id="@+id/stock_price_textview_label"
@@ -132,7 +155,12 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                                android:textColor="@color/text_light_primary"/>
+                                android:textColor="@color/text_light_primary"
+                                android:maxLines="1"
+                                android:ellipsize="marquee"
+                                android:fadingEdge="horizontal"
+                                android:marqueeRepeatLimit="marquee_forever"
+                                android:scrollHorizontally="true"/>
 
                             <TextView
                                 android:id="@+id/stock_change_textview_label"
