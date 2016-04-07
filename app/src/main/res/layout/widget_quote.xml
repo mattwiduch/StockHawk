@@ -14,7 +14,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/list_icon_padding"
-        tools:src="@drawable/ic_trending_up_white_18dp"/>
+        tools:src="@drawable/ic_trending_up_white_18dp"
+        android:contentDescription="@string/a11y_no_description"/>
 
     <LinearLayout
         android:id="@+id/widget_symbol_layout"
@@ -34,6 +35,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             tools:text="GOOG"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_item_vertical_text_spacing"/>
 
         <TextView
             android:id="@+id/widget_stock_name"
@@ -68,6 +73,10 @@
             android:layout_gravity="end"
             android:gravity="end"
             tools:text="1000.00"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_item_vertical_text_spacing"/>
 
         <TextView
             android:id="@+id/widget_change"

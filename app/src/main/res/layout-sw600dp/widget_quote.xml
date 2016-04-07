@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/widget_large"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/touch_selector_dark"
+              android:gravity="center_vertical"
+              android:orientation="horizontal"
+              android:padding="@dimen/widget_margin">
+
+    <LinearLayout
+        android:id="@+id/widget_symbol_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/content_padding"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/content_padding"
+        android:paddingStart="@dimen/activity_horizontal_margin">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/widget_stock_symbol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:paddingEnd="@dimen/content_spacing"
+                android:paddingLeft="0dp"
+                android:paddingRight="@dimen/content_spacing"
+                android:paddingStart="0dp"
+                android:textColor="@color/text_light_primary"
+                android:textSize="24sp"
+                tools:text="GOOG"/>
+
+            <ImageView
+                android:id="@+id/widget_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:contentDescription="@string/a11y_no_description"
+                tools:src="@drawable/ic_trending_up_white_18dp"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_item_vertical_text_spacing"/>
+
+        <TextView
+            android:id="@+id/widget_stock_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:ellipsize="marquee"
+            android:fadingEdge="horizontal"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textColor="@color/text_light_hint"
+            android:textSize="20sp"
+            tools:text="Alphabet Inc."/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/widget_price_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingLeft="0dp"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingStart="0dp">
+
+        <TextView
+            android:id="@+id/widget_bid_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:textColor="@color/text_light_primary"
+            android:textSize="24sp"
+            tools:text="1000.00"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_item_vertical_text_spacing"/>
+
+        <TextView
+            android:id="@+id/widget_change"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:textColor="@color/text_light_hint"
+            android:textSize="20sp"
+            tools:text="100%"/>
+
+    </LinearLayout>
+</LinearLayout>

@@ -2,10 +2,10 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorPrimary" >@color/grey_primary</item>
+        <item name="colorPrimary">@color/grey_primary</item>
         <item name="colorPrimaryDark">@color/grey_dark</item>
         <item name="colorAccent">@color/orange_accent</item>
-        <item name="android:windowBackground">@color/grey_card</item>
+        <item name="android:windowBackground">@color/grey_background</item>
         <!-- Customize your theme here. -->
     </style>
 
@@ -23,7 +23,7 @@
     </style>
 
     <!-- Sort stocks dialog theme -->
-    <style name="DialogSortStocks" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="DialogSortStocks" parent="Theme.AppCompat.Dialog.Alert">
         <item name="android:background">@color/grey_card</item>
         <item name="colorAccent">@color/orange_accent</item>
         <item name="colorControlNormal">@color/control_highlight</item>
@@ -39,7 +39,7 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:maxWidth">600dp</item>
         <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
-        <item name="android:windowBackground">@color/grey_primary</item>
+        <item name="android:windowBackground">@color/grey_card</item>
     </style>
 
     <style name="PercentChangeTextStyle">

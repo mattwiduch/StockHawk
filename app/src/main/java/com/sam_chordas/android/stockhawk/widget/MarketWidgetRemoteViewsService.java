@@ -28,6 +28,8 @@ import android.widget.RemoteViewsService;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
+import com.sam_chordas.android.stockhawk.rest.Utils;
+import com.sam_chordas.android.stockhawk.ui.LineGraphFragment;
 
 /**
  * RemoteViewsService controlling the data being shown in the scrollable today's market widget
@@ -90,33 +92,41 @@ public class MarketWidgetRemoteViewsService extends RemoteViewsService {
 
                 String symbol = data.getString(data.getColumnIndex(QuoteColumns.SYMBOL));
                 String name = data.getString(data.getColumnIndex(QuoteColumns.NAME));
-                String price = data.getString(data.getColumnIndex(QuoteColumns.BID_PRICE));
-                String change = data.getString(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE));
+                String price = Utils.formatBidPrice(getApplication(),
+                        data.getDouble(data.getColumnIndex(QuoteColumns.BID_PRICE)));
+                String change = Utils.formatChangeInPercent(getApplication(),
+                        data.getDouble(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
                 int isUp = data.getInt(data.getColumnIndex(QuoteColumns.IS_UP));
 
                 // Get correct color & icon
                 int color = R.color.blue_flat;
                 int icon = R.drawable.ic_trending_flat_18dp;
+                String trending = getString(R.string.a11y_trending_flat);
                 if (isUp == -1) {
                     icon = R.drawable.ic_trending_down_18dp;
                     color = R.color.red_low;
-                } else if (isUp == 1){
+                    trending = getString(R.string.a11y_trending_down);
+                } else if (isUp == 1) {
                     icon = R.drawable.ic_trending_up_18dp;
                     color = R.color.green_high;
+                    trending = getString(R.string.a11y_trending_up);
                 }
 
                 // Add the data to the RemoteViews
                 views.setImageViewResource(R.id.widget_icon, icon);
                 views.setTextViewText(R.id.widget_stock_symbol, symbol);
+                views.setContentDescription(R.id.widget_stock_symbol, name);
                 views.setTextViewText(R.id.widget_stock_name, name);
+                views.setContentDescription(R.id.widget_stock_name, trending);
                 views.setTextViewText(R.id.widget_bid_price, price);
+                views.setContentDescription(R.id.widget_bid_price, getString(R.string.a11y_price, price));
                 views.setTextViewText(R.id.widget_change, change);
                 views.setTextColor(R.id.widget_change, ContextCompat.getColor(getApplication(), color));
-                views.setContentDescription(R.id.widget_icon, symbol);
+                views.setContentDescription(R.id.widget_change, getString(R.string.a11y_change, change));
 
                 // Add fill intent to item view
                 final Intent fillInIntent = new Intent();
-                fillInIntent.putExtra(getString(R.string.line_graph_extra), symbol);
+                fillInIntent.putExtra(LineGraphFragment.LGF_SYMBOL, symbol);
                 views.setOnClickFillInIntent(R.id.widget_list_item, fillInIntent);
 
                 return views;

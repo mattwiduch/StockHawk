@@ -1,65 +1,67 @@
-<resources>
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2016 Mateusz Widuch
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+ -->
+<resources xmlns:xliff="http://schemas.android.com/tools">
+
     <!-- Application Name -->
     <string name="app_name">Stock Hawk</string>
 
-    <!-- Labels for toolbar buttons -->
-    <string name="action_settings">Settings</string>
-    <string name="action_change_units">Change Units</string>
-    <string name="action_sort">Sort stocks</string>
-
-    <!-- Error Messages -->
-    <string name="empty_stocks_list">Uh-oh! You are not tracking any stocks.</string>
-    <string name="error_no_network">Stock Hawk requires internet connection.</string>
-    <string name="error_utf8_not_supported">Stock Hawk requires UTF-8 encoding which is not supported by your device.</string>
-    <string name="error_corrupted_data">Something went wrong while adding data. Please try again.</string>
-    <string name="error_server_down">Stock server is not responding. Please try again later.</string>
-    <string name="error_server_invalid">Stock server provided invalid data. Please try again.</string>
-    <string name="error_symbol_saved">You are already tracking this symbol.</string>
-    <string name="error_symbol_invalid">Symbol not found.</string>
-
-    <!-- Strings related to Track Stock Dialog -->
-    <string name="dialog_track_title">Enter stock symbol</string>
-    <string name="dialog_track_message">Please enter stock symbol</string>
-    <string name="dialog_track_input_hint">FB</string>
-    <string name="dialog_track_button_positive">Track</string>
-    <string name="dialog_track_error">Symbol not recognised</string>
-    <string name="dialog_track_error_message">Please enter valid stock symbol</string>
-    <string name="dialog_track_error_input_length">Stock symbol should be between 1 and 7 characters.</string>
-
     <!-- Key name for storing application status in SharedPreferences -->
-    <string name="pref_hawk_status_key">hawk_status</string>
+    <string name="pref_hawk_status_key" translatable="false">hawk_status</string>
 
     <!-- Key name for storing stocks sort order in SharedPreferences -->
-    <string name="pref_sort_order">stocks_sort_order</string>
+    <string name="pref_sort_order" translatable="false">stocks_sort_order</string>
 
     <!-- Key name for storing last update time in SharedPreferences -->
-    <string name="pref_last_update">last_update_time</string>
+    <string name="pref_last_update" translatable="false">last_update_time</string>
+
+    <!-- Key name for storing preferred units in SharedPreferences -->
+    <string name="pref_units_key" translatable="false">units</string>
 
     <!-- Key name for storing desired update frequency time in SharedPreferences -->
     <string name="pref_update_frequency_key">update_frequency</string>
 
-    <!-- Strings related to Stock Value Graph -->
-    <string name="line_graph_activity_title">Stock Value Graph</string>
-    <string name="line_graph_extra">stock_symbol</string>
+    <!-- Labels for toolbar buttons -->
+    <string name="action_settings">Settings</string>
+    <string name="action_change_units">Change units</string>
+    <string name="action_sort">Sort stocks</string>
 
-    <!-- Strings related to database -->
-    <string name="data_not_available">N/A</string>
+    <!-- String used to display time of last update -->
+    <string name="last_updated">Updated <xliff:g id="time_passed">%1$s</xliff:g></string>
+    <string name="last_updated_never">Never updated</string>
+    <string name="last_updated_never_key" translatable="false">1970–01–01T00:00:00Z</string>
+    <string name="last_updated_minute">less than a minute ago</string>
 
-    <!-- Strings related to Line Graph Fragment -->
-    <string name="graph_label">PRICE HISTORY</string>
-    <string name="stock_price_label">Current Price</string>
-    <string name="stock_change_label">Change</string>
-    <string name="stock_prev_close_label">Prev Close</string>
-    <string name="stock_open_label">Open</string>
-    <string name="stock_low_label">Low</string>
-    <string name="stock_52wk_low_label">52wk Low</string>
-    <string name="stock_mkt_capital_label">Mkt Cap</string>
-    <string name="stock_1y_target_label">1y Target</string>
-    <string name="stock_high_label">High</string>
-    <string name="stock_52wk_high_label">52wk High</string>
-    <string name="stock_volume_label">Volume</string>
-    <string name="stock_avg_volume_label">Avg Vol (3m)</string>
-    <string name="stock_symbol_label">Symbol</string>
+    <!-- Error Messages -->
+    <string name="empty_stocks_list">Uh-oh! You are not tracking any stocks.</string>
+    <string name="error_no_network">You are not connected to the internet</string>
+    <string name="error_utf8_not_supported">Your device does not support UTF-8 character encoding</string>
+    <string name="error_corrupted_data">Something went wrong while adding data. Please try again.</string>
+    <string name="error_server_down">Stock server is not responding. Please try again later.</string>
+    <string name="error_server_invalid">Stock server provided invalid data. Please try again.</string>
+
+    <!-- Label for network snackbar's action button -->
+    <string name="network_snackbar_button_retry">RETRY</string>
+
+    <!-- Strings related to Track Stock Dialog -->
+    <string name="dialog_track_title">Enter stock symbol</string>
+    <string name="dialog_track_input_hint" translatable="false">GOOG</string>
+    <string name="dialog_track_button_positive">Track</string>
+    <string name="dialog_track_error_symbol_saved">You are already tracking this symbol</string>
+    <string name="dialog_track_error_symbol_invalid">Symbol not found</string>
 
     <!-- Strings related to Sort Stocks Dialog -->
     <string name="sort_dialog_title">Sort stocks by:</string>
@@ -71,21 +73,39 @@
     <string name="sort_change_asc">Change (Ascending)</string>
     <string name="sort_change_dsc">Change (Descending)</string>
 
-    <!-- String used to display time of last update -->
-    <string name="last_updated">Last updated: %1$s.</string>
-    <string name="last_updated_never">1970–01–01T00:00:00Z</string>
-    <string name="last_updated_minute">less than a minute ago</string>
+    <!-- Strings related to Line Graph Fragment -->
+    <string name="line_graph_activity_title">Stock Value Graph</string>
+
+    <!-- Labels for data displayed in Line Graph Fragment -->
+    <string name="graph_label">PRICE HISTORY</string>
+    <string name="stock_price_label">Bid price</string>
+    <string name="stock_change_label">Change</string>
+    <string name="stock_prev_close_label">Prev close</string>
+    <string name="stock_open_label">Open</string>
+    <string name="stock_low_label">Low</string>
+    <string name="stock_52wk_low_label">52wk low</string>
+    <string name="stock_mkt_capital_label">Mkt cap</string>
+    <string name="stock_1y_target_label">1y target</string>
+    <string name="stock_high_label">High</string>
+    <string name="stock_52wk_high_label">52wk high</string>
+    <string name="stock_volume_label">Volume</string>
+    <string name="stock_avg_volume_label">Avg vol (3m)</string>
+    <string name="stock_symbol_label">Symbol</string>
+
+    <!-- Label for null values in database -->
+    <string name="data_not_available" translatable="false">N/A</string>
+    <string name="data_not_available_label">N/A</string>
 
     <!-- Strings related to widgets -->
-    <string name="widget_quote_title">Stock Hawk Quote</string>
-    <string name="widget_market_title">Stock Hawk Market</string>
-    <string name="widget_market_heading">Today\'s Market</string>
-    <string name="widget_quote_empty">%1$s is no longer being tracked</string>
+    <string name="widget_quote_title">Stock Hawk - Quote</string>
+    <string name="widget_market_title">Stock Hawk - Market</string>
+    <string name="widget_market_heading">Today\'s market</string>
+    <string name="widget_quote_empty"><xliff:g id="symbol">%1$s</xliff:g> is no longer being tracked</string>
     <string name="widget_quote_empty_label">Error</string>
 
     <!-- Strings related to quote widget configuration -->
-    <string name="widget_default_symbol">GOOG</string>
-    <string name="widget_config_spinner_item">%1$s - %2$s</string>
+    <string name="widget_default_symbol" translatable="false">GOOG</string>
+    <string name="widget_config_spinner_item"><xliff:g id="symbol">%1$s</xliff:g> - <xliff:g id="name">%2$s</xliff:g></string>
     <string name="dialog_button_negative">Cancel</string>
     <string name="dialog_button_positive">Add</string>
 
@@ -122,4 +142,22 @@
     <string name="pref_update_frequency_12h">43200</string>
     <string name="pref_update_frequency_24h">86400</string>
 
+    <!-- Accessibility -->
+    <string name="a11y_list_item_description">
+        <xliff:g id="name">%1$s</xliff:g>.
+        <xliff:g id="trend">%2$s</xliff:g>.
+        Bid price: <xliff:g id="price">%3$s</xliff:g>.
+        Change: <xliff:g id="change">%4$s</xliff:g>.
+    </string>
+    <string name="a11y_no_description" translatable="false">\u00A0</string>
+    <string name="a11y_trending_down">Trending down</string>
+    <string name="a11y_trending_flat">No change</string>
+    <string name="a11y_trending_up">Trending up</string>
+    <string name="a11y_symbol">Symbol: <xliff:g id="symbol">%1$s</xliff:g></string>
+    <string name="a11y_price">Bid price: <xliff:g id="price">%1$s</xliff:g>.</string>
+    <string name="a11y_change">Change: <xliff:g id="change">%1$s</xliff:g>.</string>
+    <string name="a11y_change_units">Change units to <xliff:g id="units">%1$s</xliff:g>.</string>
+    <string name="a11y_percent">percent</string>
+    <string name="a11y_currency">currency</string>
+    <string name="a11y_fab">Add symbol</string>
 </resources>

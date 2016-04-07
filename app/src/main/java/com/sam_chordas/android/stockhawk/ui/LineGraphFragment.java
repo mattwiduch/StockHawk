@@ -1,9 +1,11 @@
 package com.sam_chordas.android.stockhawk.ui;
 
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -40,18 +42,25 @@ import butterknife.ButterKnife;
 
 public class LineGraphFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int CURSOR_LOADER_ID = 1;
+    public static final String LGF_SYMBOL = "STOCK_SYMBOL";
+    private Toolbar mToolbar;
     private String mStockSymbol;
+    private String mStockName;
 
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
     @Bind(R.id.line_chart)
     LineChartView lineChart;
     @Bind(R.id.stock_symbol_textview)
     TextView stockSymbolTextview;
+    @Bind(R.id.stock_symbol_textview_label)
+    TextView stockSymbolLabel;
     @Bind(R.id.stock_price_textview)
     TextView stockPriceTextview;
+    @Bind(R.id.stock_price_textview_label)
+    TextView stockPriceLabel;
     @Bind(R.id.stock_change_textview)
     TextView stockChangeTextview;
+    @Bind(R.id.stock_change_textview_label)
+    TextView stockChangeLabel;
     @Bind(R.id.stock_prev_close_textview)
     TextView stockPrevCloseTextview;
     @Bind(R.id.stock_open_textview)
@@ -80,7 +89,12 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mStockSymbol = getActivity().getIntent().getStringExtra(getString(R.string.line_graph_extra));
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            mStockSymbol = arguments.getString(LGF_SYMBOL);
+        } else {
+            mStockSymbol = getString(R.string.widget_default_symbol);
+        }
         getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
     }
 
@@ -101,12 +115,12 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_line_graph, container, false);
         ButterKnife.bind(this, rootView);
-        toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        mToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         lineChart = (LineChartView) rootView.findViewById(R.id.line_chart);
         return rootView;
     }
 
-    private void buildLineGraph(float[] values, String[] labels, float minBid, float maxBid, int isUp) {
+    private void buildLineGraph(float[] values, String[] labels, double minBid, double maxBid, int isUp) {
         // Line chart customization
         LineSet dataSet = new LineSet(labels, values);
         dataSet.setThickness(Tools.fromDpToPx(2.5f));
@@ -114,21 +128,29 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
         lineChart.addData(dataSet);
 
         // Generic chart customization
+        String trending;
         @ColorInt
         int bgColor;
         if (isUp == -1) {
             bgColor = ContextCompat.getColor(getContext(), R.color.red_low);
+            trending = getString(R.string.a11y_trending_down);
         } else if (isUp == 0) {
             bgColor = ContextCompat.getColor(getContext(), R.color.blue_flat);
+            trending = getString(R.string.a11y_trending_flat);
         } else {
             bgColor = ContextCompat.getColor(getContext(), R.color.green_high);
+            trending = getString(R.string.a11y_trending_up);
         }
+
+        // Set user friendly content description the the graph
+        lineChart.setContentDescription(getString(R.string.a11y_list_item_description, mStockName,
+                trending, stockPriceTextview.getText(), stockChangeTextview.getText()));
 
         lineChart.setXAxis(false);
         lineChart.setYAxis(false);
         lineChart.setBackgroundColor(bgColor);
         int padding = getResources().getDimensionPixelSize(R.dimen.content_padding);
-        lineChart.setPadding(padding, padding * 3, padding, padding);
+        lineChart.setPadding(padding, padding * 2 + padding / 2, padding, padding);
 
         // Paint object used to draw Grid
         Paint gridPaint = new Paint();
@@ -168,8 +190,10 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
 
         lineChart.setLabelsFormat(new DecimalFormat("#"));
         lineChart.setLabelsColor(ContextCompat.getColor(getContext(), R.color.text_light_secondary));
-        lineChart.setFontSize(42);
-        lineChart.setAxisLabelsSpacing(48f);
+        // Get display density to calculate correct font and spacing sizes for graph labels
+        float density = getResources().getDisplayMetrics().density;
+        lineChart.setFontSize((int) (16 * density));
+        lineChart.setAxisLabelsSpacing(18.25f * density);
 
         // Animation customization
         int[] order = new int[values.length];
@@ -180,6 +204,7 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
         anim.setEasing(new LinearEase());
         anim.setOverlap(0.5f, order);
         lineChart.show(anim);
+        //lineChart.show();
     }
 
     @Override
@@ -196,20 +221,38 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
         if (data.moveToLast()) {
+            mStockName = data.getString(data.getColumnIndex(QuoteColumns.NAME));
             AppCompatActivity activity = (AppCompatActivity) getActivity();
-            if (toolbar != null) {
-                activity.setSupportActionBar(toolbar);
+            if (mToolbar != null) {
+                activity.setSupportActionBar(mToolbar);
                 ActionBar actionBar = activity.getSupportActionBar();
                 if (actionBar != null) {
                     actionBar.setDisplayHomeAsUpEnabled(true);
-                    actionBar.setTitle(data.getString(data.getColumnIndex(QuoteColumns.NAME)));
+                    actionBar.setTitle(mStockName);
                 }
             }
 
             int isUp = data.getInt(data.getColumnIndex(QuoteColumns.IS_UP));
             stockSymbolTextview.setText(mStockSymbol);
-            stockPriceTextview.setText(data.getString(data.getColumnIndex(QuoteColumns.BID_PRICE)));
-            stockChangeTextview.setText(data.getString(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
+            stockSymbolTextview.setContentDescription(getString(R.string.a11y_symbol, mStockSymbol));
+            stockSymbolLabel.setContentDescription(getString(R.string.a11y_symbol, mStockSymbol));
+            String price = Utils.formatBidPrice(getContext(),
+                    data.getDouble(data.getColumnIndex(QuoteColumns.BID_PRICE)));
+            stockPriceTextview.setText(price);
+            stockPriceTextview.setContentDescription(getString(R.string.a11y_price, price));
+            stockPriceLabel.setContentDescription(getString(R.string.a11y_price, price));
+
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String change;
+            if (sp.getBoolean(getString(R.string.pref_units_key), true)) {
+                change = Utils.formatChangeInPercent(getContext(),
+                        data.getDouble(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
+            } else {
+                change = Utils.formatChange(getContext(), data.getDouble(data.getColumnIndex(QuoteColumns.CHANGE)));
+            }
+            stockChangeTextview.setText(change);
+            stockChangeTextview.setContentDescription(getString(R.string.a11y_change, change));
+            stockChangeLabel.setContentDescription(getString(R.string.a11y_change, change));
             stockPrevCloseTextview.setText(getResources().getString(R.string.data_not_available));
             stockOpenTextview.setText(getResources().getString(R.string.data_not_available));
             stockLowTextview.setText(getResources().getString(R.string.data_not_available));
@@ -222,22 +265,44 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
             stockAvgVolumeTextview.setText(getResources().getString(R.string.data_not_available));
 
             // Prepare data to be displayed on the graph
-            List<Float> stockValues = new ArrayList<>();
+            List<Double> stockValues = new ArrayList<>();
             List<String> stockLabels = new ArrayList<>();
-            float minBid = Float.MAX_VALUE;
-            float maxBid = Float.MIN_VALUE;
+            double minBid = Double.MAX_VALUE;
+            double maxBid = Double.MIN_VALUE;
             Integer[] dateStamps = new Integer[]{0, 1, 2, 3, 4};
             int offset = 0;
 
+            // Get stock values
+            for (int position = 0; position < data.getCount(); position++) {
+                data.moveToPosition(position);
+                double bidValue = data.getDouble(data.getColumnIndex(QuoteColumns.BID_PRICE));
+
+                if (bidValue != Double.MIN_VALUE) {
+                    minBid = Math.min(minBid, bidValue);
+                    maxBid = Math.max(maxBid, bidValue);
+
+                    if (position == 0 || position == (data.getCount() - 1)) {
+                        stockValues.add(bidValue);
+                        stockLabels.add(Utils.formatGraphDateLabels(
+                                data.getString(data.getColumnIndex(QuoteColumns.CREATED))));
+                    } else if (stockValues.size() > 0 && bidValue != stockValues.get(stockValues.size() - 1)) {
+                        stockValues.add(bidValue);
+                        stockLabels.add(Utils.formatGraphDateLabels(
+                                data.getString(data.getColumnIndex(QuoteColumns.CREATED))));
+                    }
+                }
+            }
+
             // Calculate positions of labels to be displayed on x axis
-            if (data.getCount() % 4 == 1) {
-                dateStamps[1] = (data.getCount() - 1) / 4;
-                dateStamps[2] = (data.getCount() - 1) / 2;
-                dateStamps[3] = (data.getCount() - 1) / 4 + (data.getCount() - 1) / 2;
-                dateStamps[4] = data.getCount() - 1;
-            } else if (data.getCount() > 4) {
-                offset = (data.getCount() % 4) == 0 ? 1 : 5 - data.getCount() % 4;
-                int count = data.getCount() + offset;
+            int valuesCount = stockValues.size();
+            if (valuesCount % 4 == 1) {
+                dateStamps[1] = (valuesCount - 1) / 4;
+                dateStamps[2] = (valuesCount - 1) / 2;
+                dateStamps[3] = (valuesCount - 1) / 4 + (valuesCount - 1) / 2;
+                dateStamps[4] = valuesCount - 1;
+            } else if (valuesCount > 4) {
+                offset = (valuesCount % 4) == 0 ? 1 : 5 - valuesCount % 4;
+                int count = valuesCount + offset;
                 if (offset == 1) {
                     dateStamps[1] = ((count - 1) / 4) - 1;
                     dateStamps[2] = ((count - 1) / 2) - 1;
@@ -253,28 +318,24 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
                     dateStamps[2] = ((count - 1) / 2) - 2;
                     dateStamps[3] = ((count - 1) / 4 + (count - 1) / 2) - 3;
                 }
-                dateStamps[4] = data.getCount() - 1;
+                dateStamps[4] = valuesCount - 1;
             }
 
-            // Get stock values
-            for (int position = 0; position < data.getCount(); position++) {
-                data.moveToPosition(position);
-                String bid = data.getString(data.getColumnIndex(QuoteColumns.BID_PRICE));
-                float bidValue = bid.equals(getString(R.string.data_not_available))
-                        ? 0f : Float.parseFloat(bid);
-                minBid = Math.min(minBid, bidValue);
-                maxBid = Math.max(maxBid, bidValue);
-                stockValues.add(bidValue);
-                if (Arrays.asList(dateStamps).contains(position)) {
-                    stockLabels.add(Utils.formatGraphDateLabels(
-                            data.getString(data.getColumnIndex(QuoteColumns.CREATED))));
-                } else {
-                    stockLabels.add("");
+            // Clear unnecessary labels
+            for (int position = 0; position < valuesCount; position++) {
+                if (!Arrays.asList(dateStamps).contains(position)) {
+                    stockLabels.set(position, "");
                 }
             }
 
-            // Duplicate data point if there is only one so line always shows on the graph
-            if (stockValues.size() == 1) {
+            // Add dummy values if there is no data for this symbol
+            if (stockValues.size() == 0) {
+                minBid = 0;
+                maxBid = 0;
+                stockValues.add(0d);
+                stockLabels.add("");
+            } else if (stockValues.size() == 1) {
+                // Duplicate data point if there is only one so line always shows on the graph
                 stockValues.add(stockValues.get(0));
                 stockLabels.add(Utils.formatGraphDateLabels(
                         data.getString(data.getColumnIndex(QuoteColumns.CREATED))));
@@ -299,13 +360,24 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
             float[] valuesArray = new float[stockValues.size()];
             String[] labelsArray = stockLabels.toArray(new String[stockLabels.size()]);
             for (int i = 0; i < valuesArray.length; i++) {
-                valuesArray[i] = stockValues.get(i);
+                valuesArray[i] = stockValues.get(i).floatValue();
             }
-            buildLineGraph(valuesArray, labelsArray, minBid, maxBid, isUp);
+            if (valuesArray.length > 0) {
+                lineChart.clearAnimation();
+                lineChart.reset();
+                buildLineGraph(valuesArray, labelsArray, minBid, maxBid, isUp);
+            }
         }
     }
 
     @Override
     public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
+    }
+
+    /**
+     * Restarts loader so new data can be displayed
+     */
+    public void onDatabaseUpdate() {
+        getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
     }
 }
