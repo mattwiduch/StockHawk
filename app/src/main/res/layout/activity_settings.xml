@@ -29,7 +29,7 @@
             android:layout_height="?attr/actionBarSize"
             android:elevation="0dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
+            app:popupTheme="@style/PopupTheme"
             app:titleTextAppearance="@style/ToolbarTitle"/>
 
     </android.support.design.widget.AppBarLayout>

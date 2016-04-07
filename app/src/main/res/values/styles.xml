@@ -44,6 +44,13 @@
         <item name="android:windowBackground">@color/grey_card</item>
     </style>
 
+    <!-- Popup theme -->
+    <style name="PopupTheme" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:windowBackground">@color/grey_card</item>
+        <item name="android:colorBackground">@color/grey_card</item>
+    </style>
+
+
     <style name="PercentChangeTextStyle">
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">#FFF</item>
