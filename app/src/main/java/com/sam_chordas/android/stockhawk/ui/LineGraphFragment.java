@@ -203,8 +203,8 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
         Animation anim = new Animation(750);
         anim.setEasing(new LinearEase());
         anim.setOverlap(0.5f, order);
-        //lineChart.show(anim);
-        lineChart.show();
+        lineChart.show(anim);
+        //lineChart.show();
     }
 
     @Override
@@ -248,7 +248,7 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
                 change = Utils.formatChangeInPercent(getContext(),
                         data.getDouble(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
             } else {
-                change = data.getString(data.getColumnIndex(QuoteColumns.CHANGE));
+                change = Utils.formatChange(getContext(), data.getDouble(data.getColumnIndex(QuoteColumns.CHANGE)));
             }
             stockChangeTextview.setText(change);
             stockChangeTextview.setContentDescription(getString(R.string.a11y_change, change));
@@ -362,7 +362,11 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
             for (int i = 0; i < valuesArray.length; i++) {
                 valuesArray[i] = stockValues.get(i).floatValue();
             }
-            buildLineGraph(valuesArray, labelsArray, minBid, maxBid, isUp);
+            if (valuesArray.length > 0) {
+                lineChart.clearAnimation();
+                lineChart.reset();
+                buildLineGraph(valuesArray, labelsArray, minBid, maxBid, isUp);
+            }
         }
     }
 
@@ -370,10 +374,10 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
     public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
     }
 
-    /** Restarts loader so new data can be displayed */
+    /**
+     * Restarts loader so new data can be displayed
+     */
     public void onDatabaseUpdate() {
-        lineChart.clearAnimation();
-        lineChart.reset();
         getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
     }
 }

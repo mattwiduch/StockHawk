@@ -126,7 +126,7 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
             change = Utils.formatChangeInPercent(mContext, cursor.getDouble(cursor.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
             viewHolder.change.setText(change);
         } else {
-            change = Utils.formatChange(mContext, cursor.getString(cursor.getColumnIndex(QuoteColumns.CHANGE)));
+            change = Utils.formatChange(mContext, cursor.getDouble(cursor.getColumnIndex(QuoteColumns.CHANGE)));
             viewHolder.change.setText(change);
         }
         viewHolder.change.setContentDescription(mContext.getString(R.string.a11y_change,

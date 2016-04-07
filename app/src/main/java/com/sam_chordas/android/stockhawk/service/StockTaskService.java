@@ -19,7 +19,6 @@ import com.google.android.gms.gcm.TaskParams;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
-import com.sam_chordas.android.stockhawk.rest.Utils;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -256,9 +255,6 @@ public class StockTaskService extends GcmTaskService {
             // Name
             builder.withValue(QuoteColumns.NAME, jsonObject.getString(YFQ_STOCK_NAME));
             // BidPrice
-//            String bidPrice = jsonObject.getString(YFQ_STOCK_BID).equals(YFQ_DATA_NOT_AVAILABLE)
-//                    ? mContext.getString(R.string.data_not_available)
-//                    : Utils.truncateBidPrice(jsonObject.getString(YFQ_STOCK_BID));
             String bidPriceString = jsonObject.getString(YFQ_STOCK_BID);
             double bidPrice = Double.MIN_VALUE;
             if (!bidPriceString.equals(YFQ_DATA_NOT_AVAILABLE)) {
@@ -269,13 +265,16 @@ public class StockTaskService extends GcmTaskService {
             } else {
                 builder.withValue(QuoteColumns.BID_PRICE, bidPrice);
             }
-
-
             // Change
-            String change = jsonObject.getString(YFQ_STOCK_CHANGE).equals(YFQ_DATA_NOT_AVAILABLE)
-                    ? mContext.getString(R.string.data_not_available)
-                    : Utils.truncateChange(jsonObject.getString(YFQ_STOCK_CHANGE), false);
-            builder.withValue(QuoteColumns.CHANGE, change);
+            String changeString = jsonObject.getString(YFQ_STOCK_CHANGE);
+            double change = Double.MIN_VALUE;
+            if (!changeString.equals(YFQ_DATA_NOT_AVAILABLE)) {
+                String numberOnly = changeString.replaceAll("[^-0-9\\.]+$", "");
+                change = Double.parseDouble(numberOnly);
+                builder.withValue(QuoteColumns.CHANGE, change);
+            } else {
+                builder.withValue(QuoteColumns.CHANGE, change);
+            }
             // ChangeInPercent
             String changeInPercentString = jsonObject.getString(YFQ_STOCK_CHANGE_IN_PERCENT);
             double changeInPercent = Double.MIN_VALUE;

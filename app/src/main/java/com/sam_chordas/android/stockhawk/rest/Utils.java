@@ -122,7 +122,7 @@ public class Utils {
     /**
      * Formats stock bid price for device's locale
      */
-    static public String formatBidPrice(Context context, Double bidPrice) {
+    static public String formatBidPrice(Context context, double bidPrice) {
         if (bidPrice != Double.MIN_VALUE) {
             DecimalFormat decimalFormat = new DecimalFormat("'$'#.00");
             return decimalFormat.format(bidPrice);
@@ -134,20 +134,19 @@ public class Utils {
     /**
      * Formats stock change for device's locale
      */
-    static public String formatChange(Context context, String change) {
-        if (!change.equals(context.getResources().getString(R.string.data_not_available))) {
+    static public String formatChange(Context context, double change) {
+        if (change != Double.MIN_VALUE) {
             DecimalFormat decimalFormat = new DecimalFormat("+#0.00;-#");
-            change = decimalFormat.format(Double.parseDouble(change));
+            return decimalFormat.format(change);
         } else {
-            context.getString(R.string.data_not_available_label);
+            return context.getString(R.string.data_not_available_label);
         }
-        return change;
     }
 
     /**
      * Formats stock change in percent for device's locale
      */
-    static public String formatChangeInPercent(Context context, Double changeInPercent) {
+    static public String formatChangeInPercent(Context context, double changeInPercent) {
         if (changeInPercent != Double.MIN_VALUE) {
             DecimalFormat decimalFormat = new DecimalFormat("+#0.00%;-#%");
             decimalFormat.setMultiplier(1);
