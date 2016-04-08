@@ -22,6 +22,13 @@
     <android.support.v7.preference.PreferenceCategory
         android:title="@string/pref_category_widgets">
 
+        <android.support.v7.preference.CheckBoxPreference
+            android:defaultValue="@string/pref_widget_units_default"
+            android:key="@string/pref_widget_units_key"
+            android:summaryOff="@string/pref_widget_units_false"
+            android:summaryOn="@string/pref_widget_units_true"
+            android:title="@string/pref_widget_units_label"/>
+
         <android.support.v7.preference.ListPreference
             android:defaultValue="@string/pref_update_frequency_1h"
             android:entries="@array/pref_update_frequency_options"

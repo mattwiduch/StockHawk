@@ -94,4 +94,7 @@
     <string name="pref_update_frequency_label_3h">3 godziny</string>
     <string name="pref_update_frequency_label_5m">5 minut</string>
     <string name="pref_update_frequency_label_6h">6 godzin</string>
+    <string name="pref_widget_units_label" translatable="false">Pokaż zmianę w procentach</string>
+    <string name="pref_widget_units_true">Włączone</string>
+    <string name="pref_widget_units_false">Wyłączone</string>
 </resources>
