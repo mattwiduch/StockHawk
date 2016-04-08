@@ -1,5 +1,7 @@
 package com.sam_chordas.android.stockhawk.ui;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.preference.ListPreference;
@@ -7,12 +9,13 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
 import com.sam_chordas.android.stockhawk.R;
+import com.sam_chordas.android.stockhawk.service.StockTaskService;
 
 /**
  * PreferenceFragment that presents a set of application settings.
  */
 public class SettingsFragment extends PreferenceFragmentCompat implements
-        Preference.OnPreferenceChangeListener {
+        Preference.OnPreferenceChangeListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
@@ -23,6 +26,22 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         // For all preferences, attach an OnPreferenceChangeListener so the UI summary can be
         // updated when the preference changes.
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_update_frequency_key)));
+    }
+
+    // Registers a shared preference change listener that gets notified when preferences change
+    @Override
+    public void onResume() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sp.registerOnSharedPreferenceChangeListener(this);
+        super.onResume();
+    }
+
+    // Unregisters a shared preference change listener
+    @Override
+    public void onPause() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sp.unregisterOnSharedPreferenceChangeListener(this);
+        super.onPause();
     }
 
     /**
@@ -63,5 +82,15 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         setPreferenceSummary(preference, newValue);
         return true;
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        // Send update broadcast to widget when user changes preferred units
+        if (key.equals(getString(R.string.pref_widget_units_key))) {
+            Intent dataUpdatedIntent = new Intent(StockTaskService.ACTION_DATA_UPDATED)
+                    .setPackage(getActivity().getPackageName());
+            getActivity().sendBroadcast(dataUpdatedIntent);
+        }
     }
 }
