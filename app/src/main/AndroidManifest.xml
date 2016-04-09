@@ -37,7 +37,7 @@
         <activity
             android:name=".ui.LineGraphActivity"
             android:parentActivityName=".ui.MyStocksActivity"
-            android:theme="@style/GraphActivityTheme">
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.sam_chordas.android.stockhawk.ui.MyStocksActivity"/>
@@ -46,7 +46,7 @@
         <!-- Quote Widget Configuration Activity -->
         <activity
             android:name=".widget.QuoteWidgetConfigurationActivity"
-            android:theme="@style/Widget.Configure">
+            android:theme="@style/AppTheme.Widget.Configure">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
