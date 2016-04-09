@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.view.ViewGroup;
 
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.service.StockTaskService;
@@ -18,9 +19,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         Preference.OnPreferenceChangeListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // Allows recycler view items to be focused
+        getListView().setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+    }
+
+    @Override
     public void onCreatePreferences(Bundle bundle, String s) {
-        PreferenceManager.setDefaultValues(getActivity(),
-                R.xml.pref_general, false);
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.pref_general);
         // For all preferences, attach an OnPreferenceChangeListener so the UI summary can be
