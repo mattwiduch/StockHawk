@@ -12,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.facebook.stetho.Stetho;
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
@@ -34,7 +33,7 @@ public class MyStocksActivity extends AppCompatActivity implements MyStocksFragm
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Stetho.initializeWithDefaults(this);
+        //Stetho.initializeWithDefaults(this);
         AndroidThreeTen.init(getApplication());
         setContentView(R.layout.activity_my_stocks);
 
