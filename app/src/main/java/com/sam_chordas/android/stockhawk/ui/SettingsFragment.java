@@ -23,6 +23,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         super.onActivityCreated(savedInstanceState);
         // Allows recycler view items to be focused
         getListView().setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+        // TODO: Fix talkback for PreferenceCategory (Reads "disabled" after category title)
     }
 
     @Override
