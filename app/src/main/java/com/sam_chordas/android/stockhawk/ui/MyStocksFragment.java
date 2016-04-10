@@ -371,7 +371,7 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
         if (mSortOrder.equals(SORT_CHANGE_ASC)) defaultChoice = 5;
         if (mSortOrder.equals(SORT_CHANGE_DSC)) defaultChoice = 6;
 
-        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mActivity, R.style.AppTheme_Dialog_SortStocks);
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mActivity, R.style.AppTheme_Dialog_Alert);
         dialogBuilder.setTitle(R.string.sort_dialog_title);
         dialogBuilder.setSingleChoiceItems(R.array.sort_type, defaultChoice, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {

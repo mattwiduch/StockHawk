@@ -7,19 +7,11 @@
         <item name="colorAccent">@color/orange_accent</item>
         <item name="android:windowBackground">@color/grey_background</item>
         <item name="preferenceTheme">@style/AppTheme.Preferences</item>
-        <item name="alertDialogTheme">@style/AppTheme.Dialog.SortStocks</item>
+        <item name="alertDialogTheme">@style/AppTheme.Dialog.Alert</item>
     </style>
 
-    <!-- Track Stock dialog theme -->
-    <style name="AppTheme.Dialog.TrackStock" parent="Theme.AppCompat.Dialog">
-        <item name="android:background">@color/grey_card</item>
-        <item name="colorAccent">@color/orange_accent</item>
-        <item name="android:textColor">@color/text_light_primary</item>
-        <item name="android:textColorPrimary">@color/text_light_secondary</item>
-    </style>
-
-    <!-- Sort stocks dialog theme -->
-    <style name="AppTheme.Dialog.SortStocks" parent="Theme.AppCompat.Dialog.Alert">
+    <!-- Alert dialog theme -->
+    <style name="AppTheme.Dialog.Alert" parent="Theme.AppCompat.Dialog.Alert">
         <item name="android:background">@color/grey_card</item>
         <item name="colorAccent">@color/orange_accent</item>
         <item name="colorControlNormal">@color/control_highlight</item>
