@@ -67,7 +67,7 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
     private AppCompatActivity mActivity;
     private View mRootView;
     private Cursor mCursor;
-    private TrackStockDialog mDialog;
+    private DialogTrackStock mDialog;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private String mSortOrder;
     private boolean mIsPercent;
@@ -188,7 +188,7 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
             @Override
             public void onClick(View v) {
                 if (Utils.isNetworkAvailable(mActivity)) {
-                    mDialog = new TrackStockDialog();
+                    mDialog = new DialogTrackStock();
                     mDialog.show(mActivity.getSupportFragmentManager(), DIALOG_TAG);
                 } else {
                     networkSnackbar();
@@ -237,7 +237,7 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
             mCursorAdapter.setFocusedItem(mFocusedItemPosition);
             mRecyclerView.scrollToPosition(mFocusedItemPosition);
         }
-        mDialog = (TrackStockDialog) mActivity.getSupportFragmentManager().findFragmentByTag(DIALOG_TAG);
+        mDialog = (DialogTrackStock) mActivity.getSupportFragmentManager().findFragmentByTag(DIALOG_TAG);
         updateLastUpdateTime(sp);
     }
 

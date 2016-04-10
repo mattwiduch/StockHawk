@@ -27,7 +27,7 @@ import com.sam_chordas.android.stockhawk.service.StockIntentService;
 /**
  * Creates Dialog that allows user to track new stock symbol.
  */
-public class TrackStockDialog extends DialogFragment {
+public class DialogTrackStock extends DialogFragment {
     private AlertDialog mDialog;
     private EditText mEditText;
     private TextInputLayout mTextInputLayout;
