@@ -49,6 +49,7 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
     private static final String DIALOG_TAG = "Dialog.trackSymbol";
     private static final String RECYCLER_VIEW_FOCUSED_ITEM_KEY = "RecyclerView.focusedItem";
     private static final String RECYCLER_VIEW_STATE_KEY = "RecyclerView.state";
+    private static final String DIALOG_SORT_STOCKS_STATE_KEY = "Dialog.SortStocks.state";
 
     private static final String SORT_DEFAULT = "null";
     private static final String SORT_SYMBOL_ASC = QuoteColumns.SYMBOL + " ASC";
@@ -61,13 +62,14 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
     private Intent mServiceIntent;
     private ItemTouchHelper mItemTouchHelper;
     private RecyclerView mRecyclerView;
-    private static Bundle mRecyclerViewStateBundle;
+    private static Bundle mStateBundle;
     private int mFocusedItemPosition;
     private QuoteCursorAdapter mCursorAdapter;
     private AppCompatActivity mActivity;
     private View mRootView;
     private Cursor mCursor;
-    private DialogTrackStock mDialog;
+    private DialogTrackStock mDialogTrackStock;
+    private AlertDialog mDialogSortStocks;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private String mSortOrder;
     private boolean mIsPercent;
@@ -188,8 +190,8 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
             @Override
             public void onClick(View v) {
                 if (Utils.isNetworkAvailable(mActivity)) {
-                    mDialog = new DialogTrackStock();
-                    mDialog.show(mActivity.getSupportFragmentManager(), DIALOG_TAG);
+                    mDialogTrackStock = new DialogTrackStock();
+                    mDialogTrackStock.show(mActivity.getSupportFragmentManager(), DIALOG_TAG);
                 } else {
                     networkSnackbar();
                 }
@@ -207,15 +209,20 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mActivity);
         sp.unregisterOnSharedPreferenceChangeListener(this);
         // Save RecyclerView state
-        mRecyclerViewStateBundle = new Bundle();
+        mStateBundle = new Bundle();
         Parcelable listState = mRecyclerView.getLayoutManager().onSaveInstanceState();
-        mRecyclerViewStateBundle.putParcelable(RECYCLER_VIEW_STATE_KEY, listState);
+        mStateBundle.putParcelable(RECYCLER_VIEW_STATE_KEY, listState);
         // Save position of currently focused item
         mFocusedItemPosition = mRecyclerView.getChildAdapterPosition(mRecyclerView.getFocusedChild());
-        mRecyclerViewStateBundle.putInt(RECYCLER_VIEW_FOCUSED_ITEM_KEY, mFocusedItemPosition);
+        mStateBundle.putInt(RECYCLER_VIEW_FOCUSED_ITEM_KEY, mFocusedItemPosition);
         // Send broadcast to widgets to update
         Intent dataUpdatedIntent = new Intent(StockTaskService.ACTION_DATA_UPDATED).setPackage(mActivity.getPackageName());
         mActivity.sendBroadcast(dataUpdatedIntent);
+        // Dismiss sort stocks dialog if present
+        if (mDialogSortStocks != null && mDialogSortStocks.isShowing()) {
+            mDialogSortStocks.dismiss();
+            mStateBundle.putBoolean(DIALOG_SORT_STOCKS_STATE_KEY, true);
+        }
     }
 
     @Override
@@ -227,17 +234,21 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mActivity);
         sp.registerOnSharedPreferenceChangeListener(this);
         // Restore RecyclerView state
-        if (mRecyclerViewStateBundle != null) {
-            Parcelable listState = mRecyclerViewStateBundle.getParcelable(RECYCLER_VIEW_STATE_KEY);
+        if (mStateBundle != null) {
+            Parcelable listState = mStateBundle.getParcelable(RECYCLER_VIEW_STATE_KEY);
             mRecyclerView.getLayoutManager().onRestoreInstanceState(listState);
             // TODO: Clears previously selected view
             mCursorAdapter.notifyItemChanged(mCursorAdapter.getSelectedItem());
             // Restore position of previously focused item
-            mFocusedItemPosition = mRecyclerViewStateBundle.getInt(RECYCLER_VIEW_FOCUSED_ITEM_KEY);
+            mFocusedItemPosition = mStateBundle.getInt(RECYCLER_VIEW_FOCUSED_ITEM_KEY);
             mCursorAdapter.setFocusedItem(mFocusedItemPosition);
             mRecyclerView.scrollToPosition(mFocusedItemPosition);
+            if (mStateBundle.getBoolean(DIALOG_SORT_STOCKS_STATE_KEY, false)) {
+                mDialogSortStocks = createSortDialog();
+                mDialogSortStocks.show();
+            }
         }
-        mDialog = (DialogTrackStock) mActivity.getSupportFragmentManager().findFragmentByTag(DIALOG_TAG);
+        mDialogTrackStock = (DialogTrackStock) mActivity.getSupportFragmentManager().findFragmentByTag(DIALOG_TAG);
         updateLastUpdateTime(sp);
     }
 
@@ -273,7 +284,8 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
         }
 
         if (id == R.id.action_sort) {
-            createSortDialog();
+            mDialogSortStocks = createSortDialog();
+            mDialogSortStocks.show();
             return true;
         }
 
@@ -319,8 +331,8 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
                     showSnackbar(getString(R.string.error_server_invalid));
                     break;
                 case StockTaskService.HAWK_STATUS_SYMBOL_INVALID:
-                    if (mDialog != null)
-                        mDialog.setErrorMessage(getString(R.string.dialog_track_error_symbol_invalid));
+                    if (mDialogTrackStock != null)
+                        mDialogTrackStock.setErrorMessage(getString(R.string.dialog_track_error_symbol_invalid));
                     break;
                 case StockTaskService.HAWK_STATUS_DATA_CORRUPTED:
                     showSnackbar(getString(R.string.error_corrupted_data));
@@ -341,7 +353,7 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
 
             if (status != StockTaskService.HAWK_STATUS_UNKNOWN
                     && status != StockTaskService.HAWK_STATUS_SYMBOL_INVALID) {
-                if (mDialog != null) mDialog.dismiss();
+                if (mDialogTrackStock != null) mDialogTrackStock.dismiss();
             }
             mSwipeRefreshLayout.setRefreshing(false);
         }
@@ -362,7 +374,7 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
     /**
      * Creates dialog that lets user choose stock sorting method.
      */
-    private void createSortDialog() {
+    private AlertDialog createSortDialog() {
         int defaultChoice = 0;
         if (mSortOrder.equals(SORT_SYMBOL_ASC)) defaultChoice = 1;
         if (mSortOrder.equals(SORT_SYMBOL_DSC)) defaultChoice = 2;
@@ -408,10 +420,7 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
             }
         });
         dialogBuilder.setNegativeButton(R.string.dialog_button_negative, null);
-        // Creates dialog
-        AlertDialog sortDialog = dialogBuilder.create();
-        // Shows dialog
-        sortDialog.show();
+        return dialogBuilder.create();
     }
 
     /**
