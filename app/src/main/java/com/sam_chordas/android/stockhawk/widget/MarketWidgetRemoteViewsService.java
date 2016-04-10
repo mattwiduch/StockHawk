@@ -94,8 +94,9 @@ public class MarketWidgetRemoteViewsService extends RemoteViewsService {
                 String name = data.getString(data.getColumnIndex(QuoteColumns.NAME));
                 String price = Utils.formatBidPrice(getApplication(),
                         data.getDouble(data.getColumnIndex(QuoteColumns.BID_PRICE)));
-                String change = Utils.formatChangeInPercent(getApplication(),
-                        data.getDouble(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
+                String change = PreferenceManager.getDefaultSharedPreferences(getApplication()).getBoolean(getString(R.string.pref_widget_units_key), true)
+                        ? Utils.formatChangeInPercent(getApplication(), data.getDouble(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE)))
+                        : Utils.formatChange(getApplication(), data.getDouble(data.getColumnIndex(QuoteColumns.CHANGE)));
                 int isUp = data.getInt(data.getColumnIndex(QuoteColumns.IS_UP));
 
                 // Get correct color & icon

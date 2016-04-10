@@ -33,7 +33,7 @@
 
         <TextView
             android:id="@+id/stock_symbol"
-            style="@style/StockSymbolTextStyle"
+            style="@style/AppTheme.StockSymbolTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
@@ -45,7 +45,7 @@
 
         <TextView
             android:id="@+id/stock_name"
-            style="@style/StockNameTextStyle"
+            style="@style/AppTheme.StockNameTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
@@ -70,7 +70,7 @@
 
         <TextView
             android:id="@+id/bid_price"
-            style="@style/StockSymbolTextStyle"
+            style="@style/AppTheme.StockSymbolTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -83,7 +83,7 @@
 
         <TextView
             android:id="@+id/change"
-            style="@style/StockNameTextStyle"
+            style="@style/AppTheme.StockNameTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"

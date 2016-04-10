@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -82,6 +83,10 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
             if (mFocusedItem == position) {
                 viewHolder.itemView.requestFocus();
             }
+            // Skips footer view during talk back
+            ViewCompat.setImportantForAccessibility(
+                    ((FooterViewHolder) viewHolder).itemView,
+                    ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO);
         }
     }
 

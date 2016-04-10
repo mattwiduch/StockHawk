@@ -1,6 +1,7 @@
 package com.sam_chordas.android.stockhawk.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -23,7 +24,8 @@ import com.sam_chordas.android.stockhawk.rest.Utils;
 import com.sam_chordas.android.stockhawk.service.StockIntentService;
 import com.sam_chordas.android.stockhawk.service.StockTaskService;
 
-public class MyStocksActivity extends AppCompatActivity implements MyStocksFragment.Callback {
+public class MyStocksActivity extends AppCompatActivity implements MyStocksFragment.Callback,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     public static final String GRAPH_FRAGMENT_TAG = "GF_TAG";
 
@@ -78,24 +80,23 @@ public class MyStocksActivity extends AppCompatActivity implements MyStocksFragm
             mTwoPane = false;
         }
 
-        if (Utils.isNetworkAvailable(this)) {
-            long period = 3600L;
-            long flex = 10L;
+        firePeriodicUpdateTask();
+    }
 
-            // create a periodic task to pull stocks once every hour after the app has been opened. This
-            // is so Widget data stays up to date.
-            PeriodicTask periodicTask = new PeriodicTask.Builder()
-                    .setService(StockTaskService.class)
-                    .setPeriod(period)
-                    .setFlex(flex)
-                    .setTag(StockIntentService.TASK_TYPE_PERIODIC)
-                    .setRequiredNetwork(Task.NETWORK_STATE_CONNECTED)
-                    .setRequiresCharging(false)
-                    .build();
-            // Schedule task with tag "periodic." This ensure that only the stocks present in the DB
-            // are updated.
-            GcmNetworkManager.getInstance(this).schedule(periodicTask);
-        }
+    // Registers a shared preference change listener that gets notified when preferences change
+    @Override
+    public void onResume() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        sp.registerOnSharedPreferenceChangeListener(this);
+        super.onResume();
+    }
+
+    // Unregisters a shared preference change listener
+    @Override
+    public void onPause() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        sp.unregisterOnSharedPreferenceChangeListener(this);
+        super.onPause();
     }
 
     @Override
@@ -130,6 +131,7 @@ public class MyStocksActivity extends AppCompatActivity implements MyStocksFragm
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
 
@@ -156,6 +158,40 @@ public class MyStocksActivity extends AppCompatActivity implements MyStocksFragm
                     .putExtra(LineGraphFragment.LGF_SYMBOL, symbol);
 
             ActivityCompat.startActivity(this, intent, null);
+        }
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(getString(R.string.pref_update_frequency_key))) {
+            // Override any preexisting update task if user changed update frequency settings
+            firePeriodicUpdateTask();
+        }
+    }
+
+    private void firePeriodicUpdateTask() {
+        if (Utils.isNetworkAvailable(this)) {
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+            String updateFrequency = sp.getString(getString(R.string.pref_update_frequency_key),
+                    getString(R.string.pref_update_frequency_1h));
+            long period = Long.parseLong(updateFrequency);
+            // Specifies how close to the end of the period you are willing to execute
+            long flex = 10L;
+
+            // create a periodic task to pull stocks once every hour after the app has been opened. This
+            // is so Widget data stays up to date.
+            PeriodicTask periodicTask = new PeriodicTask.Builder()
+                    .setService(StockTaskService.class)
+                    .setPeriod(period)
+                    .setFlex(flex)
+                    .setTag(StockIntentService.TASK_TYPE_PERIODIC)
+                    .setRequiredNetwork(Task.NETWORK_STATE_CONNECTED)
+                    .setRequiresCharging(false)
+                    .setUpdateCurrent(true)
+                    .build();
+            // Schedule task with tag "periodic." This ensure that only the stocks present in the DB
+            // are updated.
+            GcmNetworkManager.getInstance(this).schedule(periodicTask);
         }
     }
 }

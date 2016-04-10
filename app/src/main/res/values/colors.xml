@@ -19,4 +19,7 @@
     <color name="text_light_primary">#FFFFFF</color>
     <color name="text_light_secondary">#B3FFFFFF</color>
     <color name="text_light_hint">#80FFFFFF</color>
+
+    <!-- Preferences -->
+    <color name="preference_fallback_accent_color">@color/orange_accent</color>
 </resources>

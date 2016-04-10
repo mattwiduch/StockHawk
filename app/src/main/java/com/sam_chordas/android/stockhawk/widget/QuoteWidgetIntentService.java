@@ -44,7 +44,7 @@ public class QuoteWidgetIntentService extends IntentService {
             String symbol = sp.getString(appWidgetId + "", getString(R.string.widget_default_symbol));
             Cursor data = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
                     new String[]{QuoteColumns._ID, QuoteColumns.SYMBOL, QuoteColumns.NAME, QuoteColumns.BID_PRICE,
-                            QuoteColumns.PERCENT_CHANGE, QuoteColumns.IS_UP, QuoteColumns.IS_CURRENT},
+                            QuoteColumns.CHANGE, QuoteColumns.PERCENT_CHANGE, QuoteColumns.IS_UP, QuoteColumns.IS_CURRENT},
                     QuoteColumns.SYMBOL + " = ? AND " + QuoteColumns.IS_CURRENT + " = ?",
                     new String[]{symbol, "1"},
                     null);
@@ -67,7 +67,9 @@ public class QuoteWidgetIntentService extends IntentService {
             //String symbol = data.getString(data.getColumnIndex(QuoteColumns.SYMBOL));
             String name = data.getString(data.getColumnIndex(QuoteColumns.NAME));
             String price = Utils.formatBidPrice(this, data.getDouble(data.getColumnIndex(QuoteColumns.BID_PRICE)));
-            String change = Utils.formatChangeInPercent(this, data.getDouble(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
+            String change = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_widget_units_key), true)
+                    ? Utils.formatChangeInPercent(this, data.getDouble(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE)))
+                    : Utils.formatChange(this, data.getDouble(data.getColumnIndex(QuoteColumns.CHANGE)));
             int isUp = data.getInt(data.getColumnIndex(QuoteColumns.IS_UP));
 
             // Get correct color & icon

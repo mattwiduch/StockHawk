@@ -6,16 +6,12 @@
         <item name="colorPrimaryDark">@color/grey_dark</item>
         <item name="colorAccent">@color/orange_accent</item>
         <item name="android:windowBackground">@color/grey_background</item>
-        <!-- Customize your theme here. -->
-    </style>
-
-    <style name="GraphActivityTheme" parent="AppTheme">
-        <item name="android:windowBackground">@color/grey_background</item>
-        <!-- Customize your theme here. -->
+        <item name="preferenceTheme">@style/AppTheme.Preferences</item>
+        <item name="alertDialogTheme">@style/AppTheme.Dialog.SortStocks</item>
     </style>
 
     <!-- Track Stock dialog theme -->
-    <style name="DialogTrackStock" parent="Theme.AppCompat.Dialog.Alert">
+    <style name="AppTheme.Dialog.TrackStock" parent="Theme.AppCompat.Dialog">
         <item name="android:background">@color/grey_card</item>
         <item name="colorAccent">@color/orange_accent</item>
         <item name="android:textColor">@color/text_light_primary</item>
@@ -23,7 +19,7 @@
     </style>
 
     <!-- Sort stocks dialog theme -->
-    <style name="DialogSortStocks" parent="Theme.AppCompat.Dialog.Alert">
+    <style name="AppTheme.Dialog.SortStocks" parent="Theme.AppCompat.Dialog.Alert">
         <item name="android:background">@color/grey_card</item>
         <item name="colorAccent">@color/orange_accent</item>
         <item name="colorControlNormal">@color/control_highlight</item>
@@ -32,7 +28,7 @@
     </style>
 
     <!-- Configure widget activity theme -->
-    <style name="Widget.Configure" parent="AppTheme">
+    <style name="AppTheme.Widget.Configure" parent="AppTheme">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>
@@ -42,29 +38,44 @@
         <item name="android:windowBackground">@color/grey_card</item>
     </style>
 
-    <style name="PercentChangeTextStyle">
+    <!-- Popup theme -->
+    <style name="AppTheme.ThemeOverlay" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:windowBackground">@color/grey_card</item>
+        <item name="android:colorBackground">@color/grey_card</item>
+    </style>
+
+    <style name="AppTheme.Preferences" parent="PreferenceThemeOverlay.v14.Material">
+        <item name="preferenceCategoryStyle">@style/AppTheme.PreferenceCategoryStyle</item>
+    </style>
+
+    <style name="AppTheme.PreferenceCategoryStyle" parent="Preference.Category.Material">
+        <item name="android:layout">@layout/preference_category</item>
+
+    </style>
+
+    <style name="AppTheme.PercentChangeTextStyle">
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">#FFF</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="BidPriceTextStyle">
+    <style name="AppTheme.BidPriceTextStyle">
         <item name="android:textSize">20sp</item>
     </style>
 
-    <style name="StockSymbolTextStyle">
+    <style name="AppTheme.StockSymbolTextStyle">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/text_light_primary</item>
         <item name="android:textAllCaps">true</item>
     </style>
 
-    <style name="StockNameTextStyle">
+    <style name="AppTheme.StockNameTextStyle">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/text_light_hint</item>
         <!--<item name="android:fontFamily" tools:targetApi="jelly_bean">sans-serif-light</item>-->
     </style>
 
-    <style name="ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+    <style name="AppTheme.ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">20sp</item>
     </style>
 
