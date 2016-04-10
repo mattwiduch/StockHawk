@@ -20,7 +20,7 @@
     <string name="a11y_currency">walutę</string>
     <string name="a11y_fab">Dodaj spółkę</string>
     <string name="a11y_list_item_description">
-        <xliff:g id="name">%1$s</xliff:g>.
+        <xliff:g id="name">%1$s</xliff:g>:
         <xliff:g id="trend">%2$s</xliff:g>.
         Kurs: <xliff:g id="price">%3$s</xliff:g>.
         Zmiana: <xliff:g id="change">%4$s</xliff:g>.
@@ -87,14 +87,14 @@
     <string name="pref_update_frequency_label_10m">10 minut</string>
     <string name="pref_update_frequency_label_12h">12 godzin</string>
     <string name="pref_update_frequency_label_15m">15 minut</string>
-    <string name="pref_update_frequency_label_1h">1 godzina</string>
-    <string name="pref_update_frequency_label_1m">1 minuta</string>
+    <string name="pref_update_frequency_label_1h">1 godzinę</string>
+    <string name="pref_update_frequency_label_1m">1 minutę</string>
     <string name="pref_update_frequency_label_24h">24 godziny</string>
     <string name="pref_update_frequency_label_30m">30 minut</string>
     <string name="pref_update_frequency_label_3h">3 godziny</string>
     <string name="pref_update_frequency_label_5m">5 minut</string>
     <string name="pref_update_frequency_label_6h">6 godzin</string>
-    <string name="pref_widget_units_label" translatable="false">Pokaż zmianę w procentach</string>
-    <string name="pref_widget_units_true">Włączone</string>
-    <string name="pref_widget_units_false">Wyłączone</string>
+    <string name="pref_widget_units_label" translatable="false">Zmiana w procentach</string>
+    <string name="pref_widget_units_summary">Pokaż zmianę ceny w procentach</string>
+    <string name="pref_update_frequency_summary">Pobierz nowe dane co: <xliff:g id="frequency">%1$s</xliff:g></string>
 </resources>

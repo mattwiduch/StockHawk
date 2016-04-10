@@ -119,13 +119,13 @@
     <string name="pref_category_widgets">Widgets</string>
 
     <!-- Strings related to widget units preference -->
-    <string name="pref_widget_units_label">Show change in percents</string>
-    <string name="pref_widget_units_true">Enabled</string>
-    <string name="pref_widget_units_false">Disabled</string>
+    <string name="pref_widget_units_label">Change in percents</string>
+    <string name="pref_widget_units_summary">Show stock price change in percents</string>
     <string name="pref_widget_units_default" translatable="false">true</string>
 
     <!-- Strings related to update frequency setting -->
     <string name="pref_update_frequency_label">Update frequency</string>
+    <string name="pref_update_frequency_summary">Fetch new data every: <xliff:g id="frequency">%1$s</xliff:g></string>
     <string name="pref_update_frequency_label_1m">1 minute</string>
     <string name="pref_update_frequency_label_5m">5 minutes</string>
     <string name="pref_update_frequency_label_10m">10 minutes</string>
@@ -151,7 +151,7 @@
 
     <!-- Accessibility -->
     <string name="a11y_list_item_description">
-        <xliff:g id="name">%1$s</xliff:g>.
+        <xliff:g id="name">%1$s</xliff:g>:
         <xliff:g id="trend">%2$s</xliff:g>.
         Bid price: <xliff:g id="price">%3$s</xliff:g>.
         Change: <xliff:g id="change">%4$s</xliff:g>.

@@ -25,8 +25,7 @@
         <android.support.v14.preference.SwitchPreference
             android:defaultValue="@string/pref_widget_units_default"
             android:key="@string/pref_widget_units_key"
-            android:summaryOff="@string/pref_widget_units_false"
-            android:summaryOn="@string/pref_widget_units_true"
+            android:summary="@string/pref_widget_units_summary"
             android:title="@string/pref_widget_units_label"/>
 
         <android.support.v7.preference.ListPreference

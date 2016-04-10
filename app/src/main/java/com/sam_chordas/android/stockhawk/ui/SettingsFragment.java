@@ -75,7 +75,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             ListPreference listPreference = (ListPreference) preference;
             int prefIndex = listPreference.findIndexOfValue(stringValue);
             if (prefIndex >= 0) {
-                preference.setSummary(listPreference.getEntries()[prefIndex]);
+                preference.setSummary(getString(R.string.pref_update_frequency_summary, listPreference.getEntries()[prefIndex]));
             }
         } else {
             // For other preferences, set the summary to the value's simple string representation.
