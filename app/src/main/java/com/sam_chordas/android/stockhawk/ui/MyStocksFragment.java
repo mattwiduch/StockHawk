@@ -407,6 +407,7 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
                 getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, MyStocksFragment.this);
             }
         });
+        dialogBuilder.setNegativeButton(R.string.dialog_button_negative, null);
         // Creates dialog
         AlertDialog sortDialog = dialogBuilder.create();
         // Shows dialog

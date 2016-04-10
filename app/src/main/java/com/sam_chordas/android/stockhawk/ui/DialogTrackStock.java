@@ -45,6 +45,7 @@ public class DialogTrackStock extends DialogFragment {
         mProgressBar = (ProgressBar) dialogView.findViewById(R.id.dialog_track_stock_progress);
         builder.setView(dialogView)
                 .setTitle(R.string.dialog_track_title)
+                .setNegativeButton(R.string.dialog_button_negative, null)
                 .setPositiveButton(R.string.dialog_track_button_positive, null);
         mDialog = builder.create();
         mDialog.setOnShowListener(new DialogInterface.OnShowListener() {
