@@ -80,7 +80,7 @@
     <string name="stock_avg_volume_label">Śr. wol. (3 m.)</string>
     <string name="stock_mkt_capital_label">Wart. obrotu</string>
     <string name="stock_1y_target_label">Cel (1 r.)</string>
-    <string name="pref_category_widgets" translatable="false">Widżety</string>
+    <string name="pref_category_widgets">Widżety</string>
     <string name="last_updated_never">Nigdy nie aktualizowano</string>
     <string name="title_activity_settings">Ustawienia</string>
     <string name="pref_update_frequency_label">Częstość aktualizacji</string>
@@ -94,7 +94,7 @@
     <string name="pref_update_frequency_label_3h">3 godziny</string>
     <string name="pref_update_frequency_label_5m">5 minut</string>
     <string name="pref_update_frequency_label_6h">6 godzin</string>
-    <string name="pref_widget_units_label" translatable="false">Zmiana w procentach</string>
+    <string name="pref_widget_units_label">Zmiana w procentach</string>
     <string name="pref_widget_units_summary">Pokaż zmianę ceny w procentach</string>
     <string name="pref_update_frequency_summary">Pobierz nowe dane co: <xliff:g id="frequency">%1$s</xliff:g></string>
 </resources>

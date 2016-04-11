@@ -30,17 +30,16 @@ import com.sam_chordas.android.stockhawk.data.QuoteColumns;
  * Modified by Mateusz Widuch.
  * Credit to skyfishjy gist:
  * https://gist.github.com/skyfishjy/443b7448f59be978bc59
- * for the CursorRecyclerViewApater.java code and idea.
+ * for the CursorRecyclerViewAdapter.java code and idea.
  */
 public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
-    private static final String LOG_TAG = CursorRecyclerViewAdapter.class.getSimpleName();
     protected Cursor mCursor;
     private boolean dataIsValid;
     private int rowIdColumn;
     private DataSetObserver mDataSetObserver;
     private View mEmptyView;
 
-    public CursorRecyclerViewAdapter(Context context, Cursor cursor, View emptyView) {
+    public CursorRecyclerViewAdapter(Cursor cursor, View emptyView) {
         mCursor = cursor;
         dataIsValid = cursor != null;
         rowIdColumn = dataIsValid ? mCursor.getColumnIndex(QuoteColumns._ID) : -1;

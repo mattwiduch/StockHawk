@@ -58,14 +58,11 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
     private static final int FOOTER_VIEW = 1;
     private static Context mContext;
     private static Typeface robotoLight;
-    //private final OnStartDragListener mDragListener;
-    private boolean isPercent;
     private int mFocusedItem;
     private static int mSelectedItem;
 
     public QuoteCursorAdapter(Context context, Cursor cursor, View emptyView) {
-        super(context, cursor, emptyView);
-        //mDragListener = dragListener;
+        super(cursor, emptyView);
         mFocusedItem = -1;
         mContext = context;
     }

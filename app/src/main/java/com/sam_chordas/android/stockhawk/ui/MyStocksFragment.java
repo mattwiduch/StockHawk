@@ -75,7 +75,6 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
     private static final String SORT_CHANGE_DSC = QuoteColumns.PERCENT_CHANGE + " DESC";
 
     private Intent mServiceIntent;
-    private ItemTouchHelper mItemTouchHelper;
     private RecyclerView mRecyclerView;
     private static Bundle mStateBundle;
     private int mFocusedItemPosition;
@@ -139,8 +138,8 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
         mRecyclerView.setAdapter(mCursorAdapter);
 
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mCursorAdapter);
-        mItemTouchHelper = new ItemTouchHelper(callback);
-        mItemTouchHelper.attachToRecyclerView(mRecyclerView);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -173,19 +172,13 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
             @Override
             public void run() {
                 if (lastUpdatedTextView != null) {
+                    handler.postDelayed(this, 30000);
                 }
-                handler.postDelayed(this, 30000);
             }
         };
         handler.postDelayed(updateTask, 1000);
 
         return mRootView;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
     }
 
     @Override
@@ -497,6 +490,6 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
         /**
          * DetailFragmentCallback for when an item has been selected.
          */
-        public void onItemSelected(String symbol);
+        void onItemSelected(String symbol);
     }
 }

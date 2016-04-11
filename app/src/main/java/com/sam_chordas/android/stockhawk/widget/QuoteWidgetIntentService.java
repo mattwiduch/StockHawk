@@ -90,7 +90,7 @@ public class QuoteWidgetIntentService extends IntentService {
             // Get correct color & icon
             int color = R.color.blue_flat;
             int icon = R.drawable.ic_trending_flat_18dp;
-            String trending = trending = getString(R.string.a11y_trending_flat);
+            String trending = getString(R.string.a11y_trending_flat);
             if (isUp == -1) {
                 icon = R.drawable.ic_trending_down_18dp;
                 color = R.color.red_low;

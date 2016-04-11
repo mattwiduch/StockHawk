@@ -76,7 +76,6 @@ public class StockTaskService extends GcmTaskService {
     private static final String YFQ_STOCK_BID = "Bid";
     private static final String YFQ_STOCK_CHANGE = "Change";
     private static final String YFQ_STOCK_CHANGE_IN_PERCENT = "ChangeinPercent";
-    private static final String YFQ_STOCK_CHANGE_FLAT = "0.00";
     private static final String YFQ_DATA_NOT_AVAILABLE = "null";
 
     // Define Error States
@@ -136,8 +135,7 @@ public class StockTaskService extends GcmTaskService {
             SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
             String lastUpdate = sp.getString(mContext.getString(R.string.pref_last_update),
                     mContext.getString(R.string.last_updated_never_key));
-            if ((initQueryCursor.getCount() == 0 || initQueryCursor == null)//) {
-                    && lastUpdate.equals(mContext.getString(R.string.last_updated_never_key))) {
+            if ((initQueryCursor.getCount() == 0) && lastUpdate.equals(mContext.getString(R.string.last_updated_never_key))) {
                 // Init task. Populates DB with quotes for the symbols seen below
                 try {
                     urlStringBuilder.append(
@@ -146,7 +144,7 @@ public class StockTaskService extends GcmTaskService {
                     setHawkStatus(HAWK_STATUS_UTF8_NOT_SUPPORTED);
                     e.printStackTrace();
                 }
-            } else if (initQueryCursor != null && initQueryCursor.getCount() != 0) {
+            } else if (initQueryCursor.getCount() != 0) {
                 DatabaseUtils.dumpCursor(initQueryCursor);
                 initQueryCursor.moveToFirst();
                 for (int i = 0; i < initQueryCursor.getCount(); i++) {
@@ -185,29 +183,27 @@ public class StockTaskService extends GcmTaskService {
         String getResponse;
         int result = GcmNetworkManager.RESULT_FAILURE;
 
-        if (urlStringBuilder != null) {
-            urlString = urlStringBuilder.toString();
+        urlString = urlStringBuilder.toString();
+        try {
+            getResponse = fetchData(urlString);
+            result = GcmNetworkManager.RESULT_SUCCESS;
             try {
-                getResponse = fetchData(urlString);
-                result = GcmNetworkManager.RESULT_SUCCESS;
-                try {
-                    ContentValues contentValues = new ContentValues();
-                    // update IS_CURRENT to 0 (false) so new data is current
-                    if (isUpdate) {
-                        contentValues.put(QuoteColumns.IS_CURRENT, 0);
-                        mContext.getContentResolver().update(QuoteProvider.Quotes.CONTENT_URI, contentValues,
-                                null, null);
-                    }
-                    mContext.getContentResolver().applyBatch(QuoteProvider.AUTHORITY,
-                            quoteJsonToContentVals(getResponse));
-                } catch (RemoteException | OperationApplicationException e) {
-                    Log.e(LOG_TAG, "Error applying batch insert", e);
-                    setHawkStatus(HAWK_STATUS_DATA_CORRUPTED);
+                ContentValues contentValues = new ContentValues();
+                // update IS_CURRENT to 0 (false) so new data is current
+                if (isUpdate) {
+                    contentValues.put(QuoteColumns.IS_CURRENT, 0);
+                    mContext.getContentResolver().update(QuoteProvider.Quotes.CONTENT_URI, contentValues,
+                            null, null);
                 }
-            } catch (IOException e) {
-                setHawkStatus(HAWK_STATUS_SERVER_DOWN);
-                e.printStackTrace();
+                mContext.getContentResolver().applyBatch(QuoteProvider.AUTHORITY,
+                        quoteJsonToContentVals(getResponse));
+            } catch (RemoteException | OperationApplicationException e) {
+                Log.e(LOG_TAG, "Error applying batch insert", e);
+                setHawkStatus(HAWK_STATUS_DATA_CORRUPTED);
             }
+        } catch (IOException e) {
+            setHawkStatus(HAWK_STATUS_SERVER_DOWN);
+            e.printStackTrace();
         }
 
         return result;
@@ -215,12 +211,12 @@ public class StockTaskService extends GcmTaskService {
 
     private static ArrayList quoteJsonToContentVals(String JSON) {
         ArrayList<ContentProviderOperation> batchOperations = new ArrayList<>();
-        JSONObject jsonObject = null;
-        JSONArray resultsArray = null;
+        JSONObject jsonObject;
+        JSONArray resultsArray;
         Log.i(LOG_TAG, "GET FB: " + JSON);
         try {
             jsonObject = new JSONObject(JSON);
-            if (jsonObject != null && jsonObject.length() != 0) {
+            if (jsonObject.length() != 0) {
                 jsonObject = jsonObject.getJSONObject(YFQ_QUERY);
                 int count = Integer.parseInt(jsonObject.getString(YFQ_COUNT));
                 if (count == 1) {
