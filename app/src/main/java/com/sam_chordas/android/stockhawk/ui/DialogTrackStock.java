@@ -76,18 +76,21 @@ public class DialogTrackStock extends DialogFragment {
                         Cursor c = getActivity().getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
                                 new String[]{QuoteColumns.SYMBOL}, QuoteColumns.SYMBOL + "= ?",
                                 new String[]{input}, null);
-                        if (c.getCount() != 0) {
-                            setErrorMessage(getActivity().getString(R.string.dialog_track_error_symbol_saved));
-                            return;
-                        } else {
-                            // Create intent
-                            Intent serviceIntent = new Intent(getActivity(), StockIntentService.class);
-                            // Add the stock to DB
-                            serviceIntent.putExtra(StockIntentService.TASK_TAG, StockIntentService.TASK_TYPE_ADD);
-                            serviceIntent.putExtra(StockIntentService.TASK_SYMBOL, input);
-                            getActivity().startService(serviceIntent);
+                        if (c != null) {
+                            if (c.getCount() != 0) {
+                                setErrorMessage(getActivity().getString(R.string.dialog_track_error_symbol_saved));
+
+                            } else {
+                                // Create intent
+                                Intent serviceIntent = new Intent(getActivity(), StockIntentService.class);
+                                // Add the stock to DB
+                                serviceIntent.putExtra(StockIntentService.TASK_TAG, StockIntentService.TASK_TYPE_ADD);
+                                serviceIntent.putExtra(StockIntentService.TASK_SYMBOL, input);
+                                getActivity().startService(serviceIntent);
+                            }
+                            c.close();
                         }
-                        c.close();
+
                     }
                 });
             }

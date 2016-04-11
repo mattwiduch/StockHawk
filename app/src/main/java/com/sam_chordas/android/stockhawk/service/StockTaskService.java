@@ -135,7 +135,7 @@ public class StockTaskService extends GcmTaskService {
             SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
             String lastUpdate = sp.getString(mContext.getString(R.string.pref_last_update),
                     mContext.getString(R.string.last_updated_never_key));
-            if ((initQueryCursor.getCount() == 0) && lastUpdate.equals(mContext.getString(R.string.last_updated_never_key))) {
+            if (((initQueryCursor != null ? initQueryCursor.getCount() : 0) == 0) && lastUpdate.equals(mContext.getString(R.string.last_updated_never_key))) {
                 // Init task. Populates DB with quotes for the symbols seen below
                 try {
                     urlStringBuilder.append(
@@ -144,12 +144,11 @@ public class StockTaskService extends GcmTaskService {
                     setHawkStatus(HAWK_STATUS_UTF8_NOT_SUPPORTED);
                     e.printStackTrace();
                 }
-            } else if (initQueryCursor.getCount() != 0) {
+            } else if ((initQueryCursor != null ? initQueryCursor.getCount() : 0) != 0) {
                 DatabaseUtils.dumpCursor(initQueryCursor);
                 initQueryCursor.moveToFirst();
                 for (int i = 0; i < initQueryCursor.getCount(); i++) {
-                    mStoredSymbols.append("\"" +
-                            initQueryCursor.getString(initQueryCursor.getColumnIndex(YFQ_STOCK_SYMBOL)) + "\",");
+                    mStoredSymbols.append("\"").append(initQueryCursor.getString(initQueryCursor.getColumnIndex(YFQ_STOCK_SYMBOL))).append("\",");
                     initQueryCursor.moveToNext();
                 }
                 mStoredSymbols.replace(mStoredSymbols.length() - 1, mStoredSymbols.length(), ")");
@@ -160,7 +159,7 @@ public class StockTaskService extends GcmTaskService {
                     e.printStackTrace();
                 }
                 initQueryCursor.close();
-            } else if (initQueryCursor.getCount() == 0) {
+            } else if ((initQueryCursor != null ? initQueryCursor.getCount() : 0) == 0) {
                 setUpdateTime(Instant.now());
                 return GcmNetworkManager.RESULT_SUCCESS;
             }
@@ -209,7 +208,7 @@ public class StockTaskService extends GcmTaskService {
         return result;
     }
 
-    private static ArrayList quoteJsonToContentVals(String JSON) {
+    private static ArrayList<ContentProviderOperation> quoteJsonToContentVals(String JSON) {
         ArrayList<ContentProviderOperation> batchOperations = new ArrayList<>();
         JSONObject jsonObject;
         JSONArray resultsArray;
