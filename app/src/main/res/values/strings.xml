@@ -76,9 +76,6 @@
     <string name="sort_change_asc">Change (Ascending)</string>
     <string name="sort_change_dsc">Change (Descending)</string>
 
-    <!-- Strings related to Line Graph Fragment -->
-    <string name="line_graph_activity_title">Stock Value Graph</string>
-
     <!-- Labels for data displayed in Line Graph Fragment -->
     <string name="graph_label">PRICE HISTORY</string>
     <string name="stock_price_label">Bid price</string>

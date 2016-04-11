@@ -51,7 +51,6 @@
     <string name="graph_label">HISTORIA NOTOWAŃ</string>
     <string name="last_updated">Zaktualizowano <xliff:g id="time_passed">%1$s</xliff:g></string>
     <string name="last_updated_minute">mniej niż minutę temu</string>
-    <string name="line_graph_activity_title">Wykres</string>
     <string name="network_snackbar_button_retry">PONÓW</string>
     <string name="sort_bid_asc">Kurs (Rosnąco)</string>
     <string name="sort_bid_dsc">Kurs (Malejąco)</string>

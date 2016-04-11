@@ -41,7 +41,6 @@
 
     <!-- List item dimensions -->
     <dimen name="list_item_height">72dp</dimen>
-    <dimen name="list_item_left_padding">56dp</dimen>
     <dimen name="list_item_vertical_text_spacing">4dp</dimen>
     <dimen name="list_icon_padding">16dp</dimen>
 
