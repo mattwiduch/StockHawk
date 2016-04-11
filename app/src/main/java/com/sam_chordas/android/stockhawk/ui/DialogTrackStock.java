@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -16,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.sam_chordas.android.stockhawk.R;
@@ -29,7 +29,7 @@ import com.sam_chordas.android.stockhawk.service.StockIntentService;
  */
 public class DialogTrackStock extends DialogFragment {
     private AlertDialog mDialog;
-    private EditText mEditText;
+    private TextInputEditText mEditText;
     private TextInputLayout mTextInputLayout;
     private ProgressBar mProgressBar;
     private Button mPositiveButton;
@@ -40,7 +40,7 @@ public class DialogTrackStock extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppTheme_Dialog_Alert);
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
         View dialogView = inflater.inflate(R.layout.dialog_track_stock, null);
-        mEditText = (EditText) dialogView.findViewById(R.id.dialog_track_stock_input);
+        mEditText = (TextInputEditText) dialogView.findViewById(R.id.dialog_track_stock_input);
         mTextInputLayout = (TextInputLayout) dialogView.findViewById(R.id.dialog_track_stock_input_layout);
         mProgressBar = (ProgressBar) dialogView.findViewById(R.id.dialog_track_stock_progress);
         builder.setView(dialogView)
