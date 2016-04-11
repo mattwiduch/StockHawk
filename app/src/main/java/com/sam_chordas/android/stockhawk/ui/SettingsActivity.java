@@ -23,7 +23,7 @@ import android.support.v7.widget.Toolbar;
 import com.sam_chordas.android.stockhawk.R;
 
 /**
- * Activity that handles PreferenceFragment.
+ * Handles PreferenceFragment which displays application settings.
  */
 public class SettingsActivity extends AppCompatActivity {
     @Override

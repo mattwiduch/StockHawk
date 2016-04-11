@@ -18,11 +18,15 @@ package com.sam_chordas.android.stockhawk.touch_helper;
 import android.support.v7.widget.RecyclerView;
 
 /**
+ * Enables on drag on RecyclerView's items.
+ *
  * Created by sam_chordas on 10/6/15.
  * credit to Paul Burke (ipaulpro)
  */
 public interface OnStartDragListener {
-
+    /**
+     * Called when an item is dragged in the RecyclerView.
+     */
     void onStartDrag(RecyclerView.ViewHolder viewHolder);
 
 }

@@ -28,7 +28,7 @@ import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.service.StockTaskService;
 
 /**
- * PreferenceFragment that presents a set of application settings.
+ * Presents a set of application settings.
  */
 public class SettingsFragment extends PreferenceFragmentCompat implements
         Preference.OnPreferenceChangeListener, SharedPreferences.OnSharedPreferenceChangeListener {

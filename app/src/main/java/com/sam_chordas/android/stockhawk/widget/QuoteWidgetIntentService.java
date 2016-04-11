@@ -33,7 +33,7 @@ import com.sam_chordas.android.stockhawk.rest.Utils;
 import com.sam_chordas.android.stockhawk.ui.MyStocksActivity;
 
 /**
- * Intent Service used to update Quote Widgets.
+ * Handles updating all Quote widgets with the latest data.
  */
 public class QuoteWidgetIntentService extends IntentService {
     public QuoteWidgetIntentService() {
@@ -124,7 +124,6 @@ public class QuoteWidgetIntentService extends IntentService {
         }
     }
 
-    /** Sets pending intent to launch MyStocksActivity */
     private void launchMainActivity(RemoteViews views) {
         Intent launchIntent = new Intent(this, MyStocksActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, launchIntent, 0);

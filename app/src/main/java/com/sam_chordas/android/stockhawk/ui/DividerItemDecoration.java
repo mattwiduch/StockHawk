@@ -26,7 +26,7 @@ import android.view.View;
 import com.sam_chordas.android.stockhawk.rest.QuoteCursorAdapter;
 
 /**
- * Created by frano on 25/03/2016.
+ * Creates divider to be shown between RecyclerView's items.
  */
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 

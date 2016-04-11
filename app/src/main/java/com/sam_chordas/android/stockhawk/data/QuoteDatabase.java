@@ -19,7 +19,10 @@ import net.simonvt.schematic.annotation.Database;
 import net.simonvt.schematic.annotation.Table;
 
 /**
+ * Creates a database using QuoteColumns.
+ *
  * Created by sam_chordas on 10/5/15.
+ * Modified by Mateusz Widuch.
  */
 @Database(version = QuoteDatabase.VERSION)
 public class QuoteDatabase {

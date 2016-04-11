@@ -38,6 +38,9 @@ import com.sam_chordas.android.stockhawk.rest.Utils;
 import com.sam_chordas.android.stockhawk.service.StockIntentService;
 import com.sam_chordas.android.stockhawk.service.StockTaskService;
 
+/**
+ * Creates activity that presents the application.
+ */
 public class MyStocksActivity extends AppCompatActivity implements MyStocksFragment.Callback,
         SharedPreferences.OnSharedPreferenceChangeListener {
 

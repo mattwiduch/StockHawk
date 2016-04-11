@@ -55,7 +55,7 @@ import com.sam_chordas.android.stockhawk.service.StockTaskService;
 import com.sam_chordas.android.stockhawk.touch_helper.SimpleItemTouchHelperCallback;
 
 /**
- * Created by frano on 05/04/2016.
+ * Presents RecyclerView that contains list of stocks and their respective data.
  */
 public class MyStocksFragment extends Fragment implements android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor>,
         SharedPreferences.OnSharedPreferenceChangeListener{
@@ -438,9 +438,6 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
         return dialogBuilder.create();
     }
 
-    /**
-     * Shows snackbar with provided message.
-     */
     private void showSnackbar(String message) {
         Snackbar snackbar = Snackbar
                 .make(getActivity().findViewById(R.id.activity_my_stocks), message, Snackbar.LENGTH_LONG);
@@ -473,7 +470,7 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
     }
 
     /**
-     * Updates text view that shows last update time
+     * Updates text view that shows last update time.
      */
     private void updateLastUpdateTime(SharedPreferences sharedPreferences) {
         TextView textView = (TextView) mRootView.findViewById(R.id.last_update_textview);

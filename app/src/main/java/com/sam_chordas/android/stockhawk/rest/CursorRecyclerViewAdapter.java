@@ -24,7 +24,10 @@ import android.view.View;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 
 /**
+ * Provides base functionality for adapter that exposes Cursor data to RecyclerView.
+ *
  * Created by sam_chordas on 10/6/15.
+ * Modified by Mateusz Widuch.
  * Credit to skyfishjy gist:
  * https://gist.github.com/skyfishjy/443b7448f59be978bc59
  * for the CursorRecyclerViewApater.java code and idea.

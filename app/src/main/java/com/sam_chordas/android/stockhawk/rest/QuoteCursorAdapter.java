@@ -45,10 +45,13 @@ import com.sam_chordas.android.stockhawk.touch_helper.ItemTouchHelperAdapter;
 import com.sam_chordas.android.stockhawk.touch_helper.ItemTouchHelperViewHolder;
 
 /**
+ * Exposes a list of stock symbols from a Cursor to a RecyclerView.
+ *
  * Created by sam_chordas on 10/6/15.
+ * Modified by Mateusz Widuch.
  * Credit to skyfishjy gist:
  * https://gist.github.com/skyfishjy/443b7448f59be978bc59
- * for the code structure
+ * for the code structure.
  */
 public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAdapter.ViewHolder>
         implements ItemTouchHelperAdapter {
@@ -153,9 +156,6 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
                 change));
     }
 
-    /**
-     * Sets position of currently focused item
-     */
     public void setFocusedItem(int position) {
         mFocusedItem = position;
     }

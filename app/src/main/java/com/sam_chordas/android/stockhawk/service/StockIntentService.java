@@ -23,7 +23,10 @@ import com.google.android.gms.gcm.TaskParams;
 import com.sam_chordas.android.stockhawk.rest.Utils;
 
 /**
+ * Handles asynchronous requests on demand to update stock data.
+ *
  * Created by sam_chordas on 10/1/15.
+ * Modified by Mateusz Widuch.
  */
 public class StockIntentService extends IntentService {
     public static final String TASK_TAG = "task_type";

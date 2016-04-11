@@ -23,7 +23,10 @@ import net.simonvt.schematic.annotation.InexactContentUri;
 import net.simonvt.schematic.annotation.TableEndpoint;
 
 /**
+ * Defines content provider for QuoteDatabase.
+ *
  * Created by sam_chordas on 10/5/15.
+ * Modified by Mateusz Widuch.
  */
 @ContentProvider(authority = QuoteProvider.AUTHORITY, database = QuoteDatabase.class)
 public class QuoteProvider {

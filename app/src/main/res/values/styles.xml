@@ -46,14 +46,16 @@
         <item name="android:colorBackground">@color/grey_card</item>
     </style>
 
+    <!-- Preferences Theme -->
     <style name="AppTheme.Preferences" parent="PreferenceThemeOverlay.v14.Material">
         <item name="preferenceCategoryStyle">@style/AppTheme.PreferenceCategoryStyle</item>
     </style>
 
+    <!-- Preference Category Style -->
     <style name="AppTheme.PreferenceCategoryStyle" parent="Preference.Category.Material">
         <item name="android:layout">@layout/preference_category</item>
-
     </style>
+
 
     <style name="AppTheme.PercentChangeTextStyle">
         <item name="android:textSize">20sp</item>
@@ -65,18 +67,21 @@
         <item name="android:textSize">20sp</item>
     </style>
 
+    <!-- Style for displaying stock symbol in lists -->
     <style name="AppTheme.StockSymbolTextStyle">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/text_light_primary</item>
         <item name="android:textAllCaps">true</item>
     </style>
 
+    <!-- Style for displaying stock name in lists -->
     <style name="AppTheme.StockNameTextStyle">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/text_light_hint</item>
         <!--<item name="android:fontFamily" tools:targetApi="jelly_bean">sans-serif-light</item>-->
     </style>
 
+    <!-- Toolbar Title Style -->
     <style name="AppTheme.ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">20sp</item>
     </style>

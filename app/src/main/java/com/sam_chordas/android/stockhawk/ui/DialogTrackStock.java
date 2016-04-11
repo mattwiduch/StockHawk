@@ -128,6 +128,11 @@ public class DialogTrackStock extends DialogFragment {
         return mEditText.getText().toString();
     }
 
+    /**
+     * Sets error message of the text input layout.
+     *
+     * @param errorMessage Error message to be displayed
+     */
     public void setErrorMessage(String errorMessage) {
         mProgressBar.setVisibility(View.GONE);
         mTextInputLayout.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shake));

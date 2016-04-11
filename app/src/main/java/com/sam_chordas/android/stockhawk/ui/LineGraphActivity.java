@@ -21,7 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.sam_chordas.android.stockhawk.R;
 
 /**
- * Created by frano on 21/03/2016.
+ * Presents fragment containing graph that shows stock's value over time.
  */
 public class LineGraphActivity extends AppCompatActivity {
     @Override

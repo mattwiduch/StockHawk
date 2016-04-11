@@ -32,7 +32,7 @@ import com.sam_chordas.android.stockhawk.rest.Utils;
 import com.sam_chordas.android.stockhawk.ui.LineGraphFragment;
 
 /**
- * RemoteViewsService controlling the data being shown in the scrollable today's market widget
+ * Controls the data being shown in the scrollable today's market widget.
  */
 public class MarketWidgetRemoteViewsService extends RemoteViewsService {
 

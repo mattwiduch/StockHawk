@@ -22,6 +22,8 @@ import android.view.MotionEvent;
 import android.view.View;
 
 /**
+ * Allows the application to intercept touch events on RecyclerView's items.
+ *
  * Created by sam_chordas on 11/9/15.
  */
 public class RecyclerViewItemClickListener implements RecyclerView.OnItemTouchListener {

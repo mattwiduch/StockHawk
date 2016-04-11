@@ -55,6 +55,9 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+/**
+ * Presents graph showing stock's value over time.
+ */
 public class LineGraphFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int CURSOR_LOADER_ID = 1;
     public static final String LGF_SYMBOL = "STOCK_SYMBOL";
@@ -390,7 +393,7 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
     }
 
     /**
-     * Restarts loader so new data can be displayed
+     * Restarts loader so new data can be displayed.
      */
     public void onDatabaseUpdate() {
         getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);

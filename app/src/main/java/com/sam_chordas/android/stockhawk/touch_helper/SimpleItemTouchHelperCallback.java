@@ -21,9 +21,10 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import com.sam_chordas.android.stockhawk.rest.QuoteCursorAdapter;
 
 /**
+ * Enables swipe to delete on RecyclerView's items.
+ *
  * Created by sam_chordas on 10/6/15.
  * credit to Paul Burke (ipaulpro)
- * this class enables swipe to delete in RecyclerView
  */
 public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     //public static final float ALPHA_FULL = 1.0f;
