@@ -112,6 +112,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
             dataIsValid = false;
             notifyDataSetChanged();
         }
+        // TODO: Find out why empty view shows between database updates
         mEmptyView.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
 
         return oldCursor;

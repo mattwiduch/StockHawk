@@ -131,6 +131,7 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
                             mCursor = mCursorAdapter.getCursor();
                             mCursor.moveToPosition(position);
                             String symbol = mCursor.getString(mCursor.getColumnIndex(QuoteColumns.SYMBOL));
+                            // TODO: Remove haptic feedback on item touch
                             ((Callback) getActivity()).onItemSelected(symbol);
                         }
                     }
