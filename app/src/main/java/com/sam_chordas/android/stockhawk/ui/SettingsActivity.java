@@ -1,4 +1,3 @@
-package com.sam_chordas.android.stockhawk.ui;
 /*
  * Copyright (C) 2016 Mateusz Widuch
  *
@@ -14,6 +13,7 @@ package com.sam_chordas.android.stockhawk.ui;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.sam_chordas.android.stockhawk.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
