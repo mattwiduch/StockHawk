@@ -14,15 +14,15 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License
   -->
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-          android:id="@android:id/title"
+<TextView android:id="@android:id/title"
+          xmlns:android="http://schemas.android.com/apk/res/android"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginBottom="16dip"
-          android:textAppearance="@style/Preference_TextAppearanceMaterialBody2"
-          android:textColor="@color/preference_fallback_accent_color"
-          android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
-          android:paddingStart="?android:attr/listPreferredItemPaddingLeft"
-          android:paddingRight="?android:attr/listPreferredItemPaddingRight"
           android:paddingEnd="?android:attr/listPreferredItemPaddingRight"
-          android:paddingTop="16dip"/>
+          android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
+          android:paddingRight="?android:attr/listPreferredItemPaddingRight"
+          android:paddingStart="?android:attr/listPreferredItemPaddingLeft"
+          android:paddingTop="16dip"
+          android:textAppearance="@style/Preference_TextAppearanceMaterialBody2"
+          android:textColor="@color/preference_fallback_accent_color"/>

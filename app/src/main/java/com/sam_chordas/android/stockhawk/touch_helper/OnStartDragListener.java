@@ -19,7 +19,7 @@ import android.support.v7.widget.RecyclerView;
 
 /**
  * Enables on drag on RecyclerView's items.
- *
+ * <p/>
  * Created by sam_chordas on 10/6/15.
  * credit to Paul Burke (ipaulpro)
  */

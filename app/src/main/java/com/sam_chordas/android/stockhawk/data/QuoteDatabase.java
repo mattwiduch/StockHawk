@@ -20,7 +20,7 @@ import net.simonvt.schematic.annotation.Table;
 
 /**
  * Creates a database using QuoteColumns.
- *
+ * <p/>
  * Created by sam_chordas on 10/5/15.
  * Modified by Mateusz Widuch.
  */

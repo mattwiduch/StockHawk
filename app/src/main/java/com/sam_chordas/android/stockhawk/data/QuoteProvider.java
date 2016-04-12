@@ -24,7 +24,7 @@ import net.simonvt.schematic.annotation.TableEndpoint;
 
 /**
  * Defines content provider for QuoteDatabase.
- *
+ * <p/>
  * Created by sam_chordas on 10/5/15.
  * Modified by Mateusz Widuch.
  */

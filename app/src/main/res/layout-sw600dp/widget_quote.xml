@@ -16,10 +16,10 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@drawable/touch_selector_dark"
+              android:baselineAligned="false"
               android:gravity="center_vertical"
               android:orientation="horizontal"
-              android:padding="@dimen/widget_margin"
-              android:baselineAligned="false">
+              android:padding="@dimen/widget_margin">
 
     <LinearLayout
         android:id="@+id/widget_symbol_layout"

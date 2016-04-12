@@ -15,9 +15,9 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:minHeight="?android:attr/listPreferredItemHeight"
               android:background="@drawable/touch_selector_dark"
               android:gravity="center"
+              android:minHeight="?android:attr/listPreferredItemHeight"
               android:orientation="horizontal"
               android:padding="@dimen/widget_margin">
 
@@ -25,9 +25,9 @@
         android:id="@+id/widget_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/a11y_no_description"
         android:padding="@dimen/list_icon_padding"
-        tools:src="@drawable/ic_trending_up_white_18dp"
-        android:contentDescription="@string/a11y_no_description"/>
+        tools:src="@drawable/ic_trending_up_white_18dp"/>
 
     <LinearLayout
         android:id="@+id/widget_symbol_layout"
@@ -58,8 +58,8 @@
             android:ellipsize="marquee"
             android:fadingEdge="horizontal"
             android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"
             android:maxLines="1"
+            android:scrollHorizontally="true"
             tools:text="Alphabet Inc."/>
 
     </LinearLayout>

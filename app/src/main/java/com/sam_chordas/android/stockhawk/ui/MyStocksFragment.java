@@ -58,7 +58,7 @@ import com.sam_chordas.android.stockhawk.touch_helper.SimpleItemTouchHelperCallb
  * Presents RecyclerView that contains list of stocks and their respective data.
  */
 public class MyStocksFragment extends Fragment implements android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor>,
-        SharedPreferences.OnSharedPreferenceChangeListener{
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final int CURSOR_LOADER_ID = 0;
     private static final String DIALOG_TAG = "Dialog.trackSymbol";
@@ -73,10 +73,9 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
     private static final String SORT_PRICE_DSC = QuoteColumns.BID_PRICE + " DESC";
     private static final String SORT_CHANGE_ASC = QuoteColumns.PERCENT_CHANGE + " ASC";
     private static final String SORT_CHANGE_DSC = QuoteColumns.PERCENT_CHANGE + " DESC";
-
+    private static Bundle mStateBundle;
     private Intent mServiceIntent;
     private RecyclerView mRecyclerView;
-    private static Bundle mStateBundle;
     private int mFocusedItemPosition;
     private QuoteCursorAdapter mCursorAdapter;
     private AppCompatActivity mActivity;

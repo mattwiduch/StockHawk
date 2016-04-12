@@ -22,7 +22,7 @@ import net.simonvt.schematic.annotation.PrimaryKey;
 
 /**
  * Defines the columns of a database table.
- *
+ * <p/>
  * Created by sam_chordas on 10/5/15.
  * Modified by Mateusz Widuch.
  */

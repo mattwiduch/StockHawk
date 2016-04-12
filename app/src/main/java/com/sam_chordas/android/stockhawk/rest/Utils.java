@@ -111,7 +111,7 @@ public class Utils {
     /**
      * Returns relative time since update time.
      *
-     * @param context Context to use for resource localization
+     * @param context    Context to use for resource localization
      * @param updateTime String representation of date in ISO-8601 format
      * @return Relative time since last update in the form of a string formatted as "5 minutes ago"
      */
@@ -125,7 +125,7 @@ public class Utils {
     /**
      * Formats stock bid price for device's locale.
      *
-     * @param context Context to use for resource localization
+     * @param context  Context to use for resource localization
      * @param bidPrice Bid price value
      * @return Bid price in the form of a string formatted in device's locale
      */
@@ -142,7 +142,7 @@ public class Utils {
      * Formats stock change for device's locale.
      *
      * @param context Context to use for resource localization
-     * @param change Change value
+     * @param change  Change value
      * @return Change in the form of a string formatted in device's locale
      */
     static public String formatChange(Context context, double change) {
@@ -157,7 +157,7 @@ public class Utils {
     /**
      * Formats stock change in percent for device's locale.
      *
-     * @param context Context to use for resource localization
+     * @param context         Context to use for resource localization
      * @param changeInPercent Change in percent value
      * @return Change in percent in the form of a string formatted in device's locale
      */

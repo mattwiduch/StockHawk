@@ -59,12 +59,8 @@ import butterknife.ButterKnife;
  * Presents graph showing stock's value over time.
  */
 public class LineGraphFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-    private static final int CURSOR_LOADER_ID = 1;
     public static final String LGF_SYMBOL = "STOCK_SYMBOL";
-    private Toolbar mToolbar;
-    private String mStockSymbol;
-    private String mStockName;
-
+    private static final int CURSOR_LOADER_ID = 1;
     @Bind(R.id.line_chart)
     LineChartView lineChart;
     @Bind(R.id.stock_symbol_textview)
@@ -99,6 +95,9 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
     TextView stock1yTargetTextview;
     @Bind(R.id.stock_avg_volume_textview)
     TextView stockAvgVolumeTextview;
+    private Toolbar mToolbar;
+    private String mStockSymbol;
+    private String mStockName;
 
     public LineGraphFragment() {
         setHasOptionsMenu(true);

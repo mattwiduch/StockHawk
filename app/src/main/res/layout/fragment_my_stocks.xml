@@ -29,12 +29,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
+            android:descendantFocusability="afterDescendants"
+            android:focusable="false"
             android:paddingTop="@dimen/content_spacing"
             android:scrollbarStyle="outsideOverlay"
             android:scrollbars="vertical"
-            android:smoothScrollbar="true"
-            android:focusable="false"
-            android:descendantFocusability="afterDescendants"/>
+            android:smoothScrollbar="true"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

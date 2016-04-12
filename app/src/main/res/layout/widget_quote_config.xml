@@ -37,12 +37,12 @@
             android:layout_marginBottom="@dimen/content_spacing"
             android:layout_marginTop="@dimen/content_spacing"
             android:background="@drawable/touch_selector_dark"
+            android:focusable="true"
             android:gravity="center"
             android:paddingEnd="@dimen/content_spacing"
             android:paddingLeft="@dimen/content_spacing"
             android:paddingRight="@dimen/content_spacing"
             android:paddingStart="@dimen/content_spacing"
-            android:focusable="true"
             android:text="@string/dialog_button_negative"
             android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button"
             android:textColor="@color/orange_accent"/>
@@ -58,16 +58,16 @@
             android:layout_marginStart="@dimen/content_spacing"
             android:layout_marginTop="@dimen/content_spacing"
             android:background="@drawable/touch_selector_dark"
+            android:focusable="true"
             android:gravity="center"
             android:paddingEnd="@dimen/content_spacing"
             android:paddingLeft="@dimen/content_spacing"
             android:paddingRight="@dimen/content_spacing"
             android:paddingStart="@dimen/content_spacing"
-            android:focusable="true"
-            android:textColorHighlight="@color/green_action"
             android:text="@string/dialog_button_positive"
             android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button"
-            android:textColor="@color/orange_accent"/>
+            android:textColor="@color/orange_accent"
+            android:textColorHighlight="@color/green_action"/>
 
     </LinearLayout>
 

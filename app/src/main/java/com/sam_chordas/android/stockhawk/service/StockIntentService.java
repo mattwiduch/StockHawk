@@ -24,7 +24,7 @@ import com.sam_chordas.android.stockhawk.rest.Utils;
 
 /**
  * Handles asynchronous requests on demand to update stock data.
- *
+ * <p/>
  * Created by sam_chordas on 10/1/15.
  * Modified by Mateusz Widuch.
  */

@@ -53,7 +53,7 @@ public class DialogTrackStock extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppTheme_Dialog_Alert);
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View dialogView = inflater.inflate(R.layout.dialog_track_stock, null);
         mEditText = (TextInputEditText) dialogView.findViewById(R.id.dialog_track_stock_input);
         mTextInputLayout = (TextInputLayout) dialogView.findViewById(R.id.dialog_track_stock_input_layout);

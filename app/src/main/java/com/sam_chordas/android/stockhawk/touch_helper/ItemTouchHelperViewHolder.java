@@ -17,7 +17,7 @@ package com.sam_chordas.android.stockhawk.touch_helper;
 
 /**
  * Enables swipe to delete on RecyclerView's items.
- *
+ * <p/>
  * Created by sam_chordas on 10/6/15.
  * credit to Paul Burke (ipaulpro)
  * Interface for enabling swiping to delete
