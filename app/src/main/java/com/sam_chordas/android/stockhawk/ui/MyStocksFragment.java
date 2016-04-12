@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2016 Mateusz Widuch
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.sam_chordas.android.stockhawk.ui;
 
 import android.content.DialogInterface;
@@ -40,10 +55,10 @@ import com.sam_chordas.android.stockhawk.service.StockTaskService;
 import com.sam_chordas.android.stockhawk.touch_helper.SimpleItemTouchHelperCallback;
 
 /**
- * Created by frano on 05/04/2016.
+ * Presents RecyclerView that contains list of stocks and their respective data.
  */
 public class MyStocksFragment extends Fragment implements android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor>,
-        SharedPreferences.OnSharedPreferenceChangeListener{
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final int CURSOR_LOADER_ID = 0;
     private static final String DIALOG_TAG = "Dialog.trackSymbol";
@@ -58,11 +73,9 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
     private static final String SORT_PRICE_DSC = QuoteColumns.BID_PRICE + " DESC";
     private static final String SORT_CHANGE_ASC = QuoteColumns.PERCENT_CHANGE + " ASC";
     private static final String SORT_CHANGE_DSC = QuoteColumns.PERCENT_CHANGE + " DESC";
-
-    private Intent mServiceIntent;
-    private ItemTouchHelper mItemTouchHelper;
-    private RecyclerView mRecyclerView;
     private static Bundle mStateBundle;
+    private Intent mServiceIntent;
+    private RecyclerView mRecyclerView;
     private int mFocusedItemPosition;
     private QuoteCursorAdapter mCursorAdapter;
     private AppCompatActivity mActivity;
@@ -116,6 +129,7 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
                             mCursor = mCursorAdapter.getCursor();
                             mCursor.moveToPosition(position);
                             String symbol = mCursor.getString(mCursor.getColumnIndex(QuoteColumns.SYMBOL));
+                            // TODO: Remove haptic feedback on item touch
                             ((Callback) getActivity()).onItemSelected(symbol);
                         }
                     }
@@ -123,8 +137,8 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
         mRecyclerView.setAdapter(mCursorAdapter);
 
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mCursorAdapter);
-        mItemTouchHelper = new ItemTouchHelper(callback);
-        mItemTouchHelper.attachToRecyclerView(mRecyclerView);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -157,19 +171,13 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
             @Override
             public void run() {
                 if (lastUpdatedTextView != null) {
+                    handler.postDelayed(this, 30000);
                 }
-                handler.postDelayed(this, 30000);
             }
         };
         handler.postDelayed(updateTask, 1000);
 
         return mRootView;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
     }
 
     @Override
@@ -423,9 +431,6 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
         return dialogBuilder.create();
     }
 
-    /**
-     * Shows snackbar with provided message.
-     */
     private void showSnackbar(String message) {
         Snackbar snackbar = Snackbar
                 .make(getActivity().findViewById(R.id.activity_my_stocks), message, Snackbar.LENGTH_LONG);
@@ -458,7 +463,7 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
     }
 
     /**
-     * Updates text view that shows last update time
+     * Updates text view that shows last update time.
      */
     private void updateLastUpdateTime(SharedPreferences sharedPreferences) {
         TextView textView = (TextView) mRootView.findViewById(R.id.last_update_textview);
@@ -484,6 +489,6 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
         /**
          * DetailFragmentCallback for when an item has been selected.
          */
-        public void onItemSelected(String symbol);
+        void onItemSelected(String symbol);
     }
 }

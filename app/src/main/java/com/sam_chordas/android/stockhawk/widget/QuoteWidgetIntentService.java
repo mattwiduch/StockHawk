@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2016 Mateusz Widuch
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.sam_chordas.android.stockhawk.widget;
 
 import android.app.IntentService;
@@ -18,7 +33,7 @@ import com.sam_chordas.android.stockhawk.rest.Utils;
 import com.sam_chordas.android.stockhawk.ui.MyStocksActivity;
 
 /**
- * Intent Service used to update Quote Widgets.
+ * Handles updating all Quote widgets with the latest data.
  */
 public class QuoteWidgetIntentService extends IntentService {
     public QuoteWidgetIntentService() {
@@ -75,12 +90,12 @@ public class QuoteWidgetIntentService extends IntentService {
             // Get correct color & icon
             int color = R.color.blue_flat;
             int icon = R.drawable.ic_trending_flat_18dp;
-            String trending = trending = getString(R.string.a11y_trending_flat);
+            String trending = getString(R.string.a11y_trending_flat);
             if (isUp == -1) {
                 icon = R.drawable.ic_trending_down_18dp;
                 color = R.color.red_low;
                 trending = getString(R.string.a11y_trending_down);
-            } else if (isUp == 1){
+            } else if (isUp == 1) {
                 icon = R.drawable.ic_trending_up_18dp;
                 color = R.color.green_high;
                 trending = getString(R.string.a11y_trending_up);
@@ -109,7 +124,6 @@ public class QuoteWidgetIntentService extends IntentService {
         }
     }
 
-    /** Sets pending intent to launch MyStocksActivity */
     private void launchMainActivity(RemoteViews views) {
         Intent launchIntent = new Intent(this, MyStocksActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, launchIntent, 0);

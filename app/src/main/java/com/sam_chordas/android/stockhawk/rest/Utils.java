@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2016 Mateusz Widuch
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.sam_chordas.android.stockhawk.rest;
 
 import android.content.Context;
@@ -19,13 +34,13 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
- * Created by sam_chordas on 10/8/15.
+ * Provides various utility methods.
  */
 public class Utils {
     /**
      * Returns true if the network is available or about to become available.
      *
-     * @param c Context used to get the ConnectivityManager
+     * @param c Context to use for resource localization
      * @return true if the network is available
      */
     public static boolean isNetworkAvailable(Context c) {
@@ -40,8 +55,8 @@ public class Utils {
     /**
      * Retrieves application status from shared preference.
      *
-     * @param context Context used to get the SharedPreferences
-     * @return hawk status integer type
+     * @param context Context to use for resource localization
+     * @return Hawk status integer type
      */
     @SuppressWarnings("ResourceType")
     static public
@@ -52,9 +67,9 @@ public class Utils {
     }
 
     /**
-     * Resets stock hawk status to HAWK_STATUS_UNKNOWN
+     * Resets stock hawk status to HAWK_STATUS_UNKNOWN.
      *
-     * @param context Context used to get the SharedPreferences
+     * @param context Context to use for resource localization
      */
     static public void resetHawkStatus(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
@@ -63,6 +78,12 @@ public class Utils {
         spe.apply();
     }
 
+    /**
+     * Formats dates that will be displayed as graph labels.
+     *
+     * @param date String representation of date in ISO-8601 format
+     * @return Date in the form of a string formatted as DD:MM in device's locale
+     */
     static public String formatGraphDateLabels(String date) {
         String currentDate = Instant.now().toString();
         SimpleDateFormat df = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT);
@@ -88,7 +109,11 @@ public class Utils {
     }
 
     /**
-     * Returns relative time since update time
+     * Returns relative time since update time.
+     *
+     * @param context    Context to use for resource localization
+     * @param updateTime String representation of date in ISO-8601 format
+     * @return Relative time since last update in the form of a string formatted as "5 minutes ago"
      */
     static public String formatLastUpdateTime(Context context, String updateTime) {
         String formattedUpdateTime = DateUtils.getRelativeTimeSpanString(Instant.parse(updateTime).toEpochMilli(),
@@ -98,7 +123,11 @@ public class Utils {
     }
 
     /**
-     * Formats stock bid price for device's locale
+     * Formats stock bid price for device's locale.
+     *
+     * @param context  Context to use for resource localization
+     * @param bidPrice Bid price value
+     * @return Bid price in the form of a string formatted in device's locale
      */
     static public String formatBidPrice(Context context, double bidPrice) {
         if (bidPrice != Double.MIN_VALUE) {
@@ -110,7 +139,11 @@ public class Utils {
     }
 
     /**
-     * Formats stock change for device's locale
+     * Formats stock change for device's locale.
+     *
+     * @param context Context to use for resource localization
+     * @param change  Change value
+     * @return Change in the form of a string formatted in device's locale
      */
     static public String formatChange(Context context, double change) {
         if (change != Double.MIN_VALUE) {
@@ -122,7 +155,11 @@ public class Utils {
     }
 
     /**
-     * Formats stock change in percent for device's locale
+     * Formats stock change in percent for device's locale.
+     *
+     * @param context         Context to use for resource localization
+     * @param changeInPercent Change in percent value
+     * @return Change in percent in the form of a string formatted in device's locale
      */
     static public String formatChangeInPercent(Context context, double changeInPercent) {
         if (changeInPercent != Double.MIN_VALUE) {

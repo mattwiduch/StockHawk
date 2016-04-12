@@ -1,4 +1,3 @@
-package com.sam_chordas.android.stockhawk.widget;
 /*
  * Copyright (C) 2016 Mateusz Widuch
  *
@@ -14,6 +13,7 @@ package com.sam_chordas.android.stockhawk.widget;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.sam_chordas.android.stockhawk.widget;
 
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;

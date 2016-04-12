@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2016 Mateusz Widuch
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.sam_chordas.android.stockhawk.rest;
 
 import android.annotation.TargetApi;
@@ -30,24 +45,24 @@ import com.sam_chordas.android.stockhawk.touch_helper.ItemTouchHelperAdapter;
 import com.sam_chordas.android.stockhawk.touch_helper.ItemTouchHelperViewHolder;
 
 /**
+ * Exposes a list of stock symbols from a Cursor to a RecyclerView.
+ * <p/>
  * Created by sam_chordas on 10/6/15.
+ * Modified by Mateusz Widuch.
  * Credit to skyfishjy gist:
  * https://gist.github.com/skyfishjy/443b7448f59be978bc59
- * for the code structure
+ * for the code structure.
  */
 public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAdapter.ViewHolder>
         implements ItemTouchHelperAdapter {
     private static final int FOOTER_VIEW = 1;
     private static Context mContext;
     private static Typeface robotoLight;
-    //private final OnStartDragListener mDragListener;
-    private boolean isPercent;
-    private int mFocusedItem;
     private static int mSelectedItem;
+    private int mFocusedItem;
 
     public QuoteCursorAdapter(Context context, Cursor cursor, View emptyView) {
-        super(context, cursor, emptyView);
-        //mDragListener = dragListener;
+        super(cursor, emptyView);
         mFocusedItem = -1;
         mContext = context;
     }
@@ -138,14 +153,13 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
                 change));
     }
 
-    /**
-     * Sets position of currently focused item
-     */
     public void setFocusedItem(int position) {
         mFocusedItem = position;
     }
 
-    public int getSelectedItem() { return mSelectedItem; }
+    public int getSelectedItem() {
+        return mSelectedItem;
+    }
 
     @Override
     public void onItemDismiss(int position) {
