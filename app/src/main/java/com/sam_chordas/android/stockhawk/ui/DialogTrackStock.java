@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2016 Mateusz Widuch
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.sam_chordas.android.stockhawk.ui;
 
 import android.app.Dialog;
@@ -7,6 +22,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -16,7 +32,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.sam_chordas.android.stockhawk.R;
@@ -27,9 +42,9 @@ import com.sam_chordas.android.stockhawk.service.StockIntentService;
 /**
  * Creates Dialog that allows user to track new stock symbol.
  */
-public class TrackStockDialog extends DialogFragment {
+public class DialogTrackStock extends DialogFragment {
     private AlertDialog mDialog;
-    private EditText mEditText;
+    private TextInputEditText mEditText;
     private TextInputLayout mTextInputLayout;
     private ProgressBar mProgressBar;
     private Button mPositiveButton;
@@ -37,14 +52,15 @@ public class TrackStockDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.DialogTrackStock);
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppTheme_Dialog_Alert);
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View dialogView = inflater.inflate(R.layout.dialog_track_stock, null);
-        mEditText = (EditText) dialogView.findViewById(R.id.dialog_track_stock_input);
+        mEditText = (TextInputEditText) dialogView.findViewById(R.id.dialog_track_stock_input);
         mTextInputLayout = (TextInputLayout) dialogView.findViewById(R.id.dialog_track_stock_input_layout);
         mProgressBar = (ProgressBar) dialogView.findViewById(R.id.dialog_track_stock_progress);
         builder.setView(dialogView)
                 .setTitle(R.string.dialog_track_title)
+                .setNegativeButton(R.string.dialog_button_negative, null)
                 .setPositiveButton(R.string.dialog_track_button_positive, null);
         mDialog = builder.create();
         mDialog.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -60,18 +76,21 @@ public class TrackStockDialog extends DialogFragment {
                         Cursor c = getActivity().getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
                                 new String[]{QuoteColumns.SYMBOL}, QuoteColumns.SYMBOL + "= ?",
                                 new String[]{input}, null);
-                        if (c.getCount() != 0) {
-                            setErrorMessage(getActivity().getString(R.string.dialog_track_error_symbol_saved));
-                            return;
-                        } else {
-                            // Create intent
-                            Intent serviceIntent = new Intent(getActivity(), StockIntentService.class);
-                            // Add the stock to DB
-                            serviceIntent.putExtra(StockIntentService.TASK_TAG, StockIntentService.TASK_TYPE_ADD);
-                            serviceIntent.putExtra(StockIntentService.TASK_SYMBOL, input);
-                            getActivity().startService(serviceIntent);
+                        if (c != null) {
+                            if (c.getCount() != 0) {
+                                setErrorMessage(getActivity().getString(R.string.dialog_track_error_symbol_saved));
+
+                            } else {
+                                // Create intent
+                                Intent serviceIntent = new Intent(getActivity(), StockIntentService.class);
+                                // Add the stock to DB
+                                serviceIntent.putExtra(StockIntentService.TASK_TAG, StockIntentService.TASK_TYPE_ADD);
+                                serviceIntent.putExtra(StockIntentService.TASK_SYMBOL, input);
+                                getActivity().startService(serviceIntent);
+                            }
+                            c.close();
                         }
-                        c.close();
+
                     }
                 });
             }
@@ -112,6 +131,11 @@ public class TrackStockDialog extends DialogFragment {
         return mEditText.getText().toString();
     }
 
+    /**
+     * Sets error message of the text input layout.
+     *
+     * @param errorMessage Error message to be displayed
+     */
     public void setErrorMessage(String errorMessage) {
         mProgressBar.setVisibility(View.GONE);
         mTextInputLayout.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shake));

@@ -1,4 +1,3 @@
-package com.sam_chordas.android.stockhawk.widget;
 /*
  * Copyright (C) 2016 Mateusz Widuch
  *
@@ -14,6 +13,7 @@ package com.sam_chordas.android.stockhawk.widget;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.sam_chordas.android.stockhawk.widget;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,7 +32,7 @@ import com.sam_chordas.android.stockhawk.rest.Utils;
 import com.sam_chordas.android.stockhawk.ui.LineGraphFragment;
 
 /**
- * RemoteViewsService controlling the data being shown in the scrollable today's market widget
+ * Controls the data being shown in the scrollable today's market widget.
  */
 public class MarketWidgetRemoteViewsService extends RemoteViewsService {
 
@@ -94,8 +94,9 @@ public class MarketWidgetRemoteViewsService extends RemoteViewsService {
                 String name = data.getString(data.getColumnIndex(QuoteColumns.NAME));
                 String price = Utils.formatBidPrice(getApplication(),
                         data.getDouble(data.getColumnIndex(QuoteColumns.BID_PRICE)));
-                String change = Utils.formatChangeInPercent(getApplication(),
-                        data.getDouble(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE)));
+                String change = PreferenceManager.getDefaultSharedPreferences(getApplication()).getBoolean(getString(R.string.pref_widget_units_key), true)
+                        ? Utils.formatChangeInPercent(getApplication(), data.getDouble(data.getColumnIndex(QuoteColumns.PERCENT_CHANGE)))
+                        : Utils.formatChange(getApplication(), data.getDouble(data.getColumnIndex(QuoteColumns.CHANGE)));
                 int isUp = data.getInt(data.getColumnIndex(QuoteColumns.IS_UP));
 
                 // Get correct color & icon

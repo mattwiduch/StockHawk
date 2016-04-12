@@ -16,30 +16,24 @@
 package com.sam_chordas.android.stockhawk.ui;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import com.sam_chordas.android.stockhawk.R;
 
 /**
- * Presents fragment containing graph that shows stock's value over time.
+ * Handles PreferenceFragment which displays application settings.
  */
-public class LineGraphActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity {
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_line_graph);
-
-        if (savedInstanceState == null) {
-            Bundle arguments = new Bundle();
-            arguments.putString(LineGraphFragment.LGF_SYMBOL,
-                    getIntent().getStringExtra(LineGraphFragment.LGF_SYMBOL));
-
-            LineGraphFragment fragment = new LineGraphFragment();
-            fragment.setArguments(arguments);
-
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.stock_detail_container, fragment)
-                    .commit();
+        setContentView(R.layout.activity_settings);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
 }

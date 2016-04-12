@@ -1,4 +1,3 @@
-package com.sam_chordas.android.stockhawk.widget;
 /*
  * Copyright (C) 2016 Mateusz Widuch
  *
@@ -14,6 +13,7 @@ package com.sam_chordas.android.stockhawk.widget;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.sam_chordas.android.stockhawk.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -31,7 +31,7 @@ import com.sam_chordas.android.stockhawk.ui.LineGraphActivity;
 import com.sam_chordas.android.stockhawk.ui.MyStocksActivity;
 
 /**
- * Provider for a scrollable today's market widget
+ * Provider for a scrollable today's market widget.
  */
 public class MarketWidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {

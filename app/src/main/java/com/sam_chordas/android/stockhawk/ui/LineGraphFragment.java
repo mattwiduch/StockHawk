@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2016 Mateusz Widuch
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.sam_chordas.android.stockhawk.ui;
 
 import android.content.SharedPreferences;
@@ -40,13 +55,12 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+/**
+ * Presents graph showing stock's value over time.
+ */
 public class LineGraphFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-    private static final int CURSOR_LOADER_ID = 1;
     public static final String LGF_SYMBOL = "STOCK_SYMBOL";
-    private Toolbar mToolbar;
-    private String mStockSymbol;
-    private String mStockName;
-
+    private static final int CURSOR_LOADER_ID = 1;
     @Bind(R.id.line_chart)
     LineChartView lineChart;
     @Bind(R.id.stock_symbol_textview)
@@ -81,6 +95,9 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
     TextView stock1yTargetTextview;
     @Bind(R.id.stock_avg_volume_textview)
     TextView stockAvgVolumeTextview;
+    private Toolbar mToolbar;
+    private String mStockSymbol;
+    private String mStockName;
 
     public LineGraphFragment() {
         setHasOptionsMenu(true);
@@ -375,7 +392,7 @@ public class LineGraphFragment extends Fragment implements LoaderManager.LoaderC
     }
 
     /**
-     * Restarts loader so new data can be displayed
+     * Restarts loader so new data can be displayed.
      */
     public void onDatabaseUpdate() {
         getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);

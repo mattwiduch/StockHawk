@@ -11,7 +11,6 @@
      limitations under the License.
 -->
 <android.support.design.widget.CoordinatorLayout
-    android:id="@+id/activity_my_stocks"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -31,34 +30,17 @@
             android:elevation="0dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/AppTheme.ThemeOverlay"
-            app:titleTextAppearance="@style/AppTheme.ToolbarTitle">
-        </android.support.v7.widget.Toolbar>
+            app:titleTextAppearance="@style/AppTheme.ToolbarTitle"/>
 
     </android.support.design.widget.AppBarLayout>
 
     <fragment
-        android:id="@+id/my_stocks_container"
-        android:name="com.sam_chordas.android.stockhawk.ui.MyStocksFragment"
+        android:name="com.sam_chordas.android.stockhawk.ui.SettingsFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:tag="com.sam_chordas.android.stockhawk.ui.SettingsFragment"
         app:layout_anchor="@+id/appbar"
         app:layout_anchorGravity="top|start"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="@dimen/fab_bottom_margin"
-        android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginLeft="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin"
-        android:layout_marginStart="@dimen/fab_margin"
-        android:layout_marginTop="@dimen/fab_margin"
-        android:contentDescription="@string/a11y_fab"
-        android:focusable="true"
-        android:src="@drawable/ic_add_white_24dp"
-        app:fabSize="normal"/>
 
 </android.support.design.widget.CoordinatorLayout>
