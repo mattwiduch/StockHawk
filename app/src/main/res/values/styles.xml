@@ -9,7 +9,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/grey_primary</item>
@@ -70,7 +70,7 @@
     </style>
 
     <!-- Toolbar Title Style -->
-    <style name="AppTheme.ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+    <style name="AppTheme.ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" tools:ignore="UnusedResources">
         <item name="android:textSize">20sp</item>
     </style>
 

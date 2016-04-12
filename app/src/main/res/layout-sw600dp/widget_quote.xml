@@ -18,7 +18,8 @@
               android:background="@drawable/touch_selector_dark"
               android:gravity="center_vertical"
               android:orientation="horizontal"
-              android:padding="@dimen/widget_margin">
+              android:padding="@dimen/widget_margin"
+              android:baselineAligned="false">
 
     <LinearLayout
         android:id="@+id/widget_symbol_layout"

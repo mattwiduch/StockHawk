@@ -11,6 +11,7 @@
      limitations under the License.
 -->
 <android.support.design.widget.CoordinatorLayout
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_my_stocks"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -49,7 +50,8 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/appbar"
             android:divider="?android:attr/dividerHorizontal"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:baselineAligned="false">
 
             <!--
             This layout is a two-pane layout for the Items master/detail flow.
@@ -72,7 +74,8 @@
                     android:id="@+id/stock_detail_container"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_above="@+id/tooltip_bar"/>
+                    android:layout_above="@+id/tooltip_bar"
+                    tools:ignore="InconsistentLayout"/>
 
                 <FrameLayout
                     android:id="@+id/tooltip_bar"
