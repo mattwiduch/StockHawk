@@ -47,7 +47,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
             mCursor.registerDataSetObserver(mDataSetObserver);
         }
 
-        mEmptyView = emptyView;
+        //mEmptyView = emptyView;
         //mEmptyView.setVisibility(View.GONE);
     }
 
@@ -102,16 +102,17 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
             if (mDataSetObserver != null) {
                 mCursor.registerDataSetObserver(mDataSetObserver);
             }
-            rowIdColumn = newCursor.getColumnIndexOrThrow(QuoteColumns._ID);
+            rowIdColumn = mCursor.getColumnIndexOrThrow(QuoteColumns._ID);
             dataIsValid = true;
             notifyDataSetChanged();
+            // TODO: Find out why empty view shows between database updates
+            //mEmptyView.setVisibility(mCursor.getCount() == 0 ? View.VISIBLE : View.GONE);
         } else {
             rowIdColumn = -1;
             dataIsValid = false;
+            // TODO: This might be the culprit for bug above
             notifyDataSetChanged();
         }
-        // TODO: Find out why empty view shows between database updates
-        mEmptyView.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
 
         return oldCursor;
     }

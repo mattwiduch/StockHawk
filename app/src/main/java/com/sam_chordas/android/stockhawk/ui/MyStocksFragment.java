@@ -317,6 +317,20 @@ public class MyStocksFragment extends Fragment implements android.support.v4.app
         mCursorAdapter.swapCursor(data);
         mCursor = data;
         mSwipeRefreshLayout.setEnabled(mCursorAdapter.getItemCount() > 1);
+
+        // TODO: Temporary fix for empty list view showing during database update
+        if (mCursor.getCount() == 0) {
+            View emptyView = mRootView.findViewById(R.id.recycler_view_empty);
+            Cursor db = getActivity().getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
+                    new String[]{QuoteColumns._ID},
+                    null,
+                    null,
+                    null);
+            if (db != null) {
+                emptyView.setVisibility(db.getCount() == 0 ? View.VISIBLE : View.GONE);
+                db.close();
+            }
+        }
     }
 
     @Override
