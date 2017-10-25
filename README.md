@@ -21,8 +21,15 @@ Stock Hawk is stock tracking application for Android tablets and smartphones run
 **Bug fixes:**
 * App does not crash when user searches for a non-existent stock
 * Appropriate messages are shown when errors occur
- 
 
+## Try it out
+To install the app on a connected device or running emulator, run:
+
+```gradle
+git clone https://github.com/mattwiduch/StockHawk.git
+cd StockHawk
+./gradlew installDebug
+```
 
 ## Dependencies
 Stock Hawk uses following third-party libraries:
@@ -31,13 +38,6 @@ Stock Hawk uses following third-party libraries:
 - [WilliamChart](https://github.com/diogobernardino/WilliamChart)
 - [ThreeTenABP](https://github.com/JakeWharton/ThreeTenABP)
 - [ButterKnife](http://jakewharton.github.io/butterknife/)
-
-## Try it out
-Try Stock Hawk by following these steps:
-
-1. Download repo
-2. Run `./gradlew clean build` in root directory
-3. Enjoy!
 
 ## License
 ```
