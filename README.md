@@ -2,7 +2,7 @@
 
 <img src="https://cloud.githubusercontent.com/assets/15446842/14938268/e4fbc2c8-0f15-11e6-8fe3-b0e28690a957.png"/>
 
-Stock Hawk is stock tracking application for Android tablets and smartphones running Android 4.0.3 (API level 15) or newer. It demonstrates ability of taking an [app](http://www.mjolnir.io/#/stockhawk/) from a functional state to a production-ready state. The base code was provided by [Sam Chordas] (https://github.com/schordas) for Udacity Android Nanodegree students.
+Stock Hawk is stock tracking application for Android tablets and smartphones running Android 4.0.3 (API level 15) or newer. It demonstrates ability of taking an [app](http://www.mjolnir.io/#/stockhawk/) from a functional state to a production-ready state. The base code was provided by [Sam Chordas](https://github.com/schordas) for Udacity Android Nanodegree students.
 
 **New Features:**
 * New screen which graphs the stock's value over time
@@ -26,11 +26,11 @@ Stock Hawk is stock tracking application for Android tablets and smartphones run
 
 ## Dependencies
 Stock Hawk uses following third-party libraries:
-- [Schematic] (https://github.com/SimonVT/schematic)
-- [OkHttp] (http://square.github.io/okhttp/)
-- [WilliamChart] (https://github.com/diogobernardino/WilliamChart)
-- [ThreeTenABP] (https://github.com/JakeWharton/ThreeTenABP)
-- [ButterKnife] (http://jakewharton.github.io/butterknife/)
+- [Schematic](https://github.com/SimonVT/schematic)
+- [OkHttp](http://square.github.io/okhttp/)
+- [WilliamChart](https://github.com/diogobernardino/WilliamChart)
+- [ThreeTenABP](https://github.com/JakeWharton/ThreeTenABP)
+- [ButterKnife](http://jakewharton.github.io/butterknife/)
 
 ## Try it out
 Try Stock Hawk by following these steps:
