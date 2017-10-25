@@ -12,11 +12,11 @@ Stock Hawk is stock tracking application for Android tablets and smartphones run
 * Includes Polish translation and is fully translatable to other languages
 * RTL layouts and text are fully supported
 * Several UX enhancements including:
- - Brand new UI with improved color palette, launcher and toolbar icons
- - Stock list can be refreshed on demand by swiping down
- - Stock list can be sorted by symbol, price or change
- - Last update time is displayed on the main screen
- - Tablet layout based on master-detail flow
+  - Brand new UI with improved color palette, launcher and toolbar icons
+  - Stock list can be refreshed on demand by swiping down
+  - Stock list can be sorted by symbol, price or change
+  - Last update time is displayed on the main screen
+  - Tablet layout based on master-detail flow
  
 **Bug fixes:**
 * App does not crash when user searches for a non-existent stock
